@@ -1,0 +1,32 @@
+
+<fieldset>
+	<legend>Administration</legend>
+	<p>Redigera layout</p>
+
+	<form enctype="multipart/form-data">
+		<label>Namn</label>
+		<input type="text" name="name" ng-model="layout.name" />
+		
+		<input type="radio" name="inputType" value="textarea" ng-model="inputType">Befintlig XSL-stilmall</input>
+		<textarea rows="20" name="xslStylesheet" ng-disabled="inputType != 'textarea'" ng-model="layout.xslStylesheet"></textarea>
+		
+		<!-- disabled since file upload is not implemented -->
+		<input disabled="disabled" type="radio" name="inputType" value="file" ng-model="inputType">Ers&auml;tt XSL-stilmall</input>
+		<input type="file" id="fileInput" ng-disabled="inputType != 'file'" name="xslStylesheetFile" accept=".xsl" />
+	</form>
+</fieldset>
+
+<div class="buttonPanel">
+	<!-- not implemented yet -->
+<!-- 	<div class="left"> -->
+<!-- 		<input type="button" value="Radera..." ng-click="deleteLayout()" /> -->
+<!-- 	</div> -->
+	<div class="right">
+		<input type="button" value="Spara" ng-click="updateLayout()" />
+	</div>
+	<div class="right">
+		<input type="button" value="Avbryt" ng-click="backToAdmin()" />
+	</div>
+</div>			
+
+

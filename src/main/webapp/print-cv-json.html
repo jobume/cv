@@ -1,0 +1,17 @@
+<html ng-app="cvconverter">
+	<head>
+		<title>CV-konvertering</title>
+		<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+		<script src="script/app.js"></script>
+		<script src="script/controllers.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<form action="api/rtfparser" enctype="multipart/form-data" method="POST">
+				<input type="file" name="rtfCvFile" accept=".rtf" />
+				<input type="submit" />
+			</form>
+		</div>
+	</body>
+</html>

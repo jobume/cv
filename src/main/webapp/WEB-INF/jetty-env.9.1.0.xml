@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+
+<!-- Works for jetty 9 -->
+<Configure id='wac' class="org.eclipse.jetty.webapp.WebAppContext">
+	
+	<!-- Works for jetty 9 -->
+	<New id="h2Database" class="org.eclipse.jetty.plus.jndi.Resource">	
+		<Arg>
+			<Ref id="wac" />
+		</Arg>		
+		<Arg>jdbc/h2Database</Arg>
+		<Arg>
+			<!-- <New class="org.h2.jdbcx.JdbcDataSource"> -->
+			<New class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+				<!-- <Set name="URL">jdbc:h2:~/test</Set> -->
+				<Set name="URL">jdbc:mysql://localhost:3306/test</Set>
+				<Set name="User">joparo</Set>
+				<Set name="Password" type="String">joparo</Set>
+				
+				<!--
+				<Set name="URL">jdbc:mysql://mysql-env-4953051.jelastic.elastx.net/cvconverter</Set> 
+				<Set name="User">cvuser</Set>
+				<Set name="Password" type="String">cvuser</Set>
+				 -->
+			</New>
+		</Arg>
+	</New>
+</Configure>   

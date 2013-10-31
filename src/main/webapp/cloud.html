@@ -1,0 +1,49 @@
+<fieldset>
+	<legend>Ordmoln</legend>
+	<label>L&auml;gg till ord i ordmolnet. Ordmolnet visas p&aring; f&ouml;rs&auml;ttsbladet</label>
+	
+	<!-- 
+	<div>
+		<span ng-repeat="tag in cv.tags" style='background-color: #E8E8E8; margin: 2px; padding: 2px;'>
+			
+			<span ng-class="{
+			'tag_bold': tag.bold, 
+			'tag_uppercase' : tag.upperCase,
+			'tag_italic' : tag.italic, 
+			'tag_size_large': tag.size == 'LARGE',
+			'tag_size_small': tag.size == 'SMALL',
+			'tag_font_myriad': tag.font == 'myriad',
+			'tag_font_minion': tag.font == 'minion',
+			'tag_font_trebuchet': tag.font == 'trebuchet'}">
+				{{tag.tagName}}
+			</span>
+			
+			{{tag.tagName}} &nbsp; <a ng-click="deleteTag($index)" style="text-decoration: underline; color: red;">Ta bort</a>
+		</span>		
+	</div>
+	 -->
+	
+	<!-- 
+	<table style="width:30%">
+	<tr>	 
+		<td><input ng-model="tagName" /></td> 
+		
+		<td><input type="checkbox" ng-model="tagBold"/></td>
+		<td><input type="checkbox" ng-model="tagUpperCase"/></td>
+		<td><input type="checkbox" ng-model="tagItalic"/></td>
+		<td><select ng-model="tagSize" ng-options="tagSize for tagSize in tagSizes"></select></td>
+		<td><select ng-model="tagFont" ng-options="tagFont for tagFont in tagFonts"></select></td>
+		
+		<td><input type="button" ng-click="addTag()" value="L&auml;gg till"/> </td>
+	</tr>	
+	</table>
+	 -->	
+	
+	<ul ui:sortable ng:model="cv.tags">
+        <li ng:repeat="tag in cv.tags" class="tag">{{tag.tagName}} <a ng-click="deleteTag($index)" style="float:right;"><img src="layout/delete-16x16.png" alt="Ta bort"/></a> </li>
+    </ul>
+    
+    <input ng-model="tagName" style="float:left;"/> <input type="button" ng-click="addTag()" value="L&auml;gg till"/>
+	
+</fieldset>
+

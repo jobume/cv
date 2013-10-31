@@ -1,0 +1,26 @@
+
+<fieldset>
+	<legend>Administration</legend>
+	<p>Skapa ny layout</p>
+
+	<form id="newLayoutForm" enctype="multipart/form-data">
+		<label>Namn</label>
+		<input type="text" name="name" ng-model="layoutName" />
+		
+		<label>XSL-stilmall</label>
+		<input type="file" id="xslFile" name="xslStylesheet" accept=".xsl" />		
+	</form>
+</fieldset>
+
+<div class="buttonPanel">
+	<div class="left">
+		<input type="button" style="width:130px" value="Base64 encoder..." ng-click="base64()" />
+	</div>
+	<div class="right">
+		<input type="button" value="Skapa" ng-click="createLayout()" />
+	</div>
+	<div class="right">
+		<input type="button" value="Avbryt" ng-click="backToAdmin()" />
+	</div>
+</div>			
+

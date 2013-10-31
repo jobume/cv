@@ -1,0 +1,25 @@
+
+<fieldset>
+	<legend>Administration</legend>
+
+	<ul>
+		<li class="layoutList" ng-repeat="layout in layouts">
+			<div class="layoutName">{{layout.name}}</div>
+			<div class="layoutTools">
+				<button type="button" title="Redigera layout" ng-click="editLayout(layout.id)"><img src="layout/pencil-16x16.png" /></button>
+<!-- 				<input type="button" class="editButton" title="Redigera layout" ng-click="editLayout(layout.id)" /> -->
+				<button type="button" title="Radera layout" ng-click="deleteLayout(layout.id)"><img src="layout/delete-16x16.png" /></button>
+<!--  				<input type="button" value="x" title="Radera layout" ng-click="deleteLayout(layout.id)" /> -->
+			</div>
+		</li>
+	</ul>
+	
+	<button type="button" title="L&auml;gg till ny layout" ng-click="createLayout()"><img src="layout/add-16x16.png" /></button>
+<!-- 	<input type="button" value="+" title="L&auml;gg till ny layout" ng-click="createLayout()" /> -->
+</fieldset>
+
+<div class="buttonPanel">
+	<div class="right">
+		<input type="button" value="Avbryt" ng-click="backToStart()" />
+	</div>
+</div>			

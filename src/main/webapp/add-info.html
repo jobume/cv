@@ -1,0 +1,25 @@
+<fieldset>
+	<legend>Personliga egenskaper</legend>
+	<label>L&auml;gg till egenskaper som beskriver personen.</label>
+	
+	<!-- 
+	<div>
+		<span ng-repeat="quality in cv.personalQualities"  style='background-color: #E8E8E8; margin: 2px; padding: 2px;'>
+			{{quality}} &nbsp; <a ng-click="deleteQuality($index)" style="text-decoration: underline; color: red;">Ta bort</a>
+		</span >
+	
+	<table style="width:30%">
+	<tr>	 
+		<td><input ng-model="qualityName" /> </td>
+		<td><input type="button" ng-click="addQuality()" value="L&auml;gg till"/> </td>
+	</tr>
+	</table>		
+	</div>
+	 -->
+	
+	<ul ui:sortable ng:model="cv.personalQualities">
+        <li ng:repeat="quality in cv.personalQualities" class="tag">{{quality}} <a ng-click="deleteQuality($index)" style="float:right;"><img src="layout/delete-16x16.png" alt="Ta bort"/></a> </li>
+    </ul>
+	
+	<input ng-model="qualityName" style="float:left;"/> <input type="button" ng-click="addQuality()" value="L&auml;gg till"/>
+</fieldset>

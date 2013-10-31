@@ -1,0 +1,52 @@
+<html ng-app="cvconverter">
+	<head>		
+		<title>CV-konvertering</title>
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">		
+	</head>
+	<body>
+		<!-- Räksmörgås. RÄKSMÖRGÅS -->
+		<p id="adminLink" title="Administration av layouter" style="float:right;"><a href="#/admin">Admin</a> &nbsp; </p>
+		<div id="wrapper">
+			<h1><a href="#/person">CV-konvertering</a></h1>										
+			<div>
+				<div class="left">
+					<p ng-bind-html-unsafe="breadcrumb" />
+				</div>
+				<div class="right">
+					<p ng-bind="selectedRtfFile" />
+				</div>
+			</div>
+			
+			<div style="clear:both;" ng-view id="main"></div>
+			
+			<div class="buttonPanel">
+				<div class="left">
+					<input type="button" value="{{previousButtonLabel}}" ng-hide="hidePrevious" ng-disabled="previousButtonDisabled" ng-click="previous()" />
+				</div>
+				<div class="right">
+					<input type="button" value="{{nextButtonLabel}}" ng-hide="hideNext" ng-disabled="nextButtonDisabled" ng-click="next()" />
+				</div>
+			</div>			
+		</div>
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+		
+		<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+		
+		<script src="script/app.js"></script>
+		<script src="script/controllers/person.js"></script>
+		<script src="script/controllers/adjustment.js"></script>
+		<script src="script/controllers/layout.js"></script>
+		<script src="script/controllers/admin-layouts.js"></script>
+		<script src="script/controllers/admin-new-layout.js"></script>
+		<script src="script/controllers/admin-edit-layout.js"></script>
+		<script src="script/controllers/admin-base64.js"></script>
+		<script src="script/controllers/select-images.js"></script>
+		<script src="script/controllers/select-info.js"></script>
+		<script src="script/controllers/add-info.js"></script>
+		<script src="script/controllers/cloud.js"></script>
+		
+	</body>
+</html>

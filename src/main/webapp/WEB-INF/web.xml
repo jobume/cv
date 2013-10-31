@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+
+	<display-name>cvconverter-se</display-name>
+
+	<security-constraint>
+        <web-resource-collection>
+            <web-resource-name>
+                Whole application
+            </web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>cvuser</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>The image folder is open</web-resource-name>	        
+	        <url-pattern>/images/*</url-pattern>	        
+	    </web-resource-collection>
+	    <!-- No Auth Contraint! -->
+	</security-constraint>
+
+	<login-config>
+  		<auth-method>BASIC</auth-method>     <!-- Use http basic authentication -->
+  		<realm-name>cv-converter</realm-name>  <!-- Users are defined in this realm -->
+	</login-config>
+	
+	<listener>
+		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+	</listener>
+	 
+
+	<servlet>
+		<servlet-name>jersey</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>se.sogeti.umea.cvconverter.adapter.client.http.resource</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>cacheControl</param-name>
+			<param-value>public, max-age=0, must-revalidate</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>jersey</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- <resource-env-ref> -->
+	<!-- <resource-env-ref-name>BeanManager</resource-env-ref-name> -->
+	<!-- <resource-env-ref-type>javax.enterprise.inject.spi.BeanManager</resource-env-ref-type> -->
+	<!-- </resource-env-ref> -->
+
+	<!-- Remove this in production. Makes jetty not lock files. -->
+	<context-param>
+	    <param-name>org.eclipse.jetty.servlet.Default.useFileMappedBuffer</param-name>
+	    <param-value>false</param-value>
+	</context-param>
+
+	<resource-ref>
+		<description>DB Connection</description>
+		<res-ref-name>jdbc/h2Database</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>	 
+
+	<error-page>
+  		<error-code>500</error-code>
+  		<location>/error.html</location>
+	</error-page>
+
+</web-app>

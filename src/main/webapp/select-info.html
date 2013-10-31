@@ -1,0 +1,39 @@
+<fieldset>
+	<legend>Titel</legend>
+	<label>Ange personens titel f&ouml;r uppdraget</label>
+	<input type="text" ng-model="cv.profile.title" />
+</fieldset>
+
+<fieldset>
+	<legend>Utvalda uppdrag</legend>		
+	<label>Ange viktiga uppdrag till f&ouml;rstasidan</label>
+	<table>
+		<tr style="border-bottom:1px solid black;">
+			<th><input type="checkbox" ng-model="columnCheckBox" ng-click="toggleRowCheckboxes()" /></th>
+			<th>Datum</th>
+			<th>Namn</th>
+		</tr>
+		<tr ng-repeat="engagement in cv.engagements" title="{{engagement.description}}"> 
+			<td><input type="checkbox" ng-model="engagement.important" ng-click="toggleColumnCheckbox(engagement.important)" /></td>
+			<td ng-click="toggleCheckbox($index)">{{engagement.date}}</td>
+			<td ng-click="toggleCheckbox($index)">{{engagement.name}}</td>
+		</tr>
+	</table>
+	<div>{{loaderIndicator}}</div>
+	<div>{{selectedEngagements}} uppdrag valda</div>
+</fieldset>
+
+<fieldset>
+	<legend>Utvalda tekniker</legend>		
+	<label>Ange viktiga tekniker till f&ouml;rstasidan</label>
+	<table>
+		<tr style="border-bottom:1px solid black;">
+			<th><input type="checkbox" ng-model="allChecked" ng-click="checkAll()" /></th>
+			<th>Namn</th>
+		</tr>
+		<tr ng-repeat="technology in cv.technologies" title="{{technology.name}}"> 
+			<td><input type="checkbox" ng-model="technology.important" /></td>			
+			<td>{{technology.name}}</td>
+		</tr>
+	</table>		
+</fieldset>
