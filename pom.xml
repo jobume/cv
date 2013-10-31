@@ -15,7 +15,7 @@
 		<jetty.version>9.1.0.M0</jetty.version>
 	</properties>
 	<build>
-		<finalName>cvconverter7</finalName>
+		<finalName>cvconverter-alpha</finalName>
 		
 		<plugins>
 			<plugin>
