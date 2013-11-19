@@ -1,0 +1,43 @@
+<div style="margin-bottom: 10px;">	
+	<a href="#/admin" style="color: gray; text-decoration: underline;"">Layouter</a> |
+	<b>Omslagsbilder</b>
+
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>			
+</div>
+
+<fieldset>
+	<legend>Befintliga siluettbilder</legend>
+	<div>
+		<ul>
+        	<li ng:repeat="coverimage in coverimages" class="tag" style="height: 45px;">
+        		
+	        	 	<img src="{{coverimage.url}}" alt="Cover Image" height="42" width="42" />
+	        	 	{{coverimage.name}}
+	        	 	 
+	        		<a ng-click="deleteCoverImage(coverimage.name)" style="float:right;">
+	        			<img src="src/assets/delete-16x16.png" alt="Ta bort"/>
+	        		</a>
+        		
+        	</li>
+    	</ul>
+	</div>
+</fieldset>
+
+<fieldset>
+	<legend>Ladda upp ny bild</legend>
+	
+	Ladda upp en ny siluettbild till f&ouml;rs&auml;ttsblad. 
+	
+	<form enctype="multipart/form-data">
+		<label>Ange siluettbild:</label>
+		<input type="file" name="file" 
+		onchange="angular.element(this).scope().prepare(this.files); angular.element(this).scope().$digest();"/>		
+	</form>
+	
+</fieldset>
+
+<div class="buttonPanel">
+	<div class="right">
+		<input type="button" value="Skapa" ng-click="upload()"/>
+	</div>	
+</div>	

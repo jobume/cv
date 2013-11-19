@@ -1,0 +1,33 @@
+<div style="margin-bottom: 10px;">	
+	<a href="#/admin" style="color: gray; text-decoration: underline;"">Layouter</a> |
+	<b>Redigera layout</b>
+
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>			
+</div>
+
+<fieldset ng-hide="!base64">
+	
+	Resultat (base64-kodad bild) : 
+	
+	<textarea ng-model="base64" />
+	
+</fieldset>
+
+<fieldset>
+	<legend>Administration</legend>
+	
+	Base64-koda en bild f&ouml;r att kunna b&auml;dda in den i en layout.
+	
+	<form enctype="multipart/form-data">
+		<label>Ange CV RTF-fil</label>
+		<input type="file" name="file" 
+		onchange="angular.element(this).scope().prepare(this.files); angular.element(this).scope().$digest();"/>		
+	</form>
+	
+</fieldset>
+
+<div class="buttonPanel">
+	<div class="right">
+		<input type="button" value="Skapa" ng-click="base64Encode()"/>
+	</div>	
+</div>	

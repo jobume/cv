@@ -1,0 +1,30 @@
+<div style="margin-bottom: 10px;">	
+	<a href="#/admin" style="color: gray; text-decoration: underline;">Layouter</a> |
+	<b>Ny layout</b>
+
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>			
+</div>
+
+<div>
+<fieldset>
+	<legend>Administration</legend>
+	<p>Skapa ny layout</p>
+
+	<form enctype="multipart/form-data">
+		<label>Namn</label>
+		<input type="text" name="name" ng-model="layoutName" />
+		
+		<label>XSL-stilmall</label>
+		<input type="file" name="xslStylesheet" 
+		onchange="angular.element(this).scope().prepare(this.files); angular.element(this).scope().$digest();" 
+		accept=".xsl"/>		
+	</form>
+	
+</fieldset>
+</div>
+
+<div class="buttonPanel">
+	<div class="right">
+		<input type="button" value="Skapa" ng-click="createLayout()" ng-disabled="!(ready && layoutName)"/>
+	</div>	
+</div>	

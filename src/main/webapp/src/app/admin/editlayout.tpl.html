@@ -1,0 +1,26 @@
+<div style="margin-bottom: 10px;">	
+	<a href="#/admin" style="color: gray; text-decoration: underline;"">Layouter</a> |
+	<b>Redigera layout</b>
+
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>			
+</div>
+
+<fieldset>
+	<legend>Administration</legend>
+	<p>Redigera layout</p>
+
+	<form enctype="multipart/form-data">
+		<label>Namn</label>
+		<input type="text" name="name" ng-model="layout.name" />
+		<textarea rows="20" name="xslStylesheet" ng-model="layout.xslStylesheet"></textarea>		
+	</form>
+	
+</fieldset>
+
+<div class="buttonPanel">
+	
+	<div class="right">
+		<input type="button" value="Spara" ng-click="update()" />
+	</div>
+	
+</div>	

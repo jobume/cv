@@ -1,0 +1,11 @@
+<fieldset>
+	<legend>Ordmoln</legend>
+	<label>L&auml;gg till ord i ordmolnet. Ordmolnet visas p&aring; f&ouml;rs&auml;ttsbladet</label>
+	
+	<ul ui:sortable ng:model="model.cv.tags">
+        <li ng:repeat="tag in model.cv.tags" class="tag">{{tag.tagName}} <a ng-click="deleteTag($index)" style="float:right;"><img src="src/assets/delete-16x16.png" alt="Ta bort"/></a> </li>
+    </ul>
+    
+    <input ng-model="tagName" style="float:left;"/> <input type="button" ng-click="addTag()" value="L&auml;gg till"/>
+	
+</fieldset>

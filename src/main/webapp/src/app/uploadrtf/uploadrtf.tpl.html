@@ -1,0 +1,9 @@
+<fieldset>
+	<legend>Person</legend>
+	<form enctype="multipart/form-data">
+		<label>Ange CV RTF-fil</label>
+		<input type="file" name="file" 
+		onchange="angular.element(this).scope().prepare(this.files); angular.element(this).scope().$digest();" 
+		accept=".rtf"/>		
+	</form>
+</fieldset>

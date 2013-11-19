@@ -1,0 +1,25 @@
+<div style="margin-bottom: 10px;">
+	<a><b>Layouter</b></a>
+	<a href="#/admin/coverimage" style="color: gray; text-decoration: underline;">Omslagsbilder</a>	
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>		
+</div>
+
+<fieldset>
+	<legend>Administration</legend>
+
+	<ul>
+		<li class="layoutList" ng-repeat="layout in layouts">
+			<div class="layoutName">{{layout.name}}</div>
+			<div class="layoutTools">
+				<button type="button" title="Redigera layout" ng-click="editLayout(layout.id)"><img src="src/assets/pencil-16x16.png" /></button>
+				<button type="button" title="Radera layout" ng-click="deleteLayout(layout.id)"><img src="src/assets/delete-16x16.png" /></button>
+			</div>
+		</li>
+	</ul>
+	
+	<button type="button" title="L&auml;gg till ny layout" ng-click="createLayout()"><img src="src/assets/add-16x16.png" /></button>
+</fieldset>
+
+<div class="buttonPanel">
+	
+</div>		

@@ -1,0 +1,17 @@
+<fieldset>
+
+	<legend>Layout</legend>
+
+	<label ng-hide="loading">V&auml;lj layout f&ouml;r generering</label>
+
+	<div class="loader" ng-hide="!loading" > 
+		<img src="src/assets/spinner.gif"> Laddar layouter ... 
+	</div>
+
+	<div ng-repeat="layout in layouts">
+		<input type="radio" name="layout"
+			value="{{layout.id}}" ng-model="layoutstate.selectedLayoutId" ng-change="layoutSelected()" />{{layout.name}}
+	</div>
+
+
+</fieldset>
