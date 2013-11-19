@@ -1,52 +1,85 @@
-<html ng-app="cvconverter">
-	<head>		
-		<title>CV-konvertering</title>
-		<link rel="stylesheet" type="text/css" href="style/style.css" />
-		<meta http-equiv="content-type" content="text/html;charset=utf-8">		
-	</head>
-	<body>
-		<!-- Räksmörgås. RÄKSMÖRGÅS -->
-		<p id="adminLink" title="Administration av layouter" style="float:right;"><a href="#/admin">Admin</a> &nbsp; </p>
-		<div id="wrapper">
-			<h1><a href="#/person">CV-konvertering</a></h1>										
-			<div>
+<html ng-app="cv">
+<head>
+<title>CV-konvertering</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<link rel="stylesheet" type="text/css" href="src/style/style.css" />
+<style type="text/css">
+		span.selected {font-weight:bold;}
+</style>
+</head>
+<body>
+	<div ng-controller="AppController">
+		<p id="adminLink" title="Administration av layouter" style="float: right;"> 
+			<a ng-hide="navigation.admin" href="#/admin">Admin</a> &nbsp;
+			<a ng-hide="!navigation.admin" href="" ng-click="back()" >Tillbaka till CV</a>
+		</p>
+	</div>
+	
+	<div id="wrapper">
+		<h1><a href="#/person">CV-konvertering</a></h1>
+		
+		<div ng-controller="AppController">
+			
+			<div ng-hide="navigation.admin">
+				 
 				<div class="left">
-					<p ng-bind-html-unsafe="breadcrumb" />
+					<span ng-repeat="step in navigation.steps"> <span
+						ng-class="{selected: $index == navigation.selectedIndex}">{{step.label}}</span>
+					</span>
+				</div>
+				
+				<div class="right">
+						<p> {{model.cv.profile.name}} </p>
+				</div>			
+			</div>
+		</div>
+	
+		<div style="clear: both;" ng-view id="main"></div>
+
+		<div class="buttonPanel" ng-controller="AppController">
+			<div ng-hide="navigation.admin">
+				<div class="left">
+					<input type="button" value="Tillbaka"
+						ng-hide="navigation.selectedIndex==0" ng-click="previous()" />
 				</div>
 				<div class="right">
-					<p ng-bind="selectedRtfFile" />
+					<input type="button" value="{{navigation.steps[navigation.selectedIndex].buttonLabel}}"
+						ng-disabled="navigation.disabled" ng-click="next()" />
 				</div>
 			</div>
-			
-			<div style="clear:both;" ng-view id="main"></div>
-			
-			<div class="buttonPanel">
-				<div class="left">
-					<input type="button" value="{{previousButtonLabel}}" ng-hide="hidePrevious" ng-disabled="previousButtonDisabled" ng-click="previous()" />
-				</div>
-				<div class="right">
-					<input type="button" value="{{nextButtonLabel}}" ng-hide="hideNext" ng-disabled="nextButtonDisabled" ng-click="next()" />
-				</div>
-			</div>			
 		</div>
-		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
 		
-		<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
-		
-		<script src="script/app.js"></script>
-		<script src="script/controllers/person.js"></script>
-		<script src="script/controllers/adjustment.js"></script>
-		<script src="script/controllers/layout.js"></script>
-		<script src="script/controllers/admin-layouts.js"></script>
-		<script src="script/controllers/admin-new-layout.js"></script>
-		<script src="script/controllers/admin-edit-layout.js"></script>
-		<script src="script/controllers/admin-base64.js"></script>
-		<script src="script/controllers/select-images.js"></script>
-		<script src="script/controllers/select-info.js"></script>
-		<script src="script/controllers/add-info.js"></script>
-		<script src="script/controllers/cloud.js"></script>
-		
-	</body>
+	</div>
+	
+	<!-- TODO concat and minify -->
+	<!-- script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script -->
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+	
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+	
+	<script src="http://code.angularjs.org/1.2.0-rc.2/angular-route.min.js"></script>
+
+	<script src="src/app/app.js"></script>
+	<script src="src/app/uploadrtf/uploadrtf.js"></script>
+	<script src="src/app/adjustments/adjustments.js"></script>
+	<script src="src/app/qualities/qualities.js"></script>
+	<script src="src/app/wordcloud/wordcloud.js"></script>
+	<script src="src/app/selectimages/selectimages.js"></script>
+	<script src="src/app/layout/layout.js"></script>
+	<script src="src/app/admin/admin.js"></script>
+	
+	<script src="src/common/resources/cvresource.js"></script>
+	<script src="src/common/resources/portraitresource.js"></script>
+	<script src="src/common/resources/coverimageresource.js"></script>
+	<script src="src/common/resources/layoutsresource.js"></script>
+	<script src="src/common/resources/pdfresource.js"></script>
+	<script src="src/common/resources/base64resource.js"></script>
+	
+	<script src="src/common/services/navigation.js"></script>
+
+</body>
 </html>
+

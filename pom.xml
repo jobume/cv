@@ -6,6 +6,20 @@
 	<packaging>war</packaging>
 	<version>0.9</version>
 	<name>CV Converter</name>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<properties>
+				<jdbc.url>jdbc:mysql://mysql-sogeti.jelastic.elastx.net/cvconverter</jdbc.url>
+				<jdbc.user>cvconverter</jdbc.user>
+				<jdbc.password>cvconverter</jdbc.password>
+				<host.name>http://sogeti.jelastic.elastx.net</host.name>
+				<host.name.internal>http://localhost:8080</host.name.internal>
+			</properties>
+		</profile>
+	</profiles>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -13,10 +27,26 @@
 		<slf4j.version>1.6.4</slf4j.version>
 		<logback.version>1.0.1</logback.version>
 		<jetty.version>9.1.0.M0</jetty.version>
+		<jdbc.url>jdbc:mysql://localhost:3306/test</jdbc.url>
+		<jdbc.user>joparo</jdbc.user>
+		<jdbc.password>joparo</jdbc.password>
+		<host.name>http://localhost:8081</host.name>
+		<host.name.internal>http://localhost:8081</host.name.internal>
 	</properties>
 	<build>
 		<finalName>cvconverter-alpha</finalName>
-		
+
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*</include>
+					<include>**/*</include>				
+				</includes>
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -52,11 +82,26 @@
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<excludes>
-						<!-- 
-						<exclude>**/cvconverter/**/*.java</exclude>
-						<exclude>**/tagcloud/*.java</exclude>
-						 -->										
+						<!-- <exclude>**/cvconverter/**/*.java</exclude> <exclude>**/tagcloud/*.java</exclude> -->
 					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/web.xml</include>
+								<include>**/jetty-env.xml</include>
+							</includes>
+						</resource>
+					</webResources>
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
 

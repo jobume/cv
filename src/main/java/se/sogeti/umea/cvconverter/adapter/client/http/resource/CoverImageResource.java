@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public class CoverImageResource extends ImageResource {
 	@GET
 	@Produces("application/json")
 	public List<Image> readImages() {
+		
 		List<Image> coverImages;
 		try {
 			coverImages = service.getCoverImages();
@@ -59,5 +61,18 @@ public class CoverImageResource extends ImageResource {
 			LOG.error("Error getting images.", e);
 			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@DELETE @Path("/{id}")
+	public void deleteImage(@PathParam("id")String name) {
+		try {
+			LOG.debug("Trying to delete cover image: " + name);
+			service.deleteCoverImage(name);
+		} catch (IllegalArgumentException | NoSuchElementException
+				| IOException e) {
+			LOG.error("Error deleting cover image with name: " + name);
+			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 }

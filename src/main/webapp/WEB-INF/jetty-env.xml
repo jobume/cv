@@ -24,17 +24,23 @@
 		<Arg>
 			
 			<New class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
-				<!-- Local config -->     
+				
+				<Set name="URL">${jdbc.url}</Set>
+				<Set name="User">${jdbc.user}</Set>
+				<Set name="Password" type="String">${jdbc.password}</Set>
+				
+				<!-- Local config  
 				<Set name="URL">jdbc:mysql://localhost:3306/test</Set>
 				<Set name="User">joparo</Set>
 				<Set name="Password" type="String">joparo</Set>
-				
+				-->
 				
 				<!-- Production config    
-				<Set name="URL">jdbc:mysql://mysql-env-4953051.jelastic.elastx.net/cvconverter</Set> 
-				<Set name="User">cvuser</Set>
-				<Set name="Password" type="String">cvuser</Set>				
-				-->
+				<Set name="URL">jdbc:mysql://mysql-sogeti.jelastic.elastx.net/cvconverter</Set> 
+				<Set name="User">cvconverter</Set>
+				<Set name="Password" type="String">cvconverter</Set>
+				-->				
+				
 			</New>
 		</Arg>
 	</New>

@@ -36,9 +36,6 @@ public class LayoutsResource extends Resource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLayouts() {
 		
-		// TODO remove this
-		LOG.info("Getting all layouts");
-		
 		List<LayoutOverview> layouts = null;
 		try {
 			layouts = service.getLayouts();
