@@ -17,7 +17,7 @@
 <fieldset>
 	<legend>Bild</legend>
 	<label>Portr&auml;ttbild</label>
-	<img src="{{model.cv.profile.portrait.url}}" alt="Portrait" />
+	<img src="{{model.cv.profile.portrait.url}}" alt="Portrait" height="50"/>
 	
 	<p>Ladda upp en ny bild</p>
 	<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>

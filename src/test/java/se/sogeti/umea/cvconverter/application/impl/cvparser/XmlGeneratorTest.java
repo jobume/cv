@@ -95,6 +95,7 @@ public class XmlGeneratorTest {
 		job.setName("Umeå Energi");
 		job.setDescription("");
 		job.setImportant(false);
+		job.setDuration(1);
 		engagements.add(job);
 
 		JobImpl job2 = new JobImpl();
@@ -102,6 +103,7 @@ public class XmlGeneratorTest {
 		job2.setName("SDC");
 		job2.setDescription("A study to present pro's and con's with an object oriented approach and the use of Java for development of new software.");
 		job2.setImportant(false);
+		job2.setDuration(1);
 		engagements.add(job2);
 		when(mockCv.getEngagements()).thenReturn(engagements);
 
@@ -210,6 +212,7 @@ public class XmlGeneratorTest {
 		emp2.setName("Cap Gemini");
 		emp2.setDescription("ghijkl");
 		emp2.setImportant(false);
+		emp2.setDuration(76);
 		employments.add(emp2);
 
 		when(mockCv.getEmployments()).thenReturn(employments);

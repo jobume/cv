@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import se.sogeti.umea.cvconverter.application.CurriculumVitae;
-import se.sogeti.umea.cvconverter.application.Image;
 import se.sogeti.umea.cvconverter.application.Tag;
 
 @ApplicationScoped

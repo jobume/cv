@@ -5,6 +5,18 @@
 </fieldset>
 
 <fieldset>
+	<!-- Räksmörgås -->
+	<legend>Beskrivning</legend>
+	<label>Ange beskrivning f&ouml;r personen: </label>	
+	<textarea maxlength="570" ng-model="model.cv.description"/>
+	
+	<div>
+		{{model.cv.description.length}} / 570
+	</div>
+	
+</fieldset>
+
+<fieldset>
 	<legend>Utvalda uppdrag</legend>		
 	<label>Ange viktiga uppdrag till f&ouml;rstasidan</label>
 	<table>

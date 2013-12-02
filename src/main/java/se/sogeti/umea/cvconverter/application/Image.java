@@ -20,6 +20,12 @@ public class Image {
 		this.name = name;		
 	}
 	
+	public Image(String name, String url, String localUrl) {
+		this.name = name;
+		this.url = url;
+		this.localUrl = localUrl;
+	}
+	
 	public String getName() {
 		return name;
 	}

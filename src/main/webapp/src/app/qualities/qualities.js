@@ -31,6 +31,7 @@ angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navig
 		if(noDuplicates) {
 			$scope.model.cv.personalQualities.push(qualityName);
 		}
+		$scope.qualityName = "";
 	}
 	
 	$scope.deleteQuality = function(index) {

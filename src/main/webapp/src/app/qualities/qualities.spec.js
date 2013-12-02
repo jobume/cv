@@ -64,6 +64,7 @@ describe('Test suite for the qualities controller', function(){
 	  
 	  scope.qualityName = "One";
 	  scope.addQuality();
+	  scope.qualityName = "One";
 	  scope.addQuality();
 	  
 	  expect(scope.model.cv.personalQualities.length).toEqual(1);

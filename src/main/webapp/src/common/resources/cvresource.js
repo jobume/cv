@@ -23,7 +23,7 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 				model.cv = data;
 				success();
 			}).error(function(err) {
-				alert("Det uppstod ett fel vid konverteringen!" + err);
+				alert("Det uppstod ett fel vid konverteringen! Felmeddelande från server: " + err);
 			});
 		},
 		

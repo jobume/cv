@@ -33,14 +33,14 @@ public class PdfResource extends Resource {
 
 	private final static HashMap<Integer, byte[]> pdfByteArrays = new HashMap<>();
 	private static int counter = 0;
-	
+
 	@Inject
 	private CvDecorator decorator;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public int createPdfFromJson(@PathParam("id") final long id, String jsonCv) {
-		LOG.debug("Generating pdf with layoutId: " + id);
+		
 		byte[] convert = null;
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -49,7 +49,7 @@ public class PdfResource extends Resource {
 		Integer generatedId = null;
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-			
+
 			decorator.decorateCv(cv);
 
 			convert = service.convert(id, cv);
@@ -57,29 +57,28 @@ public class PdfResource extends Resource {
 			pdfByteArrays.put(generatedId, convert);
 		} catch (NoSuchElementException | IllegalArgumentException e) {
 			LOG.error("Error converting cv (layoutId=" + id + ").", e);
-			throw new WebApplicationException(Status.NOT_FOUND);
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
+					.entity(e.getMessage()).build());
 		} catch (IOException | ConversionException e) {
 			LOG.error(createErrorLogMessage(id, jsonCv), e);
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getMessage()).build());
 		}
-		LOG.debug("The pdf map contains " + pdfByteArrays.keySet().size()
-				+ " generated pdfs.");
+		
 		return generatedId != null ? generatedId.intValue() : -1;
 	}
 
 	@GET
 	@Produces({ "application/pdf" })
 	public Response getPdf(@PathParam("id") Integer uniqueId) {
-		LOG.debug("Looking for generated pdf with id: " + uniqueId);
-		// streams the byte array as pdf
+		
 		final byte[] pdfAsBytes = pdfByteArrays.remove(uniqueId);
 
 		if (pdfAsBytes == null) {
-			// TODO remove this log
 			LOG.debug("Could not find pdf with id " + uniqueId);
-			throw new WebApplicationException(Status.NOT_FOUND);
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
+					.entity("Could not find pdf with id " + uniqueId).build());
 		}
 
 		StreamingOutput stream = new StreamingOutput() {
@@ -99,9 +98,7 @@ public class PdfResource extends Resource {
 	}
 
 	private Integer generateId() {
-		// TODO remove this log
-		int i = counter++;
-		LOG.debug("Returning generated id: " + i);
+		int i = counter++;		
 		return new Integer(i);
 	}
 }

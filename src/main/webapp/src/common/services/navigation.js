@@ -60,7 +60,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 			// Immediately disable next-button.
 			state.disabled = true;
 			if(state.callback != null) {
-				state.callback(this.success);
+				state.callback(this.success, state);
 			} else {
 				this.success();
 			}

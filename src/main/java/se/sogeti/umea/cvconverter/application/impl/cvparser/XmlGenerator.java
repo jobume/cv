@@ -21,7 +21,7 @@ public class XmlGenerator {
 	private static final String XML_NAMESPACE = "http://www.sogeti.se/umea/curriculumvitae";
 
 	XMLOutputFactory xmlof;
-	
+
 	public XmlGenerator() {
 		// CDI
 	}
@@ -157,6 +157,20 @@ public class XmlGenerator {
 		writer.writeCharacters(cv.getProfile().getName());
 		writer.writeEndElement();
 
+		if (cv.getProfile().getFirstName() != null
+				&& cv.getProfile().getFirstName().length() > 0) {
+			writer.writeStartElement("FirstName");
+			writer.writeCharacters(cv.getProfile().getFirstName());
+			writer.writeEndElement();
+		}
+
+		if (cv.getProfile().getLastName() != null
+				&& cv.getProfile().getLastName().length() > 0) {
+			writer.writeStartElement("LastName");
+			writer.writeCharacters(cv.getProfile().getLastName());
+			writer.writeEndElement();
+		}
+
 		writer.writeStartElement("Title");
 		writer.writeCharacters(cv.getProfile().getTitle());
 		writer.writeEndElement();
@@ -193,7 +207,7 @@ public class XmlGenerator {
 			writer.writeStartElement("Engagements");
 
 			for (Job engagement : cv.getEngagements()) {
-				writeJob(engagement, writer);
+				writeJob(engagement, writer, cv.getContentLanguage());
 			}
 
 			writer.writeEndElement();
@@ -312,7 +326,7 @@ public class XmlGenerator {
 			writer.writeStartElement("Employments");
 
 			for (Job employments : cv.getEmployments()) {
-				writeJob(employments, writer);
+				writeJob(employments, writer, cv.getContentLanguage());
 			}
 
 			writer.writeEndElement();
@@ -332,8 +346,8 @@ public class XmlGenerator {
 		}
 	}
 
-	private void writeJob(Job job, XMLStreamWriter writer)
-			throws XMLStreamException {
+	private void writeJob(Job job, XMLStreamWriter writer,
+			ContentLanguage language) throws XMLStreamException {
 		writer.writeStartElement("Job");
 
 		Boolean important = ((se.sogeti.umea.cvconverter.application.Important) job)
@@ -352,7 +366,23 @@ public class XmlGenerator {
 		writer.writeCharacters(job.getDescription());
 		writer.writeEndElement();
 
+		if (job.getDuration() > 0) {
+			writer.writeStartElement("Duration");
+			writer.writeCharacters(getDurationString(job.getDuration(),
+					language).trim());
+			writer.writeEndElement();
+		}
+
 		writer.writeEndElement();
+	}
+
+	private String getDurationString(int duration, ContentLanguage language) {
+		String month = ContentLanguage.ENGLISH.equals(language) ? "month"
+				: "månad";
+		if (duration > 1) {
+			month += ContentLanguage.ENGLISH.equals(language) ? "s" : "er";
+		}
+		return duration + " " + month;
 	}
 
 	private void writeSkill(Skill knowledge, XMLStreamWriter writer,

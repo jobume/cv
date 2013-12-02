@@ -5,12 +5,16 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -19,59 +23,64 @@ import org.slf4j.LoggerFactory;
 import se.sogeti.umea.cvconverter.application.Image;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/coverimage")
-public class CoverImageResource extends ImageResource {
+public class CoverImageResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory
-			.getLogger(ImageResource.class);
+			.getLogger(CoverImageResource.class);
 
-	@Override
-	public Image createImage(InputStream uploadedInputStream,
-			FormDataContentDisposition fileDetail) {
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Image createImage(
+			@FormDataParam("file") InputStream uploadedInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-		try {
-			service.createCoverImage(fileDetail.getFileName());
-		} catch (IOException e) {
-			LOG.error("Error creating cover image!", e);
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+		if (fileDetail.getFileName() == null) {
+			throw new WebApplicationException(Response
+					.status(Status.BAD_REQUEST)
+					.entity("Missing file name from request!").build());
 		}
 
-		return super.createImage(uploadedInputStream, fileDetail);
+		try {
+			return service.createCoverImage(uploadedInputStream, fileDetail
+					.getFileName().replaceAll(" ", "_"));
+		} catch (IOException e) {
+			LOG.error("Error creating cover image!", e);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getMessage()).build());
+		}
 	}
 
 	@GET
 	@Produces("application/json")
 	public List<Image> readImages() {
-		
-		List<Image> coverImages;
 		try {
-			coverImages = service.getCoverImages();
-
-			if (coverImages != null) {
-				for (Image img : coverImages) {
-					img.setUrl(imageDecorator.getImageUrl(img.getName()));
-				}
-			}
-
-			return coverImages;
-
+			return service.getCoverImages();
 		} catch (IllegalArgumentException | NoSuchElementException
 				| IOException e) {
 			LOG.error("Error getting images.", e);
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getMessage()).build());
 		}
 	}
 
-	@DELETE @Path("/{id}")
-	public void deleteImage(@PathParam("id")String name) {
+	@DELETE
+	@Path("/{id}")
+	public void deleteImage(@PathParam("id") String name) {
 		try {
 			LOG.debug("Trying to delete cover image: " + name);
 			service.deleteCoverImage(name);
 		} catch (IllegalArgumentException | NoSuchElementException
 				| IOException e) {
 			LOG.error("Error deleting cover image with name: " + name);
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getMessage()).build());
 		}
 
 	}

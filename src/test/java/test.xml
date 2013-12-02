@@ -17,12 +17,14 @@
 			<Date>2007-03 - 2007-04</Date>
 			<Name>Umeå Energi</Name>
 			<Description></Description>
+			<Duration>1 month</Duration>
 		</Job>
 		<Job important="false">
 			<Date>2003-04 - 2003-05</Date>
 			<Name>SDC</Name>
 			<Description>A study to present pro's and con's with an object oriented approach and the use of Java for development of new software.
 			</Description>
+			<Duration>1 month</Duration>
 		</Job>
 	</Engagements>
 
@@ -103,12 +105,13 @@
 		<Job important="false">
 			<Date>2002-01</Date>
 			<Name>Sogeti Sverige AB</Name>
-			<Description>Abcdef</Description>
+			<Description>Abcdef</Description>			
 		</Job>
 		<Job important="false">
 			<Date>1995-08 - 2001-12</Date>
 			<Name>Cap Gemini</Name>
 			<Description>ghijkl</Description>
+			<Duration>76 months</Duration>
 		</Job>
 	</Employments>
 	

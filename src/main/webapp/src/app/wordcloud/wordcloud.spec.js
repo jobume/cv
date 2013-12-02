@@ -54,8 +54,9 @@ describe('Test suite for the wordcloud controller', function(){
 	  scope.tagName = "tagOne";
 	  scope.model = { cv : {} };
 	  scope.model.cv = { tags : [] };
-	  
 	  scope.addTag();
+	  
+	  scope.tagName = "tagOne";
 	  scope.addTag();
 	  
 	  expect(scope.model.cv.tags.length).toEqual(1);

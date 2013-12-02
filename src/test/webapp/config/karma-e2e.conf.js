@@ -5,7 +5,7 @@ module.exports = function(config){
     basePath : '../',
 
     files : [
-        'test/e2e/**/*.js'
+        'e2e/**/*.js'
     ],
 
     autoWatch : false,

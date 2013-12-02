@@ -61,10 +61,19 @@ public class StringParserTest {
 				"his assignments."));
 	}
 
+	/**
+	 * Engagements
+	 * 2012-08 - 2012-12 	Tieto Sweden 
+	 * 2009-01 - 2011-04 	Anchor Management Consulting
+	 */
 	@Test
 	public void canParseEngagements() throws Exception {
 		List<Job> engagements = cvAllChaptersEng.getEngagements();
 		assertTrue(engagements.size() > 0);
+		assertEquals("2012", engagements.get(0).getDate());
+		assertEquals("2009 - 2011", engagements.get(1).getDate());
+		assertEquals(4, engagements.get(0).getDuration());
+		assertEquals(27, engagements.get(1).getDuration());
 	}
 
 	@Test
@@ -72,12 +81,12 @@ public class StringParserTest {
 		assertFalse(cvAllChaptersEng.getProfessionalKnowledge().isEmpty());
 
 		Skill firstSkill = cvAllChaptersEng.getProfessionalKnowledge().get(0);
-		assertEquals("Application development method: Test Driven Development",
+		assertEquals("Test Driven Development",
 				firstSkill.getName());
 		assertEquals("Knowledgeable", firstSkill.getEnglishLevelName());
 
 		Skill lastSkill = cvAllChaptersEng.getProfessionalKnowledge().get(2);
-		assertEquals("Configuration Management Tool: Git", lastSkill.getName());
+		assertEquals("Git", lastSkill.getName());
 		assertEquals("Experienced", lastSkill.getEnglishLevelName());
 
 		assertEquals(3, cvAllChaptersEng.getProfessionalKnowledge().size());
@@ -88,11 +97,11 @@ public class StringParserTest {
 		assertFalse(cvAllChaptersEng.getTechnologies().isEmpty());
 
 		Skill firstSkill = cvAllChaptersEng.getTechnologies().get(0);
-		assertEquals("Database: PostgreSql", firstSkill.getName());
+		assertEquals("PostgreSql", firstSkill.getName());
 		assertEquals("Knowledgeable", firstSkill.getEnglishLevelName());
 
 		Skill lastSkill = cvAllChaptersEng.getTechnologies().get(4);
-		assertEquals("Programming Language: Java", lastSkill.getName());
+		assertEquals("Java", lastSkill.getName());
 		assertEquals("Experienced", lastSkill.getEnglishLevelName());
 
 		assertEquals(5, cvAllChaptersEng.getTechnologies().size());
@@ -103,11 +112,11 @@ public class StringParserTest {
 		assertFalse(cvAllChaptersEng.getIndustryKnowledge().isEmpty());
 
 		Skill firstSkill = cvAllChaptersEng.getIndustryKnowledge().get(0);
-		assertEquals("Telecommunication: LTE/4G", firstSkill.getName());
+		assertEquals("LTE/4G", firstSkill.getName());
 		assertEquals("Knowledgeable", firstSkill.getEnglishLevelName());
 
 		Skill lastSkill = cvAllChaptersEng.getIndustryKnowledge().get(2);
-		assertEquals("Telecommunications: GSM", lastSkill.getName());
+		assertEquals("GSM", lastSkill.getName());
 		assertEquals("Knowledgeable", lastSkill.getEnglishLevelName());
 
 		assertEquals(3, cvAllChaptersEng.getIndustryKnowledge().size());
@@ -174,11 +183,11 @@ public class StringParserTest {
 		assertFalse(cvAllChaptersEng.getEmployments().isEmpty());
 
 		Job firstEmployment = cvAllChaptersEng.getEmployments().get(0);
-		assertEquals("2011-08", firstEmployment.getDate());
+		assertEquals("2011", firstEmployment.getDate());
 		assertEquals("Sogeti Sverige AB", firstEmployment.getName());
 
 		Job lastEmployment = cvAllChaptersEng.getEmployments().get(3);
-		assertEquals("2003-01 - 2005-01", lastEmployment.getDate());
+		assertEquals("2003 - 2005", lastEmployment.getDate());
 		assertEquals("Studentcentrum", lastEmployment.getName());
 
 		assertEquals(4, cvAllChaptersEng.getEmployments().size());

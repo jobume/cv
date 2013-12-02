@@ -10,8 +10,8 @@ angular.module('adjustments', [ 'ngRoute', 'resources.cvresource', 'services.nav
 	  );
 	}])
 	
-.controller('AdjustmentsController', ['$scope', 'CvResource', 'SelectionService', 
-                                      function($scope, CvResource, SelectionService) {
+.controller('AdjustmentsController', ['$scope', 'CvResource', 'SelectionService','Navigation', 
+                                      function($scope, CvResource, SelectionService, Navigation) {
 	
 	$scope.model = CvResource.get();
 	
@@ -19,6 +19,28 @@ angular.module('adjustments', [ 'ngRoute', 'resources.cvresource', 'services.nav
 	$scope.allEngagementsSelected = false;
 	$scope.selectedTechs = 0;
 	$scope.allTechsSelected = false;
+	var MAX_DESC_LENGTH = 570;
+	
+	Navigation.onNext(function (success, state) {
+		var valid = false;
+		if($scope.model.cv.profile.title && $scope.model.cv.profile.title.length > 0) {
+			valid = true;
+		} else {
+			valid = false;
+			alert('Titel är obligatoriskt!');
+		}
+		if(valid && $scope.model.cv.description && $scope.model.cv.description.length <= MAX_DESC_LENGTH) {
+			valid = true;
+		} else {
+			valid = false;
+			alert('Maxlängd för Beskrivning är ' + MAX_DESC_LENGTH);
+		}
+		if(valid) {
+			success();
+		} else {
+			state.disabled = false;
+		}
+	});
 	
 	$scope.selectEngagements = function () {
 		$scope.selectedEngagements = 

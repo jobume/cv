@@ -2,6 +2,7 @@ package se.sogeti.umea.cvconverter.application.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -13,14 +14,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.fop.apps.FOPException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import se.sogeti.umea.cvconverter.application.ConversionException;
 import se.sogeti.umea.cvconverter.application.ConverterService;
-import se.sogeti.umea.cvconverter.application.Image;
 import se.sogeti.umea.cvconverter.application.CoverImageRepository;
 import se.sogeti.umea.cvconverter.application.CurriculumVitae;
+import se.sogeti.umea.cvconverter.application.Image;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
 import se.sogeti.umea.cvconverter.application.LayoutRepository;
@@ -31,26 +30,23 @@ import se.sogeti.umea.cvconverter.application.impl.fopwrapper.FopWrapper;
 
 public class CvConverterService implements ConverterService {
 
-	private final static Logger LOG = LoggerFactory
-			.getLogger(CvConverterService.class);
-
 	private static final String ENCODING = "UTF-8";
 	private static final String CONVERTER_RESULT_MEDIA_TYPE = "application/pdf";
 	private LayoutRepository repo;
-	private CoverImageRepository silRepo;
+	private CoverImageRepository coverImageRepo;
 	private Parser parser;
 	private FopWrapper fopWrapper;
 	private XmlGenerator xmlGenerator;
 
 	@Inject
-	public CvConverterService(@Repository CoverImageRepository silRepo,
+	public CvConverterService(@Repository CoverImageRepository coverImageRepo,
 			@Repository LayoutRepository repo, Parser parser,
 			XmlGenerator xmlGenerator, FopWrapper fopWrapper) {
 		this.repo = repo;
 		this.parser = parser;
 		this.xmlGenerator = xmlGenerator;
 		this.fopWrapper = fopWrapper;
-		this.silRepo = silRepo;
+		this.coverImageRepo = coverImageRepo;
 	}
 
 	@Override
@@ -123,20 +119,20 @@ public class CvConverterService implements ConverterService {
 	}
 
 	@Override
-	public void createCoverImage(String name) throws IOException {
-		silRepo.createCoverImage(name);
+	public Image createCoverImage(InputStream imgStream, String name) throws IOException {
+		return coverImageRepo.createCoverImage(imgStream, name);
 	}
 
 	@Override
 	public List<Image> getCoverImages() throws IllegalArgumentException,
 			NoSuchElementException, IOException {
-		return silRepo.getCoverImages();
+		return coverImageRepo.getCoverImages();
 	}
 
 	@Override
 	public void deleteCoverImage(String name) throws IllegalArgumentException,
 			NoSuchElementException, IOException {
-		silRepo.deleteCoverImage(name);
+		coverImageRepo.deleteCoverImage(name);
 	}
 
 }

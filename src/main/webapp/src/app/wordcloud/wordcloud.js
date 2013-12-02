@@ -29,6 +29,8 @@ angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navig
 		if(noDuplicates) {
 			$scope.model.cv.tags.push({tagName: tagName});
 		}
+		
+		$scope.tagName = "";
 	};
 	
 	$scope.deleteTag = function(index) {

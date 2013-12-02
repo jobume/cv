@@ -1,5 +1,6 @@
 package se.sogeti.umea.cvconverter.application.impl.cvparser;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,7 +180,17 @@ class StringParser {
 			}
 
 			Job job = new JobImpl();
-			job.setDate(date);
+			
+			Duration duration;
+			try {
+				duration = new Duration(date);
+			} catch (ParseException e) {
+				throw new RuntimeException("Error parsing duration of job.", e);
+			}
+			
+			job.setDate(duration.getDurationYearString());
+			job.setDuration(duration.getDurationMonths());
+			
 			job.setName(name);
 			job.setDescription(description);
 			((JobImpl) job).setImportant(false);
@@ -226,13 +237,35 @@ class StringParser {
 		for (int i = 0; i < linesWithTabSeparatedText.size(); i += 2) {
 			SkillImpl skill = new SkillImpl();
 			String name = linesWithTabSeparatedText.get(i).get(0);
-			skill.setName(name);
+			String skillName = getSkillNameFromString(name);
+			skill.setName(skillName);
 			String level = linesWithTabSeparatedText.get(i + 1).get(0);
 			skill.setLevel(parseSkillLevel(level));
 			skills.add(skill);
 		}
 
 		return skills;
+	}
+
+	/**
+	 * Gets the name of the skill from a string containing the skill and the
+	 * skill name.
+	 * 
+	 * @param name
+	 *            the string on the form skill: skillName (e.g Programming
+	 *            Language: Java)
+	 * 
+	 * @return the name of the skill.
+	 */
+	private String getSkillNameFromString(String name) {
+		if (name != null && name.contains(":")) {
+			String[] skillAndSkillName = name.split(":");
+			if (skillAndSkillName.length > 1) {
+				return skillAndSkillName[1].trim();
+			}
+		}
+		return name;
+
 	}
 
 	private Skill.Level parseSkillLevel(String level) {
@@ -273,8 +306,7 @@ class StringParser {
 		return languages;
 	}
 
-	private Language.Level parseLanguageLevel(
-			String level) {
+	private Language.Level parseLanguageLevel(String level) {
 		switch (level.toLowerCase()) {
 		case "mother tongue":
 		case "modersmål":

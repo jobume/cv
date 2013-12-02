@@ -12,7 +12,6 @@ import javax.enterprise.context.ApplicationScoped;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
 import se.sogeti.umea.cvconverter.application.LayoutRepository;
-import se.sogeti.umea.cvconverter.application.Repository;
 
 @ApplicationScoped
 // @Repository

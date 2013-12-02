@@ -28,8 +28,9 @@ import com.sun.jersey.multipart.FormDataMultiPart;
 @Path("rtfparser")
 public class RtfParserResource extends Resource {
 
-	private final static Logger LOG = LoggerFactory.getLogger(RtfParserResource.class);	
-	
+	private final static Logger LOG = LoggerFactory
+			.getLogger(RtfParserResource.class);
+
 	@POST
 	@Produces("application/json")
 	public Response parseRtfToJson(FormDataMultiPart multiPartRequest)
@@ -41,10 +42,12 @@ public class RtfParserResource extends Resource {
 
 		CurriculumVitae cv = null;
 		try {
-			cv = service.parseRtf(rtfCv);			
+			cv = service.parseRtf(rtfCv);
 		} catch (IllegalArgumentException | IOException e) {
 			LOG.error("Error parsing RTF to JSON.", e);
-			return Response.serverError().build();
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getMessage()).build());
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -54,25 +57,25 @@ public class RtfParserResource extends Resource {
 
 		return Response.ok(cvJson).build();
 	}
-	
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response generateTagCloud(String jsonCv) {
 		LOG.debug("Generating tag cloud ... ");
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 
 		CurriculumVitaeImpl cv;
 		String cvJson;
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-			
+
 			TagCloud cloud = new TagCloud(cv);
 			cloud.generateTags();
 			cv.setTags(cloud.getTags());
-			
+
 			cvJson = mapper.writer().writeValueAsString(cv);
-			
+
 		} catch (IOException e) {
 			LOG.error("Error updating cv with tag cloud", e);
 			throw new WebApplicationException(Response
@@ -80,7 +83,7 @@ public class RtfParserResource extends Resource {
 					.entity(e.getMessage()).build());
 		}
 		LOG.debug("Returning cv with word cloud");
-		
+
 		return Response.ok(cvJson).build();
 	}
 

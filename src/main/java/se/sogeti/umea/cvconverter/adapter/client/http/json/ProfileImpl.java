@@ -5,6 +5,8 @@ import se.sogeti.umea.cvconverter.application.Image;
 public class ProfileImpl implements se.sogeti.umea.cvconverter.application.Profile {
 
 	private String name;
+	private String firstName;
+	private String lastName;
 	private String title;
 	private String dateOfBirth;
 	private Image portrait;
@@ -17,6 +19,12 @@ public class ProfileImpl implements se.sogeti.umea.cvconverter.application.Profi
 
 	@Override
 	public void setName(String name) {
+		if(name != null && name.indexOf(" ") > 0) {
+			String firstName = name.substring(0, name.indexOf(" ")).trim();
+			setFirstName(firstName);
+			String lastName = name.substring(name.indexOf(" ")).trim();
+			setLastName(lastName);			
+		}
 		this.name = name;
 	}
 
@@ -58,6 +66,26 @@ public class ProfileImpl implements se.sogeti.umea.cvconverter.application.Profi
 	@Override
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	@Override
+	public String getFirstName() {
+		return firstName;
+	}
+
+	@Override
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	@Override
+	public String getLastName() {
+		return lastName;
+	}
+
+	@Override
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 }

@@ -3,20 +3,41 @@
 <CurriculumVitae xmlns="http://www.sogeti.se/umea/curriculumvitae"
 	language="en" generated="2013-01-07">
 	<Profile>
+		 
 		<Name>Daniel Berg</Name>
+		<FirstName>Daniel</FirstName>
+		<LastName>Berg</LastName>
+		<!--  
+		<Name>Charlotta Erlandsdotter-Berglund</Name>
+		<FirstName>Charlotta</FirstName>
+		<LastName>Erlandsdotter-Berglund</LastName>
+		 -->
 		<Title>Architect</Title>
 		<DateOfBirth>01-02-2013</DateOfBirth>
-		<PortraitUrl>http://www.abc.com/url/to/picture/portrait.jpg
-		</PortraitUrl>
+		<!-- <PortraitUrl>http://localhost:8081/images/beginning_500x220.jpg</PortraitUrl> -->
+		<!-- <PortraitUrl>http://localhost:8081/images/jonas_paro_square_hs.png</PortraitUrl> -->
+		<PortraitUrl>http://localhost:8081/images/daniel_hs.png</PortraitUrl>
+		
 	</Profile>
 
-	<Description>This is the description.</Description>
+	<Description>Daniel has a M.Sc. in systems analysis and design from Linköping University and has studied
+	abroad at Monash University, Australia. His primary area of expertise is Microsoft technology. He's well versed
+	in the .NET framework, web development with ASP.NET C#, Microsoft Server technologies, Umbraco and EPiServer CMS.
+	
+	His primary area of expertise is Microsoft technology. He's well versed
+	in the .NET framework, web development with ASP.NET C#, Microsoft Server technologies, Umbraco and EPiServer CMS.
+	
+	He's well versed
+	in the .NET framework, web development with ASP.NET C#
+	
+	</Description>
 
 	<Engagements>
 		<Job important="false">
 			<Date>2007-03 - 2007-04</Date>
 			<Name>Umeå Energi</Name>
 			<Description></Description>
+			<Duration>1 month</Duration>
 		</Job>
 		<Job important="true">
 			<Date>2003-04 - 2003-05</Date>
@@ -25,6 +46,7 @@
 				oriented approach and the use of Java for development of new
 				software.
 			</Description>
+			<Duration>1 month</Duration>
 		</Job>
 	</Engagements>
 
@@ -130,7 +152,7 @@
 
 	<CoverImage>
 		<Name>ms.PNG</Name>
-		<Url>http://localhost:8081/images/solo3.PNG</Url>
+		<Url>http://localhost:8081/images/Jonas.png</Url>
 	</CoverImage>
 
 	<Tags>

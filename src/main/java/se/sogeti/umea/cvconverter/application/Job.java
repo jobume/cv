@@ -13,5 +13,9 @@ public interface Job {
 	public String getDescription();
 
 	public void setDescription(String description);
+	
+	public void setDuration(int duration);
+	
+	public int getDuration();
 
 }
