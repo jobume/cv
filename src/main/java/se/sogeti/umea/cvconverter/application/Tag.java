@@ -26,6 +26,10 @@ public class Tag {
 	public Tag() {
 		super();
 	}
+	
+	public Tag(String tagName) {
+		this.tagName = tagName;
+	}
 
 	public Tag(String tagName, boolean bold, boolean upperCase, boolean italic, Size size,
 			String font) {

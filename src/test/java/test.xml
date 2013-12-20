@@ -105,7 +105,8 @@
 		<Job important="false">
 			<Date>2002-01</Date>
 			<Name>Sogeti Sverige AB</Name>
-			<Description>Abcdef</Description>			
+			<Description>Abcdef</Description>
+			<Duration>Current</Duration>			
 		</Job>
 		<Job important="false">
 			<Date>1995-08 - 2001-12</Date>

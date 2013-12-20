@@ -2,6 +2,7 @@ package se.sogeti.umea.cvconverter.application.impl.cvparser;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -15,6 +16,7 @@ import se.sogeti.umea.cvconverter.application.Language;
 import se.sogeti.umea.cvconverter.application.Profile;
 import se.sogeti.umea.cvconverter.application.Skill;
 import se.sogeti.umea.cvconverter.application.impl.cvparser.StringParser;
+import se.sogeti.umea.cvconverter.application.impl.cvparser.model.CurriculumVitaeImpl;
 import testutil.FileReader;
 
 // TODO verify that methods are in correct order
@@ -29,9 +31,12 @@ import testutil.FileReader;
 public class StringParserTest {
 	private static CurriculumVitae cvAllChaptersEng;
 
+	private final static String FILE_NAME = "src\\test\\java\\cv-text-eng.txt";
+
 	@BeforeClass
 	public static void setUp() throws Exception {
-		String fileText = FileReader.readFile("src\\test\\java\\cv-text-eng.txt"); // non maven path: "test\\cv-text-eng.txt"
+		String fileText = FileReader.readFile(FILE_NAME); // non maven path:
+															// "test\\cv-text-eng.txt"
 		StringBuilder cvEngText = new StringBuilder(fileText);
 
 		StringParser p = new StringParser();
@@ -62,9 +67,8 @@ public class StringParserTest {
 	}
 
 	/**
-	 * Engagements
-	 * 2012-08 - 2012-12 	Tieto Sweden 
-	 * 2009-01 - 2011-04 	Anchor Management Consulting
+	 * Engagements 2012-08 - 2012-12 Tieto Sweden 2009-01 - 2011-04 Anchor
+	 * Management Consulting
 	 */
 	@Test
 	public void canParseEngagements() throws Exception {
@@ -81,8 +85,7 @@ public class StringParserTest {
 		assertFalse(cvAllChaptersEng.getProfessionalKnowledge().isEmpty());
 
 		Skill firstSkill = cvAllChaptersEng.getProfessionalKnowledge().get(0);
-		assertEquals("Test Driven Development",
-				firstSkill.getName());
+		assertEquals("Test Driven Development", firstSkill.getName());
 		assertEquals("Knowledgeable", firstSkill.getEnglishLevelName());
 
 		Skill lastSkill = cvAllChaptersEng.getProfessionalKnowledge().get(2);

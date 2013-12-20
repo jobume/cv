@@ -38,7 +38,11 @@ public class RtfParserResource extends Resource {
 
 		InputStream uploadedInputStream = multiPartRequest
 				.getField("rtfCvFile").getValueAs(InputStream.class);
-		String rtfCv = StreamUtil.readStreamToString(uploadedInputStream);
+		LOG.debug("System file.encoding is: "
+				+ System.getProperty("file.encoding"));
+		LOG.debug("Reading file with: " + "ISO-8859-1");
+		String rtfCv = StreamUtil.readStreamToString(uploadedInputStream,
+				"ISO-8859-1");
 
 		CurriculumVitae cv = null;
 		try {

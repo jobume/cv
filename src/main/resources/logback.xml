@@ -17,9 +17,9 @@
 
         <!--Daily rolling file appender -->
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>cv-converter.log</File>
+		<File>cv-converter-logs/cv-converter.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>logFile.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>cv-converter-logs/cv-converter.%d{yyyy-MM-dd}.log</FileNamePattern>
 		</rollingPolicy>
 
 		<layout class="ch.qos.logback.classic.PatternLayout">

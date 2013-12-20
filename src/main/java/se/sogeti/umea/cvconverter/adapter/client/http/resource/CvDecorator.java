@@ -11,7 +11,7 @@ import se.sogeti.umea.cvconverter.application.Tag;
 @ApplicationScoped
 public class CvDecorator {
 
-	private enum Font {
+	public enum Font {
 		MYRIAD("myriad"), TREBUCHET("trebuchet"), MINION("minion");
 
 		private String name;
@@ -20,7 +20,7 @@ public class CvDecorator {
 			this.name = name;
 		}
 
-		String getName() {
+		public String getName() {
 			return name;
 		}
 
@@ -36,31 +36,31 @@ public class CvDecorator {
 	}
 
 
-	private void decorateTags(List<Tag> tags) {
+	public void decorateTags(List<Tag> tags) {
 		if (tags.size() > 0)
 			decorateTag(tags.get(0), true, true, false, Tag.Size.LARGE,
 					Font.MYRIAD.getName());
 		if (tags.size() > 1)
-			decorateTag(tags.get(1), true, false, true, Tag.Size.LARGE,
-					Font.MINION.getName());
+			decorateTag(tags.get(1), false, false, true, Tag.Size.LARGE,
+					Font.TREBUCHET.getName());
 		if (tags.size() > 2)
 			decorateTag(tags.get(2), false, false, false, Tag.Size.LARGE,
-					Font.TREBUCHET.getName());
+					Font.MYRIAD.getName());
 		if (tags.size() > 3)
 			decorateTag(tags.get(3), true, false, true, Tag.Size.SMALL,
 					Font.MYRIAD.getName());
 		if (tags.size() > 4)
 			decorateTag(tags.get(4), true, false, false, Tag.Size.SMALL,
-					Font.MINION.getName());
+					Font.MYRIAD.getName());
 		if (tags.size() > 5)
 			decorateTag(tags.get(5), true, false, false, Tag.Size.LARGE,
-					Font.TREBUCHET.getName());
+					Font.MYRIAD.getName());
 		if (tags.size() > 6)
 			decorateTag(tags.get(6), false, false, false, Tag.Size.SMALL,
-					Font.MYRIAD.getName());
+					Font.TREBUCHET.getName());
 		if (tags.size() > 7)
-			decorateTag(tags.get(7), false, false, false, Tag.Size.LARGE,
-					Font.MINION.getName());
+			decorateTag(tags.get(7), false, true, false, Tag.Size.LARGE,
+					Font.TREBUCHET.getName());
 
 	}
 

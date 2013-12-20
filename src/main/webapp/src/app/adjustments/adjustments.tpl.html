@@ -1,14 +1,20 @@
+
+
+
+<form name="adjustmentForm" class="css-form" novalidate>
+
 <fieldset>
 	<legend>Titel</legend>
 	<label>Ange personens titel f&ouml;r uppdraget</label>
-	<input type="text" ng-model="model.cv.profile.title" />
+	<input type="text" ng-model="model.cv.profile.title" name="cvTitle" required />
 </fieldset>
 
 <fieldset>
 	<!-- Räksmörgås -->
 	<legend>Beskrivning</legend>
 	<label>Ange beskrivning f&ouml;r personen: </label>	
-	<textarea maxlength="570" ng-model="model.cv.description"/>
+	
+	<textarea style="width:100%" maxlength="570" rows="7" ng-model="model.cv.description" name="cvDescription" required></textarea>
 	
 	<div>
 		{{model.cv.description.length}} / 570
@@ -23,12 +29,20 @@
 		<tr style="border-bottom:1px solid black;">
 			<th><input type="checkbox" ng-model="allEngagementsSelected" ng-click="selectEngagements()" /></th>
 			<th>Datum</th>
-			<th>Namn</th>
+			<th>Namn och Beskrivning</th>
 		</tr>
-		<tr ng-repeat="engagement in model.cv.engagements" title="{{engagement.description}}"> 
-			<td><input type="checkbox" ng-model="engagement.important" ng-change="countSelectedEngagements()"/></td>
+		<tr style="border-bottom:1px solid black;" ng-repeat="engagement in model.cv.engagements" ng-form="engagementForm"> 
+			<!-- <ng-form name="engagementForm">  -->
+			<td><input type="checkbox" ng-model="engagement.important" ng-change="countSelectedEngagements()" name="important"/></td>
 			<td ng-click="selectEngagement(engagement)">{{engagement.date}}</td>
-			<td ng-click="selectEngagement(engagement)" >{{engagement.name}}</td>
+			<td ng-click="selectEngagement(engagement, $index)" > 
+				<div>{{engagement.name}}</div>
+				<div>
+					<textarea style="width: 100%" maxlength="200" ng-model="engagement.description" rows="3" name="engagement" customz></textarea> 
+				</div>
+				<div style="font-size: small;">{{engagement.description.length}} / 200 </div>
+			</td>
+			<!-- </ng-form>  -->	
 		</tr>
 	</table>
 	<div>{{loaderIndicator}}</div>
@@ -50,3 +64,5 @@
 	</table>
 	<div>{{selectedTechs}} tekniker valda</div>		
 </fieldset>
+
+</form>

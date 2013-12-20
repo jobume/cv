@@ -22,7 +22,8 @@ public class JdbcFileRecordRepository implements FileRecordRepository {
 	private final static String COL_TYPE = "filetype";
 	private final static String COL_URL = "url";
 
-	@Resource(name = "jdbc/h2Database")
+	// @Resource(name = "jdbc/h2Database")
+	@Resource(lookup = "java:jboss/datasources/MysqlDS")
 	DataSource ds;
 
 	@Override

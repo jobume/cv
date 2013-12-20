@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 
 <xsl:stylesheet version="1.0"
@@ -44,19 +44,21 @@
 	</xsl:template>
 
 	<xsl:template name="tag_size_small">
-		<xsl:attribute name="font-size">18px</xsl:attribute>
+		<xsl:attribute name="font-size">16px</xsl:attribute>
 	</xsl:template>
 
 	<xsl:template name="tag_font_myriad">
-		<xsl:attribute name="font-family">'Myriad Web Pro', 'Myriad Web', 'Myriad Pro', Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', , Myriad, 'DejaVu LGC Sans Condensed', 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, 'Helvetica Neue', Helvetica, Geneva,  Arial, sans-serif</xsl:attribute>
+		<!-- <xsl:attribute name="font-family">'Myriad Web Pro', 'Myriad Web', 'Myriad Pro', Frutiger, 'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT', , Myriad, 'DejaVu LGC Sans Condensed', 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, 'Helvetica Neue', Helvetica, Geneva,  Arial, sans-serif</xsl:attribute>  -->		
+		<xsl:attribute name="font-family">'Myriad Pro', 'PT Sans', sans-serif</xsl:attribute>
 	</xsl:template>
 
 	<xsl:template name="tag_font_trebuchet">
-		<xsl:attribute name="font-family">'Trebuchet MS','Segoe UI', Candara, 'Bitstream Vera Sans', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, 'Verdana Ref', sans-serif</xsl:attribute>
+		<!-- <xsl:attribute name="font-family">'Trebuchet MS','Segoe UI', Candara, 'Bitstream Vera Sans', 'DejaVu Sans', 'Bitstream Vera Sans', Verdana, 'Verdana Ref', sans-serif</xsl:attribute>-->
+		<xsl:attribute name="font-family">'Trebuchet MS', sans-serif</xsl:attribute>		
 	</xsl:template>
 
 	<xsl:template name="tag_font_minion">
-		<xsl:attribute name="font-family">'Minion Pro', 'Minion Web Pro', 'Minion Web', Minion, Constantia, 'Droid Serif', Georgia, serif</xsl:attribute>
+		<xsl:attribute name="font-family">'Minion Pro', serif</xsl:attribute>		
 	</xsl:template>
 
 	<xsl:template name="tag_color">
@@ -304,7 +306,7 @@
 				<fo:inline padding-right="3px">
 					<xsl:call-template name="tag_color" />
 					<xsl:if test="@bold='true'">
-						<xsl:call-template name="tag_bold" />
+						<xsl:call-template name="tag_bold" />						
 					</xsl:if>
 					<xsl:if test="@italic='true'">
 						<xsl:call-template name="tag_italic" />
@@ -322,16 +324,16 @@
 						<xsl:call-template name="tag_size_small" />
 					</xsl:if>
 					<xsl:if test="cv:Font = 'myriad'">
-						<xsl:call-template name="tag_font_myriad" />
+						 <xsl:call-template name="tag_font_myriad" />
 					</xsl:if>
 					<xsl:if test="cv:Font = 'trebuchet'">
-						<xsl:call-template name="tag_font_trebuchet" />
+						 <xsl:call-template name="tag_font_trebuchet" />
 					</xsl:if>
 					<xsl:if test="cv:Font = 'minion'">
-						<xsl:call-template name="tag_font_minion" />
+						 <xsl:call-template name="tag_font_minion" />
 					</xsl:if>
 
-					<xsl:value-of select="cv:TagName" />
+				 	<xsl:value-of select="cv:TagName" />
 				</fo:inline>
 				&#x200B;
 			</xsl:for-each>
@@ -438,8 +440,6 @@
 						<fo:list-item-body start-indent="4mm">
 							<fo:block font-weight="bold">
 								<xsl:value-of select="substring(cv:Date,0,5)" />
-								-
-								<xsl:value-of select="substring(cv:Date,11,4)" />
 								&#160;
 								<xsl:value-of select="cv:Name" />
 							</fo:block>
@@ -497,7 +497,7 @@
 						TECHNICAL SKILLS
 					</xsl:when>
 					<xsl:otherwise>
-						TEKNISKA FÄRDIGHETER
+						TEKNISKA FÃ„RDIGHETER
 					</xsl:otherwise>
 				</xsl:choose>
 			</fo:block>
@@ -620,7 +620,7 @@
 						EMPLOYMENTS
 					</xsl:when>
 					<xsl:otherwise>
-						ANSTÄLLNINGAR
+						ANSTÃ„LLNINGAR
 					</xsl:otherwise>
 				</xsl:choose>
 			</fo:block>
@@ -708,7 +708,7 @@
 								Assignment length:
 							</xsl:when>
 							<xsl:otherwise>
-								Uppdragets längd:
+								Uppdragets lÃ¤ngd:
 							</xsl:otherwise>
 						</xsl:choose>
 					</fo:inline>

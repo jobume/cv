@@ -155,6 +155,7 @@ public class LayoutResource extends Resource {
 		}
 
 		String requestUri = uriInfo.getRequestUri().toString();
+		
 		URI uri = null;
 		try {
 			uri = new URI(requestUri + "/" + createdId);

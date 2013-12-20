@@ -366,17 +366,20 @@ public class XmlGenerator {
 		writer.writeCharacters(job.getDescription());
 		writer.writeEndElement();
 
-		if (job.getDuration() > 0) {
-			writer.writeStartElement("Duration");
-			writer.writeCharacters(getDurationString(job.getDuration(),
-					language).trim());
-			writer.writeEndElement();
-		}
+		writer.writeStartElement("Duration");
+		writer.writeCharacters(getDurationString(job.getDuration(), language)
+				.trim());
+		writer.writeEndElement();
 
 		writer.writeEndElement();
 	}
 
 	private String getDurationString(int duration, ContentLanguage language) {
+		if(duration == 0) {
+			String current = ContentLanguage.ENGLISH.equals(language) ? "Current"
+					: "Pågår";
+			return current;
+		}
 		String month = ContentLanguage.ENGLISH.equals(language) ? "month"
 				: "månad";
 		if (duration > 1) {

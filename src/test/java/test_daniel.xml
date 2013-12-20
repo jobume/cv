@@ -159,7 +159,7 @@
 		<Tag bold="true" upperCase="true" italic="false">
 			<TagName>Expert</TagName>
 			<Size>LARGE</Size>
-			<Font>minion</Font>
+			<Font>myriad</Font>
 		</Tag>
 		<Tag bold="false" upperCase="false" italic="true">
 			<TagName>EPiServer.NET</TagName>
@@ -195,6 +195,24 @@
 			<TagName>Ambitious</TagName>
 			<Size>LARGE</Size>
 			<Font>trebuchet</Font>
+		</Tag>
+		
+		<Tag bold="false" upperCase="false" italic="false">
+			<TagName>Minion</TagName>
+			<Size>LARGE</Size>
+			<Font>minion</Font>
+		</Tag>
+		
+		<Tag bold="true" upperCase="false" italic="false">
+			<TagName>MinionBold</TagName>
+			<Size>LARGE</Size>
+			<Font>minion</Font>
+		</Tag>
+		
+		<Tag bold="false" upperCase="false" italic="true">
+			<TagName>MinionItalic</TagName>
+			<Size>LARGE</Size>
+			<Font>minion</Font>
 		</Tag>
 	</Tags>
 	

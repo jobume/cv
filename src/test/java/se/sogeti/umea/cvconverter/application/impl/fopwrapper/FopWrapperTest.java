@@ -34,7 +34,7 @@ public class FopWrapperTest {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void testWritePdf() throws Exception {
 
 		FileOutputStream fileOutput = null;
@@ -51,7 +51,7 @@ public class FopWrapperTest {
 			FopWrapperFactory.getFopWrapper().transform(xmlData,
 					xslStylesheetData, CONVERTER_RESULT_MEDIA_TYPE, out);
 
-			String filename = "C:\\Users\\joparo\\Documents\\test_fonts_pof6.pdf";
+			String filename = "C:\\Users\\joparo\\Documents\\PDFs\\test_fonts_pof_1.pdf";
 			fileOutput = new FileOutputStream(filename);
 			fileOutput.write(out.toByteArray());
 			System.out.println("File written!");

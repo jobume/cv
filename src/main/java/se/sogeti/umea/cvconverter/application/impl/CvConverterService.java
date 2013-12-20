@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -96,14 +97,26 @@ public class CvConverterService implements ConverterService {
 		// Get XSL stylesheet
 		Layout layout = repo.getLayout(layoutId);
 
-		String cvXml;
+		String xmlCv = convertCvToXml(cv);
+
+		ByteArrayOutputStream out = convertXmlCvToPdf(xmlCv, layout);
+
+		return out.toByteArray();
+	}
+
+	private String convertCvToXml(CurriculumVitae cv)
+			throws UnsupportedEncodingException, IOException {
+		String xmlCv;
 		try {
-			cvXml = xmlGenerator.generateXml(cv, ENCODING);
+			xmlCv = xmlGenerator.generateXml(cv, ENCODING);
 		} catch (XMLStreamException e) {
 			throw new IOException("Unable to generate XML!");
 		}
+		return xmlCv;
+	}
 
-		// Generate PDF
+	private ByteArrayOutputStream convertXmlCvToPdf(String cvXml, Layout layout)
+			throws ConversionException {
 		Source xmlData = new StreamSource(new StringReader(cvXml));
 		Source xslStylesheetData = new StreamSource(new StringReader(
 				layout.getXslStylesheet()));
@@ -114,8 +127,7 @@ public class CvConverterService implements ConverterService {
 		} catch (FOPException | TransformerException e) {
 			throw new ConversionException(e);
 		}
-
-		return out.toByteArray();
+		return out;
 	}
 
 	@Override

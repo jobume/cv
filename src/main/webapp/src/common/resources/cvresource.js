@@ -2,7 +2,8 @@
 
 angular.module('resources.cvresource', []).factory('CvResource', ['$http', function($http) {
 	
-	var resourceUrl = 'api/rtfparser';
+	// var resourceUrl = 'api/rtfparser';
+	var resourceUrl = 'http://localhost:8081/cv-converter/api/rtfparser'
 	var model = { cv : {} };
 	var serviceInstance = {
 		

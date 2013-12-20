@@ -59,4 +59,9 @@ public class LocalImageFileBinaryRepository implements FileBinaryRepository {
 			LOG.error("Error writing file.", e);
 		}
 	}
+
+	public String getFileLocationOnDisk() {
+		return fileLocationOnDisk;
+	}
+	
 }

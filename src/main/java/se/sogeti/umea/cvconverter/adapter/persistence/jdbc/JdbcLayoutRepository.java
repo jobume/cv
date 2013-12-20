@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,10 +24,11 @@ import se.sogeti.umea.cvconverter.application.Repository;
 //@ApplicationScoped
 @Repository
 public class JdbcLayoutRepository implements LayoutRepository {
-	
+
 	// TODO use transaction here?
 
-	@Resource(name = "jdbc/h2Database")
+	// @Resource(name = "jdbc/h2Database")
+	@Resource(lookup = "java:jboss/datasources/MysqlDS")
 	DataSource ds;
 
 	@Override
@@ -38,9 +40,11 @@ public class JdbcLayoutRepository implements LayoutRepository {
 			try {
 				con.setAutoCommit(false); // TODO can I set this as default in
 											// config?
-
+				
 				try (PreparedStatement ps = con
-						.prepareStatement("INSERT INTO layout (name,xsl_stylesheet) VALUES (?,?)")) {
+						.prepareStatement(
+								"INSERT INTO layout (name,xsl_stylesheet) VALUES (?,?)",
+								Statement.RETURN_GENERATED_KEYS)) {
 					ps.setString(1, name);
 					StringReader reader = new StringReader(xslStylesheet);
 					ps.setCharacterStream(2, reader);
@@ -161,5 +165,5 @@ public class JdbcLayoutRepository implements LayoutRepository {
 			return xmlStylesheet;
 		}
 	}
-	
+
 }

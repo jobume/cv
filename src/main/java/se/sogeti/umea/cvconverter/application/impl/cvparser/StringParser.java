@@ -65,13 +65,10 @@ class StringParser {
 		cv.setTechnologies(technologies);
 
 		// Parse industry knowledge
-		List<Skill> industryKnowledge = parseSkills(cvText,
-				Chapter.INDUSTRY_KNOWLEDGE);
-		cv.setIndustryKnowledge(industryKnowledge);
+		parseIndustryKnowledge(cvText, cv);
 
 		// Parse certifications
-		List<Skill> certifications = parseSkills(cvText, Chapter.CERTIFICATIONS);
-		cv.setCertifications(certifications);
+		parseCertifications(cvText, cv);
 
 		// Parse foreign languages
 		List<Language> foreignLanguages = parseForeignLanguages(cvText);
@@ -95,6 +92,19 @@ class StringParser {
 		cv.setEducations(educations);
 
 		return cv;
+	}
+
+	private void parseCertifications(StringBuilder cvText,
+			CurriculumVitaeImpl cv) {
+		List<Skill> certifications = parseSkills(cvText, Chapter.CERTIFICATIONS);
+		cv.setCertifications(certifications);
+	}
+
+	private void parseIndustryKnowledge(StringBuilder cvText,
+			CurriculumVitaeImpl cv) {
+		List<Skill> industryKnowledge = parseSkills(cvText,
+				Chapter.INDUSTRY_KNOWLEDGE);
+		cv.setIndustryKnowledge(industryKnowledge);
 	}
 
 	private Profile parseProfile(StringBuilder cvText) {
@@ -180,17 +190,17 @@ class StringParser {
 			}
 
 			Job job = new JobImpl();
-			
+
 			Duration duration;
 			try {
 				duration = new Duration(date);
 			} catch (ParseException e) {
 				throw new RuntimeException("Error parsing duration of job.", e);
 			}
-			
+
 			job.setDate(duration.getDurationYearString());
 			job.setDuration(duration.getDurationMonths());
-			
+
 			job.setName(name);
 			job.setDescription(description);
 			((JobImpl) job).setImportant(false);
@@ -237,6 +247,7 @@ class StringParser {
 		for (int i = 0; i < linesWithTabSeparatedText.size(); i += 2) {
 			SkillImpl skill = new SkillImpl();
 			String name = linesWithTabSeparatedText.get(i).get(0);
+
 			String skillName = getSkillNameFromString(name);
 			skill.setName(skillName);
 			String level = linesWithTabSeparatedText.get(i + 1).get(0);

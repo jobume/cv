@@ -1,14 +1,12 @@
 <fop version="1.0">
-<renderers>
-  <renderer mime="application/pdf">
-     <fonts>
-        <!-- register all the fonts found in a directory -->
-        <directory>/fonts</directory>
+	<renderers>
+		<renderer mime="application/pdf">
+			<fonts>
 
-        <!-- automatically detect operating system installed fonts -->
-        <!-- auto-detect/-->
-        
-     </fonts>
-  </renderer>
-</renderers>
+				<!-- automatically detect operating system installed fonts and classpath fonts -->
+				<auto-detect />
+				
+			</fonts>
+		</renderer>
+	</renderers>
 </fop>

@@ -29,4 +29,5 @@ public interface FileBinaryRepository {
 	 */
 	public void deleteFile(String name, String type);
 
+
 }

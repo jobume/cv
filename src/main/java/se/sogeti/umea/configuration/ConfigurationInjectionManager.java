@@ -12,14 +12,17 @@ import javax.enterprise.inject.spi.InjectionPoint;
 public class ConfigurationInjectionManager {
 	static final String INVALID_KEY = "Invalid key '{0}'";
 	static final String MANDATORY_PARAM_MISSING = "No definition found for a mandatory configuration parameter : '{0}'";
-
+	static final String PROP_FILE_NAME = "app.properties";
+	
 	private volatile static Properties properties = getProperties();
+
+	private static SystemEnvResolver envResolver = new SystemEnvResolver();
 
 	public synchronized static Properties getProperties() {
 		Properties prop = new Properties();
 		try {
 			InputStream input = ConfigurationInjectionManager.class
-					.getClassLoader().getResourceAsStream("app.properties");
+					.getClassLoader().getResourceAsStream(PROP_FILE_NAME);
 			prop.load(input);
 			input.close();
 		} catch (IOException e) {
@@ -38,18 +41,10 @@ public class ConfigurationInjectionManager {
 		if (param.key() == null || param.key().length() == 0) {
 			return param.defaultValue();
 		}
-		String value;
+		
 		try {
-			value = properties.getProperty(param.key());
-			if (value == null || value.trim().length() == 0) {
-				if (param.mandatory())
-					throw new IllegalStateException(MessageFormat.format(
-							MANDATORY_PARAM_MISSING,
-							new Object[] { param.key() }));
-				else
-					return param.defaultValue();
-			}
-			return value;
+			return getValue(param.key(), param.defaultValue(),
+					param.mandatory());
 		} catch (MissingResourceException e) {
 			if (param.mandatory())
 				throw new IllegalStateException(MessageFormat.format(
@@ -57,5 +52,19 @@ public class ConfigurationInjectionManager {
 			return MessageFormat.format(INVALID_KEY,
 					new Object[] { param.key() });
 		}
+	}
+
+	public static String getValue(String key, String defaultValue,
+			boolean mandatory) {
+		String value = properties.getProperty(key);
+		if (value == null || value.trim().length() == 0) {
+			if (mandatory)
+				throw new IllegalStateException(MessageFormat.format(
+						MANDATORY_PARAM_MISSING, new Object[] { key }));
+			else
+				return defaultValue;
+		}
+
+		return envResolver.getEnv(value);
 	}
 }

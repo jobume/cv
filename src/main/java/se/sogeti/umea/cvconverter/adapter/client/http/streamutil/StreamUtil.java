@@ -13,6 +13,13 @@ public class StreamUtil {
 		}
 	}
 
+	public static String readStreamToString(InputStream inputStream,
+			String encoding) throws IOException {
+		try (Scanner scanner = new Scanner(inputStream, encoding)) {
+			return scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+		}
+	}
+
 	public static byte[] readStreamToBytes(InputStream is) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

@@ -20,7 +20,6 @@ import org.apache.fop.apps.FopFactory;
 @ApplicationScoped
 public class FopWrapper {
 
-
 	private FopFactory fopFactory;
 	private TransformerFactory transformerFactory;
 
@@ -65,8 +64,8 @@ public class FopWrapper {
 
 		if (errorListener.containsFatalEvents()) {
 			throw new FOPException(
-					"One or more fatal events occured during transformation. \n" +
-					errorListener.getFatalEventInfo());
+					"One or more fatal events occured during transformation. \n"
+							+ errorListener.getFatalEventInfo());
 		}
 	}
 }

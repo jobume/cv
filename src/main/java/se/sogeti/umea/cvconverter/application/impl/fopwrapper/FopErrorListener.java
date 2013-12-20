@@ -24,6 +24,11 @@ public class FopErrorListener implements EventListener {
 			events.add(event);
 		}
 
+		if("fontLoadingErrorAtAutoDetection".equals(event.getEventKey())) {
+			LOG.debug("Event toString(): " + event.toString());
+			LOG.debug("Event source: " + ( event.getSource() != null ? event.getSource().toString() : null ) );
+		}
+		
 		if (severity == EventSeverity.WARN || severity == EventSeverity.ERROR
 				|| severity == EventSeverity.FATAL) {
 
