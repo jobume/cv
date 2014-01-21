@@ -20,6 +20,8 @@ import se.sogeti.umea.cvconverter.application.ConversionException;
 import se.sogeti.umea.cvconverter.application.ConverterService;
 import se.sogeti.umea.cvconverter.application.CoverImageRepository;
 import se.sogeti.umea.cvconverter.application.CurriculumVitae;
+import se.sogeti.umea.cvconverter.application.CvOverview;
+import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Image;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
@@ -35,19 +37,22 @@ public class CvConverterService implements ConverterService {
 	private static final String CONVERTER_RESULT_MEDIA_TYPE = "application/pdf";
 	private LayoutRepository repo;
 	private CoverImageRepository coverImageRepo;
+	private JsonCvRepository cvRepo;
 	private Parser parser;
 	private FopWrapper fopWrapper;
 	private XmlGenerator xmlGenerator;
 
 	@Inject
 	public CvConverterService(@Repository CoverImageRepository coverImageRepo,
-			@Repository LayoutRepository repo, Parser parser,
+			@Repository LayoutRepository repo,
+			@Repository JsonCvRepository cvRepo, Parser parser,
 			XmlGenerator xmlGenerator, FopWrapper fopWrapper) {
 		this.repo = repo;
 		this.parser = parser;
 		this.xmlGenerator = xmlGenerator;
 		this.fopWrapper = fopWrapper;
 		this.coverImageRepo = coverImageRepo;
+		this.cvRepo = cvRepo;
 	}
 
 	@Override
@@ -131,7 +136,8 @@ public class CvConverterService implements ConverterService {
 	}
 
 	@Override
-	public Image createCoverImage(InputStream imgStream, String name) throws IOException {
+	public Image createCoverImage(InputStream imgStream, String name)
+			throws IOException {
 		return coverImageRepo.createCoverImage(imgStream, name);
 	}
 
@@ -145,6 +151,31 @@ public class CvConverterService implements ConverterService {
 	public void deleteCoverImage(String name) throws IllegalArgumentException,
 			NoSuchElementException, IOException {
 		coverImageRepo.deleteCoverImage(name);
+	}
+
+	@Override
+	public int createCv(String name, String cv) throws IOException {
+		return cvRepo.createCv(name, cv);
+	}
+
+	@Override
+	public String getCv(int id) throws IOException {
+		return cvRepo.getCv(id);
+	}
+
+	@Override
+	public void updateCv(int id, String name, String cv) throws IOException {
+		cvRepo.updateCv(id, name, cv);
+	}
+
+	@Override
+	public void deleteCv(int id) throws IOException {
+		cvRepo.deleteCv(id);
+	}
+
+	@Override
+	public List<CvOverview> listCvs() throws IOException {
+		return cvRepo.listCvs();
 	}
 
 }

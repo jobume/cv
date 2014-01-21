@@ -235,9 +235,6 @@ public class TagCloudTest {
 		when(mockCv.getPersonalQualities()).thenReturn(personalQualities);
 		
 		TagCloud cloud = new TagCloud(mockCv);
-		cloud.generateTags();
-		for(Tag tag : cloud.getTags()) {
-			System.out.println(tag);
-		}
+		cloud.generateTags();		
 	}
 }

@@ -19,7 +19,9 @@ var uploader = angular.module(
 	$scope.$on('LOAD',function(){$scope.loading=true});
 	$scope.$on('UNLOAD',function(){$scope.loading=false});
 	$scope.$emit('LOAD');
-			
+	
+	$scope.loadingportrait = false;
+	
 	$scope.model = CvResource.get();	
 	
 	$scope.imageSelected = function() {
@@ -42,8 +44,12 @@ var uploader = angular.module(
 	 * @param files file list
 	 */
 	$scope.uploadFile = function(files) {
+		Navigation.getState().disabled = true;
+		$scope.loadingportrait = true;
 		PortraitResource.create(files, function (data) {
 			$scope.model.cv.profile.portrait = data;
+			Navigation.getState().disabled = false;
+			$scope.loadingportrait = false;
 		});
 		$scope.$apply();
 	}

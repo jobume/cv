@@ -1,6 +1,5 @@
 package se.sogeti.umea.cvconverter.application.impl.cvparser;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,46 +165,38 @@ class StringParser {
 		String sectionText = getSectionText(cvText, chapter);
 
 		List<List<String>> linesWithTabSeparatedText = splitTextByLinesAndTabs(sectionText);
-
+		
+		JobImpl workingJob = null;
+		StringBuilder description = null;
 		for (int i = 0; i < linesWithTabSeparatedText.size(); i++) {
 			List<String> line = linesWithTabSeparatedText.get(i);
 
-			// Skip this line if it does not contain date and name (since it
-			// must be a description that has already been handled)
-			if (line.size() == 1) {
-				continue;
-			}
-
-			String date = line.get(0);
-			String name = line.get(1);
-			String description = "";
-
-			// Check next line and set as description if it only consists of one
-			// string
-			if (i + 1 < linesWithTabSeparatedText.size()) {
-				List<String> nextLine = linesWithTabSeparatedText.get(i + 1);
-				if (nextLine.size() == 1) {
-					description = nextLine.get(0);
+			// We found a new line
+			if(line.size() == 2) {
+				// If this is not the first line, add the current working job
+				if(workingJob != null && description != null) {
+					workingJob.setDescription(description.toString());
+					workingJob.setShortDescription(description.toString());
+					jobs.add(workingJob);
 				}
+				workingJob = new JobImpl();
+				description = new StringBuilder();
+				Duration duration = new Duration(line.get(0));
+				workingJob.setDate(duration.getDurationYearString());
+				workingJob.setDuration(duration.getDurationMonths());
+				workingJob.setName(line.get(1));
+				workingJob.setImportant(false);
+			} else if (description != null) {
+				if(description.length() > 0) {
+					description.append(LN);
+				}
+				description.append(line.get(0));				
 			}
-
-			Job job = new JobImpl();
-
-			Duration duration;
-			try {
-				duration = new Duration(date);
-			} catch (ParseException e) {
-				throw new RuntimeException("Error parsing duration of job.", e);
-			}
-
-			job.setDate(duration.getDurationYearString());
-			job.setDuration(duration.getDurationMonths());
-
-			job.setName(name);
-			job.setDescription(description);
-			((JobImpl) job).setImportant(false);
-
-			jobs.add(job);
+		}
+		if(workingJob != null && description != null) {
+			workingJob.setDescription(description.toString());
+			workingJob.setShortDescription(description.toString());
+			jobs.add(workingJob);
 		}
 
 		return jobs;

@@ -40,9 +40,7 @@ public class ParserIntegrationTest {
 
 	private final static String FILE_NAME_RICHARD = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Richard Ekblom.rtf";
 
-	private final static String FILE_NAME_JONAS = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Jonas Paro.rtf";
-	
-	private final static String FILE_NAME_TOBIAS = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Tobias Ohlsson.rtf";
+	private final static String FILE_NAME_TOBIAS = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Tobias Ohlsson.rtf";	
 
 	@Test
 	public void canBeCreated() throws Exception {
@@ -50,8 +48,8 @@ public class ParserIntegrationTest {
 		assertNotNull(p);
 	}
 
-	
 	@Test
+	@Ignore
 	public void canParseFile() throws IOException {
 
 		CurriculumVitaeImpl RichardAsCv = new StringParser().parseString(
@@ -79,21 +77,28 @@ public class ParserIntegrationTest {
 
 		Assert.assertEquals("Thomas Hämälä", ThomasAsCv.getProfile().getName());
 
-		String encodingOfJonas = FileReader.getEncoding(FILE_NAME_JONAS);
-		System.out.println("Encoding of Jonas: " + encodingOfJonas);
-		String encodingOfThomas = FileReader.getEncoding(FILE_NAME_THOMAS);
-		System.out.println("Encoding of Thomas: " + encodingOfThomas);
-		
-		String fileAsString = FileReader.readFile(FILE_NAME_TOBIAS, "UTF-8");		
-		System.out.println("Using encoding: " + System.getProperty("file.encoding"));
-		
+		String fileAsString = FileReader.readFile(FILE_NAME_TOBIAS, "UTF-8");
+
 		StringBuilder dd = new DocumentParser().parseDocument(new RtfParser(
 				new RTFEditorKit()).parseRtf(fileAsString));
-		System.out.println(dd.toString());
-		CurriculumVitaeImpl JonasAsCv = new StringParser().parseString(
+
+		CurriculumVitaeImpl TobiasAsCv = new StringParser().parseString(
 				ContentLanguage.SWEDISH, null, null, dd);
 
-		Assert.assertEquals("Tobias Ohlsson", JonasAsCv.getProfile().getName());
+		Assert.assertEquals("Tobias Ohlsson", TobiasAsCv.getProfile().getName());
+
+		String expectedDescription = "Testledare och testare."
+				+ (System.getProperty("line.separator"))
+				+ "Projektets syfte var att lyfta kundens Microsoft-baserade servermiljö och därtill hörande systemlösningar till senaste aktuella versioner."
+				+ (System.getProperty("line.separator"))
+				+ "Rollen som testledare innebar att ansvara för teststrategier, kvalitetssäkring samt processer för ändrings- och felhantering och handledning av tre andra testare. Arbetet skedde i nära samarbete med kunden för att kvalitetssäkra hela vägen till acceptanstest och leverans. Testmetodiken TMap NEXT användes och bl.a. genomfördes en produktriskanalys för en effektivare testprocess. Utifrån produktriskanalysen genomfördes utforskande regressionstester."
+				+ (System.getProperty("line.separator"))
+				+ "Verktyg/miljöer: MS TFS, MS Office.";
+
+		Assert.assertEquals(expectedDescription, TobiasAsCv.getEngagements()
+				.get(1).getDescription());
+		Assert.assertEquals(expectedDescription, TobiasAsCv.getEngagements()
+				.size(), 8);
 
 	}
 

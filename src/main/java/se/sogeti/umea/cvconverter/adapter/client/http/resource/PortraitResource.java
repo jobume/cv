@@ -47,7 +47,7 @@ public class PortraitResource extends Resource{
 		}
 		
 		String fileName = fileDetail.getFileName().replaceAll(" ","_");
-
+		
 		String url = binaryRepo.createFile(uploadedInputStream, fileName, TYPE_NAME);
 		LOG.debug("File created with url: " + url);
 		

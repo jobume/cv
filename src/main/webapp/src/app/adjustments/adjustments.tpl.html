@@ -1,12 +1,11 @@
 
-
-
 <form name="adjustmentForm" class="css-form" novalidate>
 
 <fieldset>
 	<legend>Titel</legend>
 	<label>Ange personens titel f&ouml;r uppdraget</label>
-	<input type="text" ng-model="model.cv.profile.title" name="cvTitle" required />
+	<input type="text" ng-model="model.cv.profile.title" name="cvTitle" required ng-maxlength="40" maxlength="40"/>
+	<span class="error" ng-show="adjustmentForm.cvTitle.$error.required"> Titel &auml;r obligatoriskt. </span>
 </fieldset>
 
 <fieldset>
@@ -14,55 +13,12 @@
 	<legend>Beskrivning</legend>
 	<label>Ange beskrivning f&ouml;r personen: </label>	
 	
-	<textarea style="width:100%" maxlength="570" rows="7" ng-model="model.cv.description" name="cvDescription" required></textarea>
+	<textarea style="width:100%" maxlength="570" rows="7" ng-model="model.cv.description" name="cvDescription" required laxlength></textarea>
 	
 	<div>
-		{{model.cv.description.length}} / 570
+		{{model.cv.description.length}} / 570 <span class="error" ng-show="adjustmentForm.cvDescription.$error.laxlength"> Beskrivningen f&aring;r endast inneh&aring;lla 570 tecken. </span>
 	</div>
 	
-</fieldset>
-
-<fieldset>
-	<legend>Utvalda uppdrag</legend>		
-	<label>Ange viktiga uppdrag till f&ouml;rstasidan</label>
-	<table>
-		<tr style="border-bottom:1px solid black;">
-			<th><input type="checkbox" ng-model="allEngagementsSelected" ng-click="selectEngagements()" /></th>
-			<th>Datum</th>
-			<th>Namn och Beskrivning</th>
-		</tr>
-		<tr style="border-bottom:1px solid black;" ng-repeat="engagement in model.cv.engagements" ng-form="engagementForm"> 
-			<!-- <ng-form name="engagementForm">  -->
-			<td><input type="checkbox" ng-model="engagement.important" ng-change="countSelectedEngagements()" name="important"/></td>
-			<td ng-click="selectEngagement(engagement)">{{engagement.date}}</td>
-			<td ng-click="selectEngagement(engagement, $index)" > 
-				<div>{{engagement.name}}</div>
-				<div>
-					<textarea style="width: 100%" maxlength="200" ng-model="engagement.description" rows="3" name="engagement" customz></textarea> 
-				</div>
-				<div style="font-size: small;">{{engagement.description.length}} / 200 </div>
-			</td>
-			<!-- </ng-form>  -->	
-		</tr>
-	</table>
-	<div>{{loaderIndicator}}</div>
-	<div>{{selectedEngagements}} uppdrag valda</div>
-</fieldset>
-
-<fieldset>
-	<legend>Utvalda tekniker</legend>		
-	<label>Ange viktiga tekniker till f&ouml;rstasidan</label>
-	<table>
-		<tr style="border-bottom:1px solid black;">
-			<th><input type="checkbox" ng-model="allTechsSelected" ng-click="selectTechs()" /></th>
-			<th>Namn</th>
-		</tr>
-		<tr ng-repeat="technology in model.cv.technologies" title="{{technology.name}}"> 
-			<td><input type="checkbox" ng-model="technology.important" ng-change="countSelectedTechs()"/></td>			
-			<td ng-click="checkTech(technology)">{{technology.name}}</td>
-		</tr>
-	</table>
-	<div>{{selectedTechs}} tekniker valda</div>		
 </fieldset>
 
 </form>

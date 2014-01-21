@@ -5,6 +5,19 @@ import java.util.List;
 
 public interface CurriculumVitae {
 
+	public int getId();
+	
+	public void setId(int id);
+	
+	/**
+	 * The name of the CV when saved to the database.
+	 * 
+	 * @return the name of the CV.
+	 */
+	public String getName();
+	
+	public void setName(String name);
+	
 	public ContentLanguage getContentLanguage();
 
 	public void setContentLanguage(ContentLanguage contentLanguage);

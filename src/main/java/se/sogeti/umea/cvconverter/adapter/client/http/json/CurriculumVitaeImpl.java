@@ -17,6 +17,9 @@ import se.sogeti.umea.cvconverter.application.Tag;
 public class CurriculumVitaeImpl implements
 		se.sogeti.umea.cvconverter.application.CurriculumVitae {
 
+	private int id;
+	private String name;
+	
 	private ContentLanguage contentLanguage;
 	private String printDate;
 	private Profile profile;
@@ -213,6 +216,26 @@ public class CurriculumVitaeImpl implements
 	@Override
 	public void setPersonalQualities(List<String> personalQualities) {
 		this.personalQualities = personalQualities;
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

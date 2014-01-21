@@ -39,6 +39,32 @@ describe('Test suite for the wordcloud controller', function(){
 	  expect(scope.model.cv.tags[1].tagName).toEqual("tagTwo");
   }));
   
+  it('should not add more than 8 tags', inject(function() {
+	  scope.tagName = "tagOne";
+	  scope.model = { cv : {} };
+	  scope.model.cv = { tags : [] };
+	  scope.addTag();
+	  
+	  scope.tagName = "tagTwo";
+	  scope.addTag();
+	  scope.tagName = "tagThree";
+	  scope.addTag();
+	  scope.tagName = "tagFour";
+	  scope.addTag();
+	  scope.tagName = "tagFive";
+	  scope.addTag();
+	  scope.tagName = "tagSix";
+	  scope.addTag();
+	  scope.tagName = "tagSeven";
+	  scope.addTag();
+	  scope.tagName = "tagEight";
+	  scope.addTag();
+	  scope.tagName = "tagNine";
+	  scope.addTag();
+	  
+	  expect(scope.model.cv.tags.length).toEqual(8);
+  }));
+  
   it('should delete tag from model on deleteTag()', inject(function() {
 	  scope.tagName = "tagOne";
 	  scope.model = { cv : {} };

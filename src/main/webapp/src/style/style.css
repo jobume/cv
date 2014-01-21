@@ -93,7 +93,7 @@ table tr {
 
 table tr:hover td {
 	background-color: lightgray;
-	/*cursor: default;*/
+	cursor: default;
 }
 
 ul {
@@ -127,11 +127,11 @@ li {
 }
 
 .layoutName {
-	width: 87%;
+	width: 81%;
 }
 
 .layoutTools {
-	width: 12%;
+	width: 18%;
 	float: right;
 }
 

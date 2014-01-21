@@ -78,9 +78,16 @@ angular.module('resources.layoutsresource', []).factory('LayoutsResource', ['$ht
 		 * @param id		: id of the layout to delete.		 
 		 */
 		deleteLayout : function (id, success) {
-			$http.delete(resourceUrl + "/" + id).success(function() {
-				success();
+			
+			$http({method: 'DELETE', url: resourceUrl + "/" + id}).
+			  success(function() {
+			    success();
 			});
+			
+			// IE does not seem to like the use of the reserved word delete
+			//$http.delete(resourceUrl + "/" + id).success(function() {
+			//	success();
+			//});
 		} 
 	
 	};

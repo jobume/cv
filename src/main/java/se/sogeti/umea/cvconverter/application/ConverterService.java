@@ -3,7 +3,7 @@ package se.sogeti.umea.cvconverter.application;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-public interface ConverterService extends LayoutRepository, CoverImageRepository {
+public interface ConverterService extends LayoutRepository, CoverImageRepository, JsonCvRepository {
 
 	public CurriculumVitae parseRtf(String input)
 			throws IllegalArgumentException, IOException;

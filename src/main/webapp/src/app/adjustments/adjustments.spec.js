@@ -14,7 +14,7 @@ describe('Test suite for the adjustments module', function(){
 	  
 	  describe('Test suite for the adjustments controller', function(){
 		  
-		  var controller, scope, cvResourceMock, serviceMock, navMock, state;
+		  var controller, scope, cvResourceMock, navMock, state;
 		  beforeEach(inject(function($rootScope, $controller) {
 		      scope = $rootScope.$new();
 		      cvResourceMock = { get : function () { }, create : function () {} };
@@ -28,16 +28,15 @@ describe('Test suite for the adjustments module', function(){
 		    			  state.callback = success;
 		    		  }
 		      };
-		
-		      serviceMock = { selectAll : function () {}, countSelected : function () { return 242; } };
 		      
 		      spyOn(cvResourceMock, 'get').andReturn( { cv : cvMock } );
 		      spyOn(navMock, 'onNext').andCallThrough();
 		      spyOn(navMock, 'next').andCallThrough();
 		      spyOn(navMock, 'success').andCallThrough();
 		      
+		      
 		      controller = $controller('AdjustmentsController', { 
-		    	  $scope : scope, CvResource : cvResourceMock, SelectionService : serviceMock, Navigation : navMock });
+		    	  $scope : scope, CvResource : cvResourceMock, Navigation : navMock });
 		      
 		  }));
 		  
@@ -45,28 +44,15 @@ describe('Test suite for the adjustments module', function(){
 			  expect(cvResourceMock.get).toHaveBeenCalled();
 		  }));
 		  
-		  it('should have the expected methods', inject(function() {
-			  expect(scope.selectTechs).toBeDefined();
-			  expect(scope.selectTech).toBeDefined();
-			  expect(scope.countSelectedTechs).toBeDefined();
-			  
-			  expect(scope.selectEngagements).toBeDefined();
-			  expect(scope.selectEngagement).toBeDefined();
-			  expect(scope.countSelectedEngagements).toBeDefined();
-			  	  
-		  }));
-		  
-		  it('should count selection on start', inject(function() {
-			  expect(scope.selectedEngagements).toEqual(242);
-			  expect(scope.selectedTechs).toEqual(242);
-		  }));
 		  
 		  it('should not call success when profile is not set', inject(function() {
+			  scope.adjustmentForm = { $valid : false };
 			  navMock.next();
 			  expect(navMock.success).not.toHaveBeenCalled();
 		  }));
 		  
 		  it('should call success when profile is set', inject(function() {
+			  scope.adjustmentForm = { $valid : true };
 			  cvMock.profile.title = "Title";
 			  navMock.next();
 			  expect(navMock.success).toHaveBeenCalled();
@@ -74,52 +60,5 @@ describe('Test suite for the adjustments module', function(){
 		  
 	  });
 	  
-	  describe('Test suite for the select service', function(){
-		  
-		  var service;
-		  beforeEach(inject(function(SelectionService) {	  
-			  service = SelectionService;			  
-		  }));
-		  
-		  it('should be able to check all', inject(function() {
-			  expect(service.selectAll).toBeDefined();
-			  
-			  expect(cvMock.technologies[0].important).toBe(false);
-			  expect(cvMock.technologies[1].important).toBe(true);
-			  expect(cvMock.technologies[2].important).toBe(false);
-			  
-			  service.selectAll(cvMock.technologies, true);
-			  
-			  expect(cvMock.technologies[0].important).toBe(true);
-			  expect(cvMock.technologies[1].important).toBe(true);
-			  expect(cvMock.technologies[2].important).toBe(true);
-			  
-			  expect(cvMock.engagements[0].important).toBe(false);
-			  expect(cvMock.engagements[1].important).toBe(true);
-			  expect(cvMock.engagements[2].important).toBe(true);
-			  
-			  service.selectAll(cvMock.engagements, true);
-			  
-			  expect(cvMock.engagements[0].important).toBe(true);
-			  expect(cvMock.engagements[1].important).toBe(true);
-			  expect(cvMock.engagements[2].important).toBe(true);
-			  
-			  service.selectAll(cvMock.engagements, false);
-			  
-			  expect(cvMock.engagements[0].important).toBe(false);
-			  expect(cvMock.engagements[1].important).toBe(false);
-			  expect(cvMock.engagements[2].important).toBe(false);
-			  
-		  }));
-		  
-		  it('should be able to count selected', inject(function() {
-			 expect(service.countSelected).toBeDefined();
-			  
-			 expect(service.countSelected(cvMock.technologies)).toBe(1);
-			 
-			 expect(service.countSelected(cvMock.engagements)).toBe(2);
-			 
-		  }));
-		  
-	  });
+	  
 });	  

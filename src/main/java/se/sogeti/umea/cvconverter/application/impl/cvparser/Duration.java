@@ -18,21 +18,22 @@ public class Duration {
 	 * 
 	 * @param date
 	 *            the duration as a string.
-	 * 
-	 * @throws ParseException
-	 *             if the string can not be parsed to a date.
 	 */
-	public Duration(String date) throws ParseException {
-		String[] dateStartAndStop = date.split(" - ");
+	public Duration(String date) {
+		try {
+			String[] dateStartAndStop = date.split(" - ");
 
-		start = new GregorianCalendar();
-		start.setTime(df.parse(dateStartAndStop[0]));
+			start = new GregorianCalendar();
+			start.setTime(df.parse(dateStartAndStop[0]));
 
-		if (dateStartAndStop.length > 1) {
-			stop = new GregorianCalendar();
-			stop.setTime(df.parse(dateStartAndStop[1]));
-		} else {
-			stop = null;
+			if (dateStartAndStop.length > 1) {
+				stop = new GregorianCalendar();
+				stop.setTime(df.parse(dateStartAndStop[1]));
+			} else {
+				stop = null;
+			}
+		} catch (ParseException prs) {
+			throw new RuntimeException(prs);
 		}
 	}
 
@@ -54,8 +55,7 @@ public class Duration {
 
 	/**
 	 * Gets the duration as a string. If the startYear and stopYear is the same,
-	 * or if there is no stopYear, the stopYear will be omitted from the
-	 * string.
+	 * or if there is no stopYear, the stopYear will be omitted from the string.
 	 * 
 	 * @return the duration as a string with format: yyyy (-yyyy)
 	 */
@@ -69,7 +69,6 @@ public class Duration {
 		}
 		return startYear + "";
 	}
-	
 
 	@Override
 	public String toString() {

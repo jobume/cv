@@ -2,9 +2,14 @@
 
 angular.module('resources.cvresource', []).factory('CvResource', ['$http', function($http) {
 	
-	// var resourceUrl = 'api/rtfparser';
-	var resourceUrl = 'http://localhost:8081/cv-converter/api/rtfparser'
+	/** Url to the parsers that parses a rtf cv to a json cv. */
+	var parserUrl = 'api/rtfparser';
+	
+	/** Url to the persistence service that saves and updates existing jsoncv:s. */
+	var resourceUrl = 'api/jsoncv';
+	
 	var model = { cv : {} };
+	
 	var serviceInstance = {
 		
 		/**
@@ -16,7 +21,7 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		create : function(files, success) {					
 			var fd = new FormData();
 			fd.append("rtfCvFile", files[0]);
-			$http.post(resourceUrl, fd, {
+			$http.post(parserUrl, fd, {
 				withCredentials : true,
 				headers : {'Content-Type' : undefined},
 				transformRequest : angular.identity
@@ -37,9 +42,9 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		},
 		
 		/**
-		 * Updates the model backed by this resource.
+		 * Generates a tag cloud for the model backed by this resource.
 		 */
-		update : function(success) {
+		generateCloud : function(success) {
 			$http.put(resourceUrl, model.cv).
 			  success(function(data, status, headers, config) {
 				  model.cv = data;
@@ -48,7 +53,64 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 			  error(function(data, status, headers, config) {
 			    alert("Ett fel uppstod när egenskaperna lades till. " + data);
 			});
+		},
+		
+		/**
+		 * Persists a cv in the database
+		 */
+		save : function(success) {
+			$http.post(resourceUrl, model.cv).success(function(data) {				
+				model.cv = data;
+				success();
+			}).error(function(err) {
+				alert("Det uppstod ett fel när CVt sparades! Felmeddelande från server: " + err);
+			});
+		},
+		
+		/**
+		 * Updates the persistent model backed by this resource.
+		 */
+		update : function(success) {
+			$http.put(resourceUrl + "/" + model.cv.id, model.cv).
+			  success(function(data, status, headers, config) {
+				  model.cv = data;
+				  success();
+			  }).
+			  error(function(data, status, headers, config) {
+			    alert("Ett fel uppstod när egenskaperna lades till. " + data);
+			});
+		},
+		
+		/**
+		 * Gets a persisted cv from the database.
+		 */
+		getCv : function(id, success) {
+			$http.get(resourceUrl + "/" + id).success(function (data) {
+				model.cv = data;
+				model.cv.id = id;
+				success();
+			});
+		},
+		
+		/**
+		 * Lists all persisted cvs.
+		 */
+		list : function(success) {			
+			$http.get(resourceUrl).success(function (data) {				
+				success(data);
+			});
+		}, 
+		
+		/**
+		 * Deletes a persisted cv from the database.
+		 */
+		deleteCv : function(id, success) {
+			$http({method: 'DELETE', url: resourceUrl + "/" + id}).
+			  success(function() {
+			    success();
+			});
 		}
 	};
+	
 	return serviceInstance;
 } ]);

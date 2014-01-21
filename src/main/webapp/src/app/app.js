@@ -1,8 +1,8 @@
 'use strict';
 
 var app = angular.module('cv', ['ngRoute','ui', 
-                                        'uploadrtf', 'adjustments', 'qualities', 
-                                        'wordcloud', 'selectimages', 'layout', 'admin',
+                                        'uploadrtf', 'adjustments', 'engagements', 'skills', 'qualities', 
+                                        'wordcloud', 'selectimages', 'layout', 'admin', 'savedcvs',
                                         'services.navigation', 'resources.cvresource'])
 
 .controller('AppController', ['$rootScope', '$scope', '$location', 'Navigation', 'CvResource', 

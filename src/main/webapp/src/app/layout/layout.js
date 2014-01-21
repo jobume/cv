@@ -26,6 +26,20 @@ angular.module('layout', [ 'ngRoute', 'services.navigation',
 		Navigation.getState().disabled = false;
 	};
 	
+	$scope.save = function() {		
+		var newName = prompt("Ange ett namn för CV:t.", "");
+		$scope.model.cv.name = newName;
+		CvResource.save(function () {
+			alert("CV:t sparades!");
+		});					
+	};
+	
+	$scope.update = function() {
+		CvResource.update(function () {
+			alert("CV:t uppdateras!");
+		});
+	}
+	
 	LayoutsResource.get(function(data) {
 		$scope.layouts = data;
 		$scope.$emit('UNLOAD');

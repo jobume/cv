@@ -1,8 +1,7 @@
 package se.sogeti.umea.cvconverter.application.impl.cvparser;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Element;
@@ -11,10 +10,6 @@ import javax.swing.text.rtf.RTFEditorKit;
 import org.junit.Test;
 
 import se.sogeti.umea.cvconverter.application.ContentLanguage;
-import se.sogeti.umea.cvconverter.application.Job;
-import se.sogeti.umea.cvconverter.application.impl.cvparser.RtfParser;
-import se.sogeti.umea.cvconverter.application.impl.cvparser.model.CurriculumVitaeImpl;
-import testutil.FileReader;
 
 public class RtfParserTest {
 	private static final String LN = System.getProperty("line.separator");

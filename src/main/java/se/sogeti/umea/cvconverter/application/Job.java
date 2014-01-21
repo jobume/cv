@@ -11,6 +11,10 @@ public interface Job {
 	public void setName(String name);
 
 	public String getDescription();
+	
+	public String getShortDescription();
+	
+	public void setShortDescription(String shortDescription);
 
 	public void setDescription(String description);
 	

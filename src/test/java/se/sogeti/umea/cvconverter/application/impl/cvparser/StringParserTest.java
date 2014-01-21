@@ -1,8 +1,10 @@
 package se.sogeti.umea.cvconverter.application.impl.cvparser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -15,8 +17,6 @@ import se.sogeti.umea.cvconverter.application.Job;
 import se.sogeti.umea.cvconverter.application.Language;
 import se.sogeti.umea.cvconverter.application.Profile;
 import se.sogeti.umea.cvconverter.application.Skill;
-import se.sogeti.umea.cvconverter.application.impl.cvparser.StringParser;
-import se.sogeti.umea.cvconverter.application.impl.cvparser.model.CurriculumVitaeImpl;
 import testutil.FileReader;
 
 // TODO verify that methods are in correct order

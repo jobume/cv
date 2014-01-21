@@ -16,3 +16,11 @@ CREATE TABLE layout (
 	xsl_stylesheet TEXT,
 	PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS cv;
+CREATE TABLE cv (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	name varchar(255),
+	json TEXT,
+	PRIMARY KEY (id)
+);

@@ -1,6 +1,6 @@
 <fieldset>
 	<legend>Ordmoln</legend>
-	<label>L&auml;gg till ord i ordmolnet. Ordmolnet visas p&aring; f&ouml;rs&auml;ttsbladet</label>
+	<label>L&auml;gg till och &auml;ndra ordning p&aring; ord i ordmolnet. Ordmolnet visas p&aring; f&ouml;rs&auml;ttsbladet</label>
 	
 	<ul ui:sortable ng:model="model.cv.tags">
         <li ng:repeat="tag in model.cv.tags" class="tag">{{tag.tagName}} <a ng-click="deleteTag($index)" style="float:right;"><img src="src/assets/delete-16x16.png" alt="Ta bort"/></a> </li>

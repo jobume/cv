@@ -1,6 +1,6 @@
 <fieldset>
 	<legend>Personliga egenskaper</legend>
-	<label>L&auml;gg till egenskaper som beskriver personen.</label>
+	<label>L&auml;gg till och &auml;ndra ordning p&aring; egenskaper som beskriver personen.</label>
 	
 	<ul ui:sortable ng:model="model.cv.personalQualities">
         <li ng:repeat="quality in model.cv.personalQualities" class="tag">{{quality}} <a ng-click="deleteQuality($index)" style="float:right;"><img src="src/assets/delete-16x16.png" alt="Ta bort"/></a> </li>

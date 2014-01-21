@@ -84,7 +84,7 @@ public class ImageDecorator {
 	 *            the image to set urls for.
 	 */
 	public void setImageUrls(Image image) {
-		if (image.getName() != null) {
+		if (image != null && image.getName() != null) {
 			image.setLocalUrl(getInternalImageUrl(image.getName()));
 			image.setUrl(getImageUrl(image.getName()));
 		} 

@@ -16,7 +16,8 @@
 <body>
 	<div ng-controller="AppController">
 		<p id="adminLink" title="Administration av layouter" style="float: right;"> 
-			<a ng-hide="navigation.admin" href="#/admin">Admin</a> &nbsp;
+			<a href="#/admin/savedcvs">Sparade CV:s</a> &nbsp;
+			<a ng-hide="navigation.admin" href="#/admin">Admin</a> &nbsp;			
 			<a ng-hide="!navigation.admin" href="" ng-click="back()" >Tillbaka till CV</a>
 		</p>
 	</div>
@@ -71,11 +72,14 @@
 	<script src="src/app/app.js"></script>
 	<script src="src/app/uploadrtf/uploadrtf.js"></script>
 	<script src="src/app/adjustments/adjustments.js"></script>
+	<script src="src/app/engagements/engagements.js"></script>
+	<script src="src/app/skills/skills.js"></script>
 	<script src="src/app/qualities/qualities.js"></script>
 	<script src="src/app/wordcloud/wordcloud.js"></script>
 	<script src="src/app/selectimages/selectimages.js"></script>
 	<script src="src/app/layout/layout.js"></script>
 	<script src="src/app/admin/admin.js"></script>
+	<script src="src/app/savedcvs/savedcvs.js"></script>
 	
 	<script src="src/common/resources/cvresource.js"></script>
 	<script src="src/common/resources/portraitresource.js"></script>

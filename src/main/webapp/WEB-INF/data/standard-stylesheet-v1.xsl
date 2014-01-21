@@ -247,7 +247,9 @@
 					<!-- 
 					<xsl:call-template name="importantEducations" />
 					 -->
+					<!-- 
 					<xsl:call-template name="importantEmployments" />
+					 -->
 				</fo:flow>
 			</fo:page-sequence>
 
@@ -278,12 +280,12 @@
 						</fo:table-cell>
 
 						<fo:table-cell text-align="center" display-align="center">
-							<fo:block>www.sogeti.se</fo:block>
-						</fo:table-cell>
-						<fo:table-cell text-align="center" display-align="center">
 							<fo:block>
 								<xsl:value-of select="cv:Profile/cv:Title" />
 							</fo:block>
+						</fo:table-cell>
+						<fo:table-cell text-align="center" display-align="center">
+							<fo:block>www.sogeti.se</fo:block>
 						</fo:table-cell>
 						<fo:table-cell text-align="center" display-align="center">
 							<fo:block>
@@ -451,7 +453,7 @@
 						</fo:list-item-label>
 						<fo:list-item-body start-indent="4mm">
 							<fo:block>
-								<xsl:value-of select="cv:Description" />
+								<xsl:value-of select="cv:ShortDescription" />
 							</fo:block>
 						</fo:list-item-body>
 					</fo:list-item>

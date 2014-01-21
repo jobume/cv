@@ -6,6 +6,7 @@ public class JobImpl implements se.sogeti.umea.cvconverter.application.Job,
 	private String date;
 	private String name;
 	private String description;
+	private String shortDescription;
 	private Boolean important;
 	private int duration;
 
@@ -49,6 +50,14 @@ public class JobImpl implements se.sogeti.umea.cvconverter.application.Job,
 	@Override
 	public int getDuration() {
 		return duration;
+	}
+	
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 
 }

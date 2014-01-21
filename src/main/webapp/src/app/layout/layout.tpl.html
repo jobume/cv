@@ -15,3 +15,12 @@
 
 
 </fieldset>
+
+<div ng-hide="model.cv.id > 0">
+	<span><input type="button" value="Spara CV" ng-click="save()" /></span>	
+</div>
+
+<div ng-hide="!(model.cv.id > 0)">
+	<span style="display: inline;"><input type="button" value="Spara som nytt" ng-click="save()" style="display: inline;"/></span>
+	<span style="display: inline;"><input type="button" value="Spara" ng-click="update()" style="display: inline;"/> </span>
+</div>

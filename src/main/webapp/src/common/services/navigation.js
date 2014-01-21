@@ -15,6 +15,8 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 	var steps = [
  		{label:"Person >", path:"/laddaupp", buttonLabel: "Nästa", disabled: true},
  		{label:"Anpassning >", path:"/anpassa", buttonLabel: "Nästa", disabled: false},
+ 		{label:"Uppdrag >", path:"/uppdrag", buttonLabel: "Nästa", disabled: false},
+ 		{label:"Teknik >", path:"/teknik", buttonLabel: "Nästa", disabled: false},
  		{label:"Egenskaper >", path:"/egenskaper", buttonLabel: "Nästa", disabled: false},
  		{label:"Ordmoln >", path:"/ordmoln", buttonLabel: "Nästa", disabled: false},
  		{label:"Bilder >", path:"/bilder", buttonLabel: "Nästa", disabled: true},

@@ -52,6 +52,11 @@ public class RtfParserResource extends Resource {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getMessage()).build());
+		} catch (Throwable t) {
+			LOG.error("Unknown error parsing RTF to JSON.", t);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(t.getMessage()).build());
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -74,9 +79,20 @@ public class RtfParserResource extends Resource {
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 
-			TagCloud cloud = new TagCloud(cv);
-			cloud.generateTags();
-			cv.setTags(cloud.getTags());
+			boolean noTagCloud = false;
+			if (cv.getTags() == null) {
+				noTagCloud = true;
+			} else if (cv.getTags().size() == 0) {
+				noTagCloud = true;
+			}
+			if (noTagCloud) {
+				LOG.debug("CV did not have a word cloud. Generating cloud.");
+				TagCloud cloud = new TagCloud(cv);
+				cloud.generateTags();
+				cv.setTags(cloud.getTags());
+			} else {
+				LOG.debug("CV had a word cloud. Not updating.");
+			}
 
 			cvJson = mapper.writer().writeValueAsString(cv);
 
@@ -85,6 +101,11 @@ public class RtfParserResource extends Resource {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getMessage()).build());
+		} catch (Throwable t) {
+			LOG.error("Unknown error updating cv with tag cloud", t);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(t.getMessage()).build());
 		}
 		LOG.debug("Returning cv with word cloud");
 

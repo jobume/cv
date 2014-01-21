@@ -1,5 +1,7 @@
 'use strict';
 
+var MAX_TAGS = 8;
+
 angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navigation' ])
 
 .config(['$routeProvider', function ($routeProvider) {
@@ -27,7 +29,11 @@ angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navig
 		}
 		
 		if(noDuplicates) {
-			$scope.model.cv.tags.push({tagName: tagName});
+			if($scope.model.cv.tags.length < MAX_TAGS) {
+				$scope.model.cv.tags.push({tagName: tagName});
+			} else {
+				alert("Du kan maximalt lägga till " + MAX_TAGS + " ord i ordmolnet.")
+			}			
 		}
 		
 		$scope.tagName = "";

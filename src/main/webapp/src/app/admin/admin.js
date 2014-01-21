@@ -24,7 +24,7 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 	    });
 	}])
 
-.controller('LayoutsController', ['$scope', '$location', 'LayoutsResource','Navigation',
+.controller('LayoutsController', ['$scope', '$location', 'LayoutsResource', 'Navigation',
                                       function($scope, $location, LayoutsResource, Navigation) {
 	
 	LayoutsResource.get(function(data) {
@@ -40,7 +40,7 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 				"Skriv \"RADERA\" (med små eller stora bokstäver):", "");
 		if (answer.toLowerCase() === "radera") {
 			LayoutsResource.deleteLayout(id, function() {				
-				$location.path("/admin")
+				$location.path("/admin");
 			});			
 		}
 	};

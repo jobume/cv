@@ -1,5 +1,7 @@
 'use strict';
 
+var MAX_QUALITIES = 5;
+
 angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navigation' ])
 
 .config(['$routeProvider', function ($routeProvider) {
@@ -16,7 +18,7 @@ angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navig
 	$scope.model = CvResource.get();
 	
 	Navigation.onNext(function(success) {
-		CvResource.update(success);
+		CvResource.generateCloud(success);
 	});
 	
 	$scope.addQuality = function() {
@@ -29,7 +31,11 @@ angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navig
 			}
 		}
 		if(noDuplicates) {
-			$scope.model.cv.personalQualities.push(qualityName);
+			if($scope.model.cv.personalQualities.length < MAX_QUALITIES) {
+				$scope.model.cv.personalQualities.push(qualityName);
+			} else {
+				alert("Du kan maximalt lägga till " + MAX_QUALITIES + " egenskaper.")
+			}
 		}
 		$scope.qualityName = "";
 	}

@@ -1,0 +1,23 @@
+<form name="adjustmentForm" class="css-form" novalidate>
+
+<fieldset>
+	<legend>Utvalda tekniker</legend>		
+	<label>Ange viktiga tekniker till f&ouml;rstasidan</label>
+	<table>
+		<tr style="border-bottom:1px solid black;">
+			<th>
+				<!-- Select all does not currently work with the validation . . . 
+					<input type="checkbox" ng-model="allTechsSelected" ng-click="selectTechs()" />
+				 -->
+			</th>
+			<th>Namn</th>
+		</tr>
+		<tr ng-repeat="technology in model.cv.technologies" title="{{technology.name}}"> 
+			<td><input ng-disabled="disableTechs && !technology.important" type="checkbox"  ng-model="technology.important" ng-change="countSelectedTechs()"/></td>			
+			<td ng-click="checkTech(technology)">{{technology.name}}</td>
+		</tr>
+	</table>
+	<div>{{selectedTechs}} / 5 tekniker valda</div>		
+</fieldset>
+
+</form>
