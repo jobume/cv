@@ -17,6 +17,8 @@ angular.module('layout', [ 'ngRoute', 'services.navigation',
 	$scope.$on('LOAD',function(){$scope.loading=true});
 	$scope.$on('UNLOAD',function(){$scope.loading=false});
 	$scope.$emit('LOAD');
+	$scope.generating = false;
+	$scope.saving = false;
 	
 	$scope.model = CvResource.get();
 	
@@ -29,14 +31,18 @@ angular.module('layout', [ 'ngRoute', 'services.navigation',
 	$scope.save = function() {		
 		var newName = prompt("Ange ett namn för CV:t.", "");
 		$scope.model.cv.name = newName;
+		$scope.saving = true;
 		CvResource.save(function () {
 			alert("CV:t sparades!");
+			$scope.saving = false;
 		});					
 	};
 	
 	$scope.update = function() {
+		$scope.saving = true;
 		CvResource.update(function () {
 			alert("CV:t uppdateras!");
+			$scope.saving = false;
 		});
 	}
 	
@@ -48,8 +54,11 @@ angular.module('layout', [ 'ngRoute', 'services.navigation',
 	Navigation.onNext(function(success) {
 		if($scope.layoutstate.selectedLayoutId) {
 			console.log("Selected layout: " + $scope.layoutstate.selectedLayoutId);
+			$scope.generating = true;
 			PdfResource.create($scope.model.cv, $scope.layoutstate.selectedLayoutId, function(getUrl) {
+				$scope.generating = false;
 				$window.open(getUrl) ;
+				Navigation.getState().disabled = false;
 			});
 		} else {
 			alert('Välj en layout!');

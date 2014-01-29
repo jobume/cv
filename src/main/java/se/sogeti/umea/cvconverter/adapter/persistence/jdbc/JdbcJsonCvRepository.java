@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,7 +33,7 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 
 		String stmt = JdbcUtils.createInsert(TBL_CV, COL_NAME, COL_JSON);
 		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(stmt)) {
+				PreparedStatement ps = con.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setString(1, name);
 			ps.setString(2, jsonCv);
 			ps.executeUpdate();

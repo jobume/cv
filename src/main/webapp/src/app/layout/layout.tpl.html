@@ -1,3 +1,5 @@
+<div ng-hide="generating">
+
 <fieldset>
 
 	<legend>Layout</legend>
@@ -17,10 +19,24 @@
 </fieldset>
 
 <div ng-hide="model.cv.id > 0">
-	<span><input type="button" value="Spara CV" ng-click="save()" /></span>	
+	<div ng-hide="saving">
+	<span><input type="button" value="Spara CV" ng-click="save()" /></span>
+	</div>	
 </div>
 
 <div ng-hide="!(model.cv.id > 0)">
+	<div ng-hide="saving">
 	<span style="display: inline;"><input type="button" value="Spara som nytt" ng-click="save()" style="display: inline;"/></span>
 	<span style="display: inline;"><input type="button" value="Spara" ng-click="update()" style="display: inline;"/> </span>
+	</div>
+</div>
+
+<div class="loader" ng-hide="!saving" > 
+		<img src="src/assets/spinner.gif"> Sparar ... 
+</div>
+
+</div>
+
+<div ng-hide="!generating" style="width:100px; margin:0 auto;">
+     <img src="src/assets/spinner.gif"> Genererar pdf...   
 </div>
