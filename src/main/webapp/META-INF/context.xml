@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<Context>
+	<!-- 
+	<Resource name="BeanManager" 
+		auth="Container"
+		type="javax.enterprise.inject.spi.BeanManager" 
+		factory="org.jboss.weld.resources.ManagerObjectFactory" />
+		
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	<WatchedResource>META-INF/context.xml</WatchedResource>
+ 	-->
+ 	
+  	<Resource name="jdbc/h2Database" auth="Container" type="javax.sql.DataSource"
+               maxActive="100" maxIdle="30" maxWait="10000"
+               username="${env.OPENSHIFT_MYSQL_DB_USERNAME}" password="${env.OPENSHIFT_MYSQL_DB_PASSWORD}" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}"/>	
+
+</Context>

@@ -44,6 +44,7 @@
 				<host.name.internal>http://localhost:8080</host.name.internal>
 				<file.path>images</file.path>
 				<file.location>C:\Users\joparo\Servers\jetty\jetty-6.1.26\home\images</file.location>
+				<fop.config.file>C:\Users\joparo\Projects\cv-converter\cvconverter\src\test\resources\userconfig.xml</fop.config.file>				
 			</properties>
 		</profile>
 	</profiles>
