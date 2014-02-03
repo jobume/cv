@@ -8,7 +8,13 @@ describe('Test suite for the select images controller', function(){
       scope = $rootScope.$new();
       
       cvResourceMock = { get : function () {  
-    	  return { cv : { coverImage : 'http://istrue.com'} } }, create : function () {} };
+    	  return { 
+    		  cv : { 
+    			  coverImage : { url: 'http://istrue.com' },
+    			  profile : { portrait : { url: 'http.istrue.com' } }
+    		  } 
+    	  } 
+      }, create : function () {} };
       navMock = {
     		  mockState : { disabled : true }, 
     		  getState : function () { 

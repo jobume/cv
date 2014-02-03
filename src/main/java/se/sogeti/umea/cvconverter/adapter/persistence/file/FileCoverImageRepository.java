@@ -24,7 +24,7 @@ public class FileCoverImageRepository implements CoverImageRepository {
 	public Image createCoverImage(InputStream fileInputStream, String name)
 			throws IOException {
 		FileRecord fileRecord = fileRepository.createFile(fileInputStream, name, TYPE_NAME);
-		return new Image(fileRecord.getName(), fileRecord.getUrl(), fileRecord.getUrl());
+		return new Image(fileRecord.getName(), fileRecord.getUrl());
 	}
 
 	@Override
@@ -33,8 +33,7 @@ public class FileCoverImageRepository implements CoverImageRepository {
 		List<Image> images = new ArrayList<>();
 		List<FileRecord> records = fileRepository.listFiles(TYPE_NAME);
 		for (FileRecord record : records) {
-			images.add(new Image(record.getName(), record.getUrl(), record
-					.getUrl()));
+			images.add(new Image(record.getName(), record.getUrl()));
 		}
 		return images;
 	}

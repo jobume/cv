@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.List;
 
 import javax.swing.text.rtf.RTFEditorKit;
 import javax.xml.stream.XMLOutputFactory;
@@ -23,10 +22,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import se.sogeti.umea.cvconverter.adapter.client.http.resource.CvDecorator;
 import se.sogeti.umea.cvconverter.application.ContentLanguage;
-import se.sogeti.umea.cvconverter.application.Tag;
 import se.sogeti.umea.cvconverter.application.impl.cvparser.model.CurriculumVitaeImpl;
+import se.sogeti.umea.cvconverter.application.impl.cvparser.model.JobImpl;
 import se.sogeti.umea.cvconverter.application.impl.fopwrapper.FopWrapperFactory;
 import testutil.FileReader;
 
@@ -40,7 +38,7 @@ public class ParserIntegrationTest {
 
 	private final static String FILE_NAME_RICHARD = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Richard Ekblom.rtf";
 
-	private final static String FILE_NAME_TOBIAS = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Tobias Ohlsson.rtf";	
+	private final static String FILE_NAME_TOBIAS = "C:\\Users\\joparo\\Projects\\cv-converter-origin\\cv-converter\\rtf-samples\\Tobias Ohlsson.rtf";
 
 	@Test
 	public void canBeCreated() throws Exception {
@@ -50,7 +48,8 @@ public class ParserIntegrationTest {
 
 	@Test
 	@Ignore
-	public void canParseFile() throws IOException {
+	public void canParseFile() throws IOException, FOPException,
+			ConfigurationException, TransformerException, SAXException {
 
 		CurriculumVitaeImpl RichardAsCv = new StringParser().parseString(
 				ContentLanguage.ENGLISH, null, null, new DocumentParser()
@@ -76,14 +75,19 @@ public class ParserIntegrationTest {
 						.readFile(FILE_NAME_THOMAS))));
 
 		Assert.assertEquals("Thomas Hämälä", ThomasAsCv.getProfile().getName());
+	}
 
+	@Test
+	@Ignore
+	public void writePdfFromRtf() throws FOPException, ConfigurationException,
+			TransformerException, SAXException, IOException {
 		String fileAsString = FileReader.readFile(FILE_NAME_TOBIAS, "UTF-8");
 
 		StringBuilder dd = new DocumentParser().parseDocument(new RtfParser(
 				new RTFEditorKit()).parseRtf(fileAsString));
 
 		CurriculumVitaeImpl TobiasAsCv = new StringParser().parseString(
-				ContentLanguage.SWEDISH, null, null, dd);
+				ContentLanguage.SWEDISH, "", "", dd);
 
 		Assert.assertEquals("Tobias Ohlsson", TobiasAsCv.getProfile().getName());
 
@@ -100,6 +104,36 @@ public class ParserIntegrationTest {
 		Assert.assertEquals(expectedDescription, TobiasAsCv.getEngagements()
 				.size(), 8);
 
+		((JobImpl) TobiasAsCv.getEngagements().get(1)).setImportant(Boolean.TRUE);;
+		
+		
+		XMLOutputFactory xmlof = XMLOutputFactory.newInstance();
+		XmlGenerator xmlGenerator = new XmlGenerator(xmlof);
+		String cvXml = null;
+		try {
+			cvXml = xmlGenerator.generateXml(TobiasAsCv, "UTF-8");
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+
+		String filename = "C:\\Users\\joparo\\Documents\\PDFs\\test_tobias.pdf";
+		try (FileOutputStream fileOutput = new FileOutputStream(filename);
+				ByteArrayOutputStream out = new ByteArrayOutputStream(10000)) {
+
+			String cvXsl = FileReader
+					.readFile("src\\main\\webapp\\WEB-INF\\data\\cv-generator.xsl");
+
+			// Generate PDF
+			Source xmlData = new StreamSource(new StringReader(cvXml));
+			Source xslStylesheetData = new StreamSource(new StringReader(cvXsl));
+
+			FopWrapperFactory.getFopWrapper().transform(xmlData,
+					xslStylesheetData, "application/pdf", out);
+
+			fileOutput.write(out.toByteArray());
+			System.out.println("File written!");
+		}
 	}
 
 	@Ignore
@@ -118,46 +152,6 @@ public class ParserIntegrationTest {
 							.parseDocument(new RtfParser(new RTFEditorKit())
 									.parseRtf(FileReader
 											.readFile(FILE_NAME_RICHARD))));
-
-			List<Tag> tags = RichardAsCv.getTags();
-
-			tags.add(new Tag("Expert", false, false, false, Tag.Size.MEDIUM,
-					CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("EPiServer.NET", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Architect", false, false, false, Tag.Size.MEDIUM,
-					CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Microsoft Biztalk Server", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Passionate", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Framework 3.5", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Sharepoint 2007", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Ambitious", false, false, false, Tag.Size.MEDIUM,
-					CvDecorator.Font.MYRIAD.getName()));
-
-			new CvDecorator().decorateTags(tags);
-
-			tags.add(new Tag("Myriad Regular", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Myriad Bold", true, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Myriad BoldIt", true, false, true,
-					Tag.Size.MEDIUM, CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Myriad It", false, false, true, Tag.Size.MEDIUM,
-					CvDecorator.Font.MYRIAD.getName()));
-			tags.add(new Tag("Minion Regular", false, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MINION.getName()));
-			tags.add(new Tag("Minion Bold", true, false, false,
-					Tag.Size.MEDIUM, CvDecorator.Font.MINION.getName()));
-			tags.add(new Tag("Minion BoldIt", true, false, true,
-					Tag.Size.MEDIUM, CvDecorator.Font.MINION.getName()));
-			tags.add(new Tag("Minion It", false, false, true, Tag.Size.MEDIUM,
-					CvDecorator.Font.MINION.getName()));
-			tags.add(new Tag("Trebuchet", false, false, false, Tag.Size.MEDIUM,
-					CvDecorator.Font.TREBUCHET.getName()));
 
 			Source xslStylesheetData = new StreamSource(new StringReader(
 					FileReader.readFile(FILE_NAME_XSL)));

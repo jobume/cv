@@ -14,8 +14,10 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import se.sogeti.umea.configuration.InjectedConfiguration;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
 import se.sogeti.umea.cvconverter.application.LayoutRepository;
@@ -31,6 +33,10 @@ public class JdbcLayoutRepository implements LayoutRepository {
 	@Resource(lookup = "java:jboss/datasources/MysqlDS")
 	DataSource ds;
 
+	@Inject
+	@InjectedConfiguration(key = "default.layout.name", defaultValue = "default")
+	private String DEFAULT_LAYOUT_NAME;
+
 	@Override
 	public long createLayout(String name, String xslStylesheet)
 			throws IOException {
@@ -40,7 +46,7 @@ public class JdbcLayoutRepository implements LayoutRepository {
 			try {
 				con.setAutoCommit(false); // TODO can I set this as default in
 											// config?
-				
+
 				try (PreparedStatement ps = con
 						.prepareStatement(
 								"INSERT INTO layout (name,xsl_stylesheet) VALUES (?,?)",
@@ -82,11 +88,7 @@ public class JdbcLayoutRepository implements LayoutRepository {
 			ps.setLong(1, id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					l.setId(rs.getInt(1));
-					l.setName(rs.getString(2));
-					Reader characterStream = rs.getCharacterStream(3);
-					String xmlStylesheet = readStream(characterStream);
-					l.setXslStylesheet(xmlStylesheet);
+					readLayout(l, rs);
 				} else {
 					l = null;
 				}
@@ -96,6 +98,14 @@ public class JdbcLayoutRepository implements LayoutRepository {
 		}
 
 		return l;
+	}
+
+	private void readLayout(LayoutImpl l, ResultSet rs) throws SQLException {
+		l.setId(rs.getInt(1));
+		l.setName(rs.getString(2));
+		Reader characterStream = rs.getCharacterStream(3);
+		String xmlStylesheet = readStream(characterStream);
+		l.setXslStylesheet(xmlStylesheet);
 	}
 
 	@Override
@@ -164,6 +174,29 @@ public class JdbcLayoutRepository implements LayoutRepository {
 					.next() : "";
 			return xmlStylesheet;
 		}
+	}
+
+	@Override
+	public Layout getDefaultLayout() throws IOException {
+		LayoutImpl l = new LayoutImpl();
+		try (Connection con = ds.getConnection();
+				PreparedStatement ps = con.prepareStatement(JdbcUtils
+						.createSelectWhere("layout", "name"))) {
+			ps.setString(1, DEFAULT_LAYOUT_NAME);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					readLayout(l, rs);
+				} else {
+					throw new IllegalStateException(
+							"No default layout with name: "
+									+ DEFAULT_LAYOUT_NAME
+									+ " was found in database. This is a configuration error.");
+				}
+			}
+		} catch (SQLException e) {
+			throw new IOException(e);
+		}
+		return l;
 	}
 
 }

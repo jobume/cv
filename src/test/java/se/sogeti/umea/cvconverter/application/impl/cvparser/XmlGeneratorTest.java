@@ -70,7 +70,7 @@ public class XmlGeneratorTest {
 		// Mock print date
 		when(mockCv.getPrintDate()).thenReturn("2013-01-07");
 
-		when(mockImage.getLocalUrl()).thenReturn(
+		when(mockImage.getUrl()).thenReturn(
 				"http://www.abc.com/url/to/picture/portrait.jpg");
 
 		// Mock profile
@@ -225,9 +225,9 @@ public class XmlGeneratorTest {
 				"English (40 p)", ""));
 		when(mockCv.getEducations()).thenReturn(educations);
 
-		Image image = new Image("pl.PNG");
-		image.setUrl("http://localhost:8080/images/pl.PNG");
-		image.setLocalUrl("http://localhost:8080/images/pl.PNG");
+		Image image = new Image();
+		image.setName("pl.PNG");
+		image.setUrl("http://localhost:8080/images/pl.PNG");		
 		when(mockCv.getCoverImage()).thenReturn(image);
 
 		List<Tag> tags = new ArrayList<>();
@@ -250,7 +250,7 @@ public class XmlGeneratorTest {
 
 		// Generate actual XML
 		String actualXml = xmlGenerator.generateXml(mockCv, ENCODING);
-		System.out.println("XML: " + actualXml);
+		
 		// Assert
 		XmlAssertions.assertXmlSimilar(expectedXml, actualXml);
 

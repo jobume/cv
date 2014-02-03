@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface JsonCvRepository {
 	
-	public int createCv(String name, String jsonCv) throws IOException;
+	public int createCv(String name, String office, String jsonCv) throws IOException;
 	
 	public String getCv(int id) throws IOException;
 	
@@ -15,5 +15,7 @@ public interface JsonCvRepository {
 	public void deleteCv(int id) throws IOException;
 	
 	public List<CvOverview> listCvs() throws IOException;
+	
+	public List<CvOverview> listCvs(String office) throws IOException;
 	
 }

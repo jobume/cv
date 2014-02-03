@@ -105,8 +105,7 @@ angular.module('engagements', [ 'ngRoute', 'resources.cvresource', 'services.nav
 		          return viewValue;
 		        }
 	      };
-	      ctrl.$parsers.unshift(jobvalidator);
-	      ctrl.$formatters.unshift(jobvalidator);
+	      scope.$watch(attrs.ngModel, jobvalidator)
 	    }
 	  };
 });

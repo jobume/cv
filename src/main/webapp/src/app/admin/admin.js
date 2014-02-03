@@ -21,6 +21,9 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 	    }).when('/admin/coverimage', {
 	    	templateUrl : 'src/app/admin/coverimage.tpl.html',
 			controller : 'CoverImageController'
+	    }).when('/admin/portraits', {
+	    	templateUrl : 'src/app/admin/portraits.tpl.html',
+			controller : 'PortraitController'
 	    });
 	}])
 
@@ -133,6 +136,42 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 				$scope.coverimages = data;
 			});
 		});
+	};
+	
+		
+}])
+
+.controller('PortraitController', ['$scope', '$location', 'PortraitResource',
+                                      function($scope, $location, PortraitResource) {
+	
+	// Load portrait images into scope
+	PortraitResource.get(function(data) {
+		$scope.portraits = data;
+	});
+	
+	$scope.deletePortrait = function(id){
+		PortraitResource.deletePortrait(id, function() {
+			PortraitResource.get(function(data) {
+				$scope.portraits = data;
+			});
+		});
+	}
+	
+	$scope.prepare = function(files) {
+		$scope.files = files;		
+		$scope.$apply();
+	};
+	
+	$scope.upload = function() {
+		if($scope.portraitname && $scope.portraitname.length > 0) {
+			PortraitResource.create($scope.files, $scope.portraitname, function() {						
+				PortraitResource.get(function(data) {
+					$scope.portraits = data;
+				});
+			});
+		} else {
+			alert("Ange ett namn för porträttet!")
+		}
 	};
 	
 		

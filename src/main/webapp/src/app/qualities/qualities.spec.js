@@ -43,6 +43,9 @@ describe('Test suite for the qualities controller', function(){
 	  scope.qualityName = "Two";
 	  scope.addQuality();
 	  expect(scope.model.cv.personalQualities[1]).toEqual("Two");
+	  scope.qualityName = "";
+	  scope.addQuality();
+	  expect(scope.model.cv.personalQualities.length).toEqual(2);
   }));
   
   it('should not add more than 5 qualities to model on addQuality()', inject(function() {

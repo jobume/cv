@@ -60,8 +60,8 @@ public class RtfParserResource extends Resource {
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(Feature.INDENT_OUTPUT, true);
-
+		mapper.configure(Feature.INDENT_OUTPUT, true);		
+		
 		String cvJson = mapper.writer().writeValueAsString(cv);
 
 		return Response.ok(cvJson).build();

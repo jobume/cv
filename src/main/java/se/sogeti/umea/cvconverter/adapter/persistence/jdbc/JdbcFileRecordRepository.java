@@ -46,11 +46,12 @@ public class JdbcFileRecordRepository implements FileRecordRepository {
 
 	@Override
 	public List<FileRecord> listFileRecords(String type) {
-		String stmt = JdbcUtils.createSelect(TBL_FILERECORD);
+		String stmt = JdbcUtils.createSelectWhere(TBL_FILERECORD, COL_TYPE);
 		List<FileRecord> fileRecords = new ArrayList<>();
 		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(stmt);
-				ResultSet rs = ps.executeQuery();) {
+				PreparedStatement ps = con.prepareStatement(stmt);) {
+			ps.setString(1, type);
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				fileRecords.add(new FileRecord(rs.getString(COL_NAME), rs
 						.getString(COL_TYPE), rs.getString(COL_URL)));

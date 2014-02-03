@@ -1,16 +1,22 @@
+<div ng-hide="!loading" style="width:100px; margin:0 auto;">
+     <img src="src/assets/spinner.gif"> Laddar sparade CV ...   
+</div>
 
+<div ng-hide="loading">
 <fieldset>
 	<legend>Sparade CV</legend>
 
 	<ul>
-		<li class="layoutList" ng-repeat="cv in cvlist">
-			<div class="layoutName">{{cv.name}}</div>
-			<div class="layoutTools">
-				<button type="button" title="Skapa PDF" ng-click="createPdf(cv.id)"><img src="src/assets/add-16x16.png" /></button>
+		<li class="cvList" ng-repeat="cv in cvlist">
+			<div class="cvName">{{cv.ts | date:'yyyy-MM-dd' }} &nbsp; {{cv.name}}</div>
+			<div class="cvTools">
+				<button type="button" title="Skapa PDF" ng-click="createPdf(cv.id)"><img src="src/assets/new-pdf-16x16.png" /></button>
 				<button type="button" title="Redigera CV" ng-click="editCv(cv.id)"><img src="src/assets/pencil-16x16.png" /></button>
+				<button type="button" title="Redigera som nytt" ng-click="editAsNew(cv.id)"><img src="src/assets/add-16x16.png" /></button>
 				<button type="button" title="Radera CV" ng-click="deleteCv(cv.id)"><img src="src/assets/delete-16x16.png" /></button>
 			</div>
 		</li>
 	</ul>
 		
 </fieldset>
+</div>

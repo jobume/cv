@@ -6,28 +6,20 @@
 	<label>Ange viktiga uppdrag till f&ouml;rstasidan</label>
 	<table>
 		<tr style="border-bottom:1px solid black;">
-			<th>
-				<!-- Check all does not currently work with the validation . . . 
-					<input type="checkbox" ng-model="allEngagementsSelected" ng-click="selectEngagements()" />
-				 -->					
-			</th>
-			<th>Datum</th>
-			<th>Namn och Beskrivning</th>
+			<th> &nbsp; </th>
+			<th> Uppdrag </th>
 		</tr>
-		<tr style="border-bottom:1px solid black;" ng-repeat="engagement in model.cv.engagements" ng-form="engagementForm"> 
-			<!-- <ng-form name="engagementForm">  -->
+		<tr style="border-bottom:1px solid black;" ng-repeat="engagement in model.cv.engagements" ng-form="engagementForm"> 			
 			<td><input ng-disabled="disableEngagements && !engagement.important" type="checkbox" ng-model="engagement.important" ng-change="countSelectedEngagements()" name="important" jobdescription /></td>
-			<td ng-click="selectEngagement(engagement)">{{engagement.date}}</td>
 			<td ng-click="selectEngagement(engagement)" > 
-				<div>{{engagement.name}}</div>
+				<div>{{engagement.name}} {{engagement.date}}</div>
 				<div>
-					<textarea style="width: 100%" maxlength="200" ng-model="engagement.shortDescription" rows="3" name="engagement" jobdescription ></textarea> 
+					<textarea style="width: 100%" ng-model="engagement.shortDescription" rows="4" name="engagement" jobdescription></textarea> 
 				</div>
 				<div style="font-size: small;">{{engagement.shortDescription.length}} / 200 
 					<span class="error" ng-show="engagementForm.engagement.$error.jobdescription"> Beskrivningen f&aring;r endast inneh&aring;lla 200 tecken. </span>
 				</div>
-			</td>
-			<!-- </ng-form>  -->	
+			</td>			
 		</tr>
 	</table>
 	<div>{{loaderIndicator}}</div>

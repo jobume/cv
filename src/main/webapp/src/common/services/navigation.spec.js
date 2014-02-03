@@ -94,9 +94,11 @@ describe('Test suite for the navigation service', function(){
   
   it('should not go beyond last', inject(function() {
 	  var steps = service.getState().steps.length;
+	  expect(service.isLast()).toBe(false);
 	  for(var i=0; i< steps; i++) {
 		  service.next();		  
 	  }
 	  expect(service.getState().selectedIndex).toBe(service.getState().steps.length-1);
+	  expect(service.isLast()).toBe(true);
   }));
 });

@@ -69,4 +69,9 @@ public class InMemoryLayoutRepository implements LayoutRepository {
 		inMemoryDb.remove(new Long(id));
 	}
 
+	@Override
+	public Layout getDefaultLayout() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
 }

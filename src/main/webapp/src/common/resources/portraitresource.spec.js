@@ -19,7 +19,7 @@ describe('Test suite for the portrait resource', function(){
 	  
 	  spyOn(caller, 'success').andCallThrough();
 	  
-	  resource.create([{}], caller.success);
+	  resource.create([{}], 'name', caller.success);
 	  httpBackend.flush();
 	  
 	  expect(caller.success).toHaveBeenCalledWith('Model POST:ed');

@@ -37,6 +37,9 @@ describe('Test suite for the wordcloud controller', function(){
 	  scope.tagName = "tagTwo";
 	  scope.addTag();
 	  expect(scope.model.cv.tags[1].tagName).toEqual("tagTwo");
+	  scope.tagName = "";
+	  scope.addTag();
+	  expect(scope.model.cv.tags.length).toEqual(2);
   }));
   
   it('should not add more than 8 tags', inject(function() {

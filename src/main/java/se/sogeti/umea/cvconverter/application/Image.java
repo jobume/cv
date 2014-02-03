@@ -6,26 +6,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Image {
 
 	private String name;
-	
+
 	private String url;
-	
-	private String localUrl;
-	
+
+	public Image(String url) {
+		this.url = url;
+		String[] urlSplitBySlash = url.split("/");
+		if (urlSplitBySlash.length > 0)
+			name = urlSplitBySlash[urlSplitBySlash.length - 1];
+
+	}
+
 	public Image() {
 		super();
 	}
-	
-	public Image(String name) {
-		super();
-		this.name = name;		
-	}
-	
-	public Image(String name, String url, String localUrl) {
+
+	public Image(String name, String url) {
 		this.name = name;
-		this.url = url;
-		this.localUrl = localUrl;
+		this.url = url;		
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -40,13 +40,5 @@ public class Image {
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getLocalUrl() {
-		return localUrl;
-	}
-
-	public void setLocalUrl(String localUrl) {
-		this.localUrl = localUrl;
 	}
 }

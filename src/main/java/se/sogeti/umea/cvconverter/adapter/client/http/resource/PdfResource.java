@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,9 +33,6 @@ public class PdfResource extends Resource {
 	private final static HashMap<Integer, byte[]> pdfByteArrays = new HashMap<>();
 	private static int counter = 0;
 
-	@Inject
-	private CvDecorator decorator;
-
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public int createPdfFromJson(@PathParam("id") final long id, String jsonCv) {
@@ -48,12 +44,15 @@ public class PdfResource extends Resource {
 		CurriculumVitaeImpl cv;
 		Integer generatedId = null;
 		try {
+						
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-
-			decorator.decorateCv(cv);
-
+			cv.decorateTags();
+			LOG.debug("Creating PDF for " + cv.getProfile().getName() + " ... ");
+			LOG.debug("Cover Image: " + cv.getCoverImage());
 			convert = service.convert(id, cv);
+			
 			generatedId = generateId();
+			LOG.debug("Created PDF for " + cv.getProfile().getName() + " with id: " + generatedId);
 			pdfByteArrays.put(generatedId, convert);
 		} catch (NoSuchElementException | IllegalArgumentException e) {
 			LOG.error("Error converting cv (layoutId=" + id + ").", e);

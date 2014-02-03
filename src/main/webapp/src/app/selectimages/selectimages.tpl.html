@@ -1,3 +1,12 @@
+<div ng-hide="!generating" style="width:100px; margin:0 auto;">
+     <img src="src/assets/spinner.gif"> Genererar pdf...   
+</div>
+
+<div ng-hide="!saving" style="width:100px; margin: 0 auto;"> 
+		<img src="src/assets/spinner.gif"> Sparar CV ... 
+</div>
+
+<div ng-hide="generating || saving">
 <fieldset>
 	<legend>Siluettbild</legend>
 	<label ng-hide="loading">Ange en siluettbild f&ouml;r f&ouml;rs&auml;ttsbladet</label>
@@ -8,7 +17,7 @@
 	
 	<div>
 		<span ng-repeat="coverimage in coverimages">
-			<input type="radio" name="coverimage" value="{{coverimage.name}}" ng-model="model.cv.coverImage" ng-change="imageSelected()" />
+			<input type="radio" name="coverimage" value="{{coverimage.url}}" ng-model="model.cv.coverImage.url" ng-change="imageSelected()" />
 			<img src="{{coverimage.url}}" alt="Cover Image" height="42" width="42" />
 		</span>		
 	</div>
@@ -29,3 +38,4 @@
 	
 	<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
 </fieldset>
+</div>

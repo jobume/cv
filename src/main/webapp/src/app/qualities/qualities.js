@@ -18,26 +18,34 @@ angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navig
 	$scope.model = CvResource.get();
 	
 	Navigation.onNext(function(success) {
-		CvResource.generateCloud(success);
+		if($scope.model.cv.tags && $scope.model.cv.tags.length > 0) {
+			console.log("Skipping tag cloud generation");
+			success();
+		} else {
+			CvResource.generateCloud(success);
+		} 		
 	});
 	
 	$scope.addQuality = function() {
 		var qualityName = $scope.qualityName;
-		var noDuplicates = true;
-		for(var i=0; i< $scope.model.cv.personalQualities.length; i++) {
-			if( $scope.model.cv.personalQualities[i] == qualityName) {
-				noDuplicates = false;
-				break;
+		
+		if(qualityName.length > 0) {
+			var noDuplicates = true;
+			for(var i=0; i< $scope.model.cv.personalQualities.length; i++) {
+				if( $scope.model.cv.personalQualities[i] == qualityName) {
+					noDuplicates = false;
+					break;
+				}
 			}
-		}
-		if(noDuplicates) {
-			if($scope.model.cv.personalQualities.length < MAX_QUALITIES) {
-				$scope.model.cv.personalQualities.push(qualityName);
-			} else {
-				alert("Du kan maximalt lägga till " + MAX_QUALITIES + " egenskaper.")
+			if(noDuplicates) {
+				if($scope.model.cv.personalQualities.length < MAX_QUALITIES) {
+					$scope.model.cv.personalQualities.push(qualityName);
+				} else {
+					alert("Du kan maximalt lägga till " + MAX_QUALITIES + " egenskaper.")
+				}
 			}
+			$scope.qualityName = "";
 		}
-		$scope.qualityName = "";
 	}
 	
 	$scope.deleteQuality = function(index) {

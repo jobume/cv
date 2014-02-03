@@ -6,26 +6,12 @@ import java.util.Random;
 
 public class TagCloud {
 
-	private enum Font {
-		MYRIAD("myriad"), TREBUCHET("trebuchet"), MINION("minion");
-
-		private String name;
-
-		Font(String name) {
-			this.name = name;
-		}
-
-		String getName() {
-			return name;
-		}
-	}
-
 	private final List<String> technologiesAndQualities = new ArrayList<>();
 	private final List<Tag> tags = new ArrayList<>();
 
 	public TagCloud(CurriculumVitae cv) {
 		for (Skill skill : cv.getTechnologies()) {
-			if(skill.isImportant() != null && skill.isImportant()) {				
+			if (skill.isImportant() != null && skill.isImportant()) {
 				technologiesAndQualities.add(skill.getName());
 			}
 		}
@@ -40,17 +26,18 @@ public class TagCloud {
 		tags.clear();
 		for (int i = 0; i < 8; i++) {
 			String tagName = randomTechnologiesAndQualities.getRandomElement();
-			if (tagName != null) {
-				tagName = stripTechnologyType(tagName);
-				decorateTags(tagName, i);
+			if (tagName != null && tagName.length() > 0) {
+				Tag tag = new Tag(tagName);
+				decorateTag(tag, i);
+				tags.add(tag);
 			}
 		}
 	}
-	
-	private String stripTechnologyType(String tagName) {
-		if(tagName.contains(":")) {
+
+	private static String stripTechnologyType(String tagName) {
+		if (tagName.contains(":")) {
 			String[] tagNameArray = tagName.split(":");
-			if(tagNameArray.length > 1) {
+			if (tagNameArray.length > 1) {
 				tagName = tagNameArray[1].trim();
 			}
 		}
@@ -60,40 +47,65 @@ public class TagCloud {
 	public List<Tag> getTags() {
 		return tags;
 	}
-	
-	private void decorateTags(String tagName, int tagNr) {
+
+	public static void decorateTag(Tag tag, int tagNr) {
+		tag.setTagName(stripTechnologyType(tag.getTagName()));
 		switch (tagNr) {
 		case 0:
-			tags.add(new Tag(tagName, true, true, false, Tag.Size.LARGE,
-					Font.MYRIAD.getName()));
+			tag.setBold(true);
+			tag.setUpperCase(true);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.LARGE);
+			tag.setFont(Tag.Font.TREBUCHET.getName());
 			break;
 		case 1:
-			tags.add(new Tag(tagName, true, false, true, Tag.Size.LARGE,
-					Font.MINION.getName()));
+			tag.setBold(false);
+			tag.setUpperCase(false);
+			tag.setItalic(true);
+			tag.setSize(Tag.Size.LARGE);
+			tag.setFont(Tag.Font.TREBUCHET.getName());
 			break;
 		case 2:
-			tags.add(new Tag(tagName, false, false, false, Tag.Size.LARGE,
-					Font.TREBUCHET.getName()));
+			tag.setBold(false);
+			tag.setUpperCase(false);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.LARGE);
+			tag.setFont(Tag.Font.MYRIAD.getName());
 			break;
 		case 3:
-			tags.add(new Tag(tagName, true, false, true, Tag.Size.SMALL,
-					Font.MYRIAD.getName()));
+			tag.setBold(true);
+			tag.setUpperCase(false);
+			tag.setItalic(true);
+			tag.setSize(Tag.Size.SMALL);
+			tag.setFont(Tag.Font.MYRIAD.getName());
 			break;
 		case 4:
-			tags.add(new Tag(tagName, true, false, false, Tag.Size.SMALL,
-					Font.MINION.getName()));
+			tag.setBold(true);
+			tag.setUpperCase(false);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.SMALL);
+			tag.setFont(Tag.Font.MYRIAD.getName());
 			break;
 		case 5:
-			tags.add(new Tag(tagName, true, false, false, Tag.Size.LARGE,
-					Font.TREBUCHET.getName()));
+			tag.setBold(true);
+			tag.setUpperCase(false);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.LARGE);
+			tag.setFont(Tag.Font.MYRIAD.getName());
 			break;
 		case 6:
-			tags.add(new Tag(tagName, false, false, false, Tag.Size.SMALL,
-					Font.MYRIAD.getName()));
+			tag.setBold(false);
+			tag.setUpperCase(false);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.SMALL);
+			tag.setFont(Tag.Font.TREBUCHET.getName());
 			break;
 		case 7:
-			tags.add(new Tag(tagName, false, false, false, Tag.Size.LARGE,
-					Font.MINION.getName()));
+			tag.setBold(false);
+			tag.setUpperCase(true);
+			tag.setItalic(false);
+			tag.setSize(Tag.Size.LARGE);
+			tag.setFont(Tag.Font.TREBUCHET.getName());
 			break;
 		default:
 			break;
@@ -114,6 +126,11 @@ public class TagCloud {
 			int randomNumber = new Random().nextInt(words.size());
 			return words.remove(randomNumber);
 		}
-
 	}
+
+	@Override
+	public String toString() {
+		return "TagCloud [tags=" + tags + "]";
+	}
+
 }

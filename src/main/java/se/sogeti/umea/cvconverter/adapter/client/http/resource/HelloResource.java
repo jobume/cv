@@ -22,10 +22,6 @@ public class HelloResource {
 	@InjectedConfiguration(key = "host.name", defaultValue = "http://localhost:8080")
 	private String hostName;
 
-	@Inject
-	@InjectedConfiguration(key = "host.name", defaultValue = "http://localhost:8080")
-	private static String hej;
-
 	@GET
 	public Response sayHello() throws NamingException {
 
@@ -37,8 +33,7 @@ public class HelloResource {
 		return Response.ok(
 				"Hello world!!! You are running at: " + hostName
 						+ ". The data source was: "
-						+ (ds != null ? " Found " : "Not found (null)")
-						+ " And the static injected host.name was: " + hej)
+						+ (ds != null ? " Found " : "Not found (null)"))
 				.build();
 	}
 

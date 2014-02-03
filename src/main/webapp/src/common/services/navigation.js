@@ -19,8 +19,8 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
  		{label:"Teknik >", path:"/teknik", buttonLabel: "Nästa", disabled: false},
  		{label:"Egenskaper >", path:"/egenskaper", buttonLabel: "Nästa", disabled: false},
  		{label:"Ordmoln >", path:"/ordmoln", buttonLabel: "Nästa", disabled: false},
- 		{label:"Bilder >", path:"/bilder", buttonLabel: "Nästa", disabled: true},
- 		{label:"Layout", path:"/layout", buttonLabel: "Skapa pdf", disabled: true}
+ 		{label:"Bilder ", path:"/bilder", buttonLabel: "Skapa pdf", disabled: true} //,
+ 		// {label:"Layout", path:"/layout", buttonLabel: "Skapa pdf", disabled: true}
  	];
 	
 	/**
@@ -101,6 +101,14 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 		 */
 		onNext : function(callback) {
 			state.callback = callback;
+		},
+		
+		/**
+		 * Returns true if current step is the last step.
+		 */
+		isLast : function() {
+			alert("Hej");
+			return (state.selectedIndex == steps.length-1);
 		}
 	};
 	

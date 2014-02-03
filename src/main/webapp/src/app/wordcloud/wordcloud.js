@@ -17,26 +17,33 @@ angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navig
 	
 	$scope.model = CvResource.get();
 	
+	$scope.generateCloud = function() {
+		CvResource.generateCloud(function () {
+			console.log("New cloud generated...");
+		});
+	}
+	
 	$scope.addTag = function() {
 		var tagName = $scope.tagName;
-		
-		var noDuplicates = true;
-		for(var i=0; i< $scope.model.cv.tags.length; i++) {
-			if( $scope.model.cv.tags[i].tagName == tagName) {
-				noDuplicates = false;
-				break;
+		if(tagName.length > 0) {
+			var noDuplicates = true;
+			for(var i=0; i< $scope.model.cv.tags.length; i++) {
+				if( $scope.model.cv.tags[i].tagName == tagName) {
+					noDuplicates = false;
+					break;
+				}
 			}
+			
+			if(noDuplicates) {
+				if($scope.model.cv.tags.length < MAX_TAGS) {
+					$scope.model.cv.tags.push({tagName: tagName});
+				} else {
+					alert("Du kan maximalt lägga till " + MAX_TAGS + " ord i ordmolnet.")
+				}			
+			}
+			
+			$scope.tagName = "";
 		}
-		
-		if(noDuplicates) {
-			if($scope.model.cv.tags.length < MAX_TAGS) {
-				$scope.model.cv.tags.push({tagName: tagName});
-			} else {
-				alert("Du kan maximalt lägga till " + MAX_TAGS + " ord i ordmolnet.")
-			}			
-		}
-		
-		$scope.tagName = "";
 	};
 	
 	$scope.deleteTag = function(index) {

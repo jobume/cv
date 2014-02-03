@@ -59,10 +59,11 @@ public class ImageServlet extends HttpServlet {
 			return;
 		}
 
-		String contentType = getServletContext().getMimeType(image.getName());
+		String contentType = getServletContext().getMimeType(image.getName().toLowerCase());
 
 		if (contentType == null || !contentType.startsWith("image")) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			LOG.debug("ContentType " + contentType + " was not an image.");
 			return;
 		}
 

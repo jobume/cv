@@ -213,43 +213,30 @@ span.orange {
 	color: rgb(242, 101, 50);
 }
 
-.tag_bold {
-	font-weight: bold;
+.cvList div {
+	display: inline;
 }
 
-.tag_uppercase {
-	text-transform: uppercase;
+.cvList:hover {
+	background-color: lightgray;
 }
 
-.tag_italic {
-	font-style: italic;
+.cvList:hover input {
+	display: inline;
 }
 
-.tag_size_large {
-	font-size: x-large;
+.cvName {
+	width: 70%;
 }
 
-.tag_size_small {
-	font-size: small;
+.cvTools {
+	width: 25%;
+	float: right;
 }
 
-.tag_font_myriad {
-	font-family: 'Myriad Web Pro', 'Myriad Web', 'Myriad Pro', Frutiger,
-		'Frutiger Linotype', Univers, Calibri, 'Gill Sans', 'Gill Sans MT',,
-		Myriad, 'DejaVu LGC Sans Condensed', 'DejaVu Sans Condensed',
-		'Liberation Sans', 'Nimbus Sans L', Tahoma, 'Helvetica Neue',
-		Helvetica, Geneva, Arial, sans-serif;
-}
-
-.tag_font_trebuchet {
-	font-family: 'Trebuchet MS', 'Segoe UI', Candara, 'Bitstream Vera Sans',
-		'DejaVu Sans', 'Bitstream Vera Sans', Verdana, 'Verdana Ref',
-		sans-serif;
-}
-
-.tag_font_minion {
-	font-family: 'Minion Pro', 'Minion Web Pro', 'Minion Web', Minion,
-		Constantia, 'Droid Serif', Georgia, serif;
+.cvTools input button{
+	display: none;
+	margin: 0px;
 }
 
 li.tag {

@@ -35,6 +35,7 @@ public class CurriculumVitaeImpl implements
 	private Image coverImage;
 	private List<Tag> tags = new ArrayList<>();
 	private List<String> personalQualities = new ArrayList<>();
+	private String office;
 
 	@Override
 	public ContentLanguage getContentLanguage() {
@@ -225,6 +226,16 @@ public class CurriculumVitaeImpl implements
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public String getOffice() {
+		return office;
+	}
+
+	@Override
+	public void setOffice(String office) {
+		this.office = office;
 	}
 		
 }

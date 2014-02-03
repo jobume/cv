@@ -15,14 +15,16 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.fop.apps.FOPException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import se.sogeti.umea.cvconverter.application.ConversionException;
 import se.sogeti.umea.cvconverter.application.ConverterService;
 import se.sogeti.umea.cvconverter.application.CoverImageRepository;
 import se.sogeti.umea.cvconverter.application.CurriculumVitae;
 import se.sogeti.umea.cvconverter.application.CvOverview;
-import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Image;
+import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
 import se.sogeti.umea.cvconverter.application.LayoutRepository;
@@ -33,6 +35,7 @@ import se.sogeti.umea.cvconverter.application.impl.fopwrapper.FopWrapper;
 
 public class CvConverterService implements ConverterService {
 
+	private final static Logger LOG = LoggerFactory.getLogger(CvConverterService.class);
 	private static final String ENCODING = "UTF-8";
 	private static final String CONVERTER_RESULT_MEDIA_TYPE = "application/pdf";
 	private LayoutRepository repo;
@@ -100,7 +103,14 @@ public class CvConverterService implements ConverterService {
 			IOException, ConversionException {
 
 		// Get XSL stylesheet
-		Layout layout = repo.getLayout(layoutId);
+		Layout layout = null;
+		if(layoutId > 0)  {
+			LOG.debug("Getting layout: " + layout);
+			layout = repo.getLayout(layoutId);
+		} else {
+			LOG.debug("Getting default layout.");
+			layout = repo.getDefaultLayout();
+		}
 
 		String xmlCv = convertCvToXml(cv);
 
@@ -154,8 +164,8 @@ public class CvConverterService implements ConverterService {
 	}
 
 	@Override
-	public int createCv(String name, String cv) throws IOException {
-		return cvRepo.createCv(name, cv);
+	public int createCv(String name, String office, String cv) throws IOException {
+		return cvRepo.createCv(name, office, cv);
 	}
 
 	@Override
@@ -176,6 +186,16 @@ public class CvConverterService implements ConverterService {
 	@Override
 	public List<CvOverview> listCvs() throws IOException {
 		return cvRepo.listCvs();
+	}
+
+	@Override
+	public Layout getDefaultLayout() throws IOException {
+		return repo.getDefaultLayout();
+	}
+
+	@Override
+	public List<CvOverview> listCvs(String office) throws IOException {
+		return cvRepo.listCvs(office);
 	}
 
 }

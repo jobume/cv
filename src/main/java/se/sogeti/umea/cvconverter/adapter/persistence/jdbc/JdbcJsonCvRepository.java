@@ -24,18 +24,24 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 	private final static String COL_ID = "id";
 	private final static String COL_NAME = "name";
 	private final static String COL_JSON = "json";
+	private final static String COL_OFFICE = "office";
+	private final static String COL_TS = "ts";
 
 	@Resource(lookup = "java:jboss/datasources/MysqlDS")
 	DataSource ds;
 
 	@Override
-	public int createCv(String name, String jsonCv) throws IOException {
+	public int createCv(String name, String office, String jsonCv)
+			throws IOException {
 
-		String stmt = JdbcUtils.createInsert(TBL_CV, COL_NAME, COL_JSON);
+		String stmt = JdbcUtils.createInsert(TBL_CV, COL_NAME, COL_OFFICE,
+				COL_JSON);
 		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS)) {
+				PreparedStatement ps = con.prepareStatement(stmt,
+						Statement.RETURN_GENERATED_KEYS)) {
 			ps.setString(1, name);
-			ps.setString(2, jsonCv);
+			ps.setString(2, office);
+			ps.setString(3, jsonCv);
 			ps.executeUpdate();
 			ResultSet generatedKeys = ps.getGeneratedKeys();
 			if (generatedKeys.next()) {
@@ -102,25 +108,38 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 	}
 
 	@Override
-	public List<CvOverview> listCvs() {
-		String stmt = JdbcUtils.createSelectWhere(TBL_CV);
+	public List<CvOverview> listCvs() throws IOException {
+		return this.listCvs(null);
+	}
+
+	@Override
+	public List<CvOverview> listCvs(String office) throws IOException {
+		String stmt;
+		if (office != null) {
+			stmt = JdbcUtils.createSelectWhere(TBL_CV, COL_OFFICE);
+		} else {
+			stmt = JdbcUtils.createSelectWhere(TBL_CV);
+		}
 
 		List<CvOverview> cvList = new ArrayList<>();
 
 		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(stmt)) {
-
+				PreparedStatement ps = con.prepareStatement(stmt + " ORDER BY " + COL_TS + " DESC")) {
+			if (office != null) {
+				ps.setString(1, office);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					cvList.add(new CvOverview(rs.getInt(COL_ID), rs
-							.getString(COL_NAME)));
+							.getString(COL_NAME), rs.getString(COL_OFFICE), rs
+							.getTimestamp(COL_TS)));
 				}
 			}
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return cvList;
 	}
 }

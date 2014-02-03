@@ -29,17 +29,18 @@ import se.sogeti.umea.cvconverter.application.TagCloud;
 public class CvResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory.getLogger(CvResource.class);
-
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCv(String jsonCv) {
 		LOG.debug("Creating (saving) jsonCv ... ");
+	
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = null;
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-			int id = service.createCv(cv.getName(), jsonCv);
+			int id = service.createCv(cv.getName(), cv.getOffice(), jsonCv);
 			cv.setId(id);
 			LOG.debug("Saved CV " + cv.getName() + " with id " + cv.getId());
 			jsonCv = mapper.writer().writeValueAsString(cv);
@@ -92,8 +93,6 @@ public class CvResource extends Resource {
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 
-			createTagCloud(cv);
-
 			LOG.debug("Updating jsonCv ... ");
 
 			jsonCv = mapper.writer().writeValueAsString(cv);
@@ -127,7 +126,6 @@ public class CvResource extends Resource {
 					.entity(e.getMessage()).build());
 		}
 
-
 		return Response.ok(jsonCv).build();
 	}
 
@@ -135,20 +133,10 @@ public class CvResource extends Resource {
 		LOG.debug("Generating tag cloud ... ");
 
 		try {
-			boolean noTagCloud = false;
-			if (cv.getTags() == null) {
-				noTagCloud = true;
-			} else if (cv.getTags().size() == 0) {
-				noTagCloud = true;
-			}
-			if (noTagCloud) {
-				LOG.debug("CV did not have a word cloud. Generating cloud.");
-				TagCloud cloud = new TagCloud(cv);
-				cloud.generateTags();
-				cv.setTags(cloud.getTags());
-			} else {
-				LOG.debug("CV had a word cloud. Not updating.");
-			}
+			TagCloud cloud = new TagCloud(cv);
+			cloud.generateTags();
+			cv.setTags(cloud.getTags());
+			
 		} catch (Throwable t) {
 			LOG.error("Unknown error updating cv with tag cloud", t);
 			throw new WebApplicationException(Response

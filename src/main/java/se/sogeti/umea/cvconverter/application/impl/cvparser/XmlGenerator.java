@@ -139,12 +139,16 @@ public class XmlGenerator {
 			throws XMLStreamException {
 		if (cv.getCoverImage() != null) {
 			writer.writeStartElement("CoverImage");
-			writer.writeStartElement("Name");
-			writer.writeCharacters(cv.getCoverImage().getName());
-			writer.writeEndElement();
-			writer.writeStartElement("Url");
-			writer.writeCharacters(cv.getCoverImage().getLocalUrl());
-			writer.writeEndElement();
+			if (cv.getCoverImage().getName() != null) {
+				writer.writeStartElement("Name");
+				writer.writeCharacters(cv.getCoverImage().getName());
+				writer.writeEndElement();
+			}
+			if (cv.getCoverImage().getUrl() != null) {
+				writer.writeStartElement("Url");
+				writer.writeCharacters(cv.getCoverImage().getUrl());
+				writer.writeEndElement();
+			}
 			writer.writeEndElement();
 		}
 	}
@@ -179,9 +183,12 @@ public class XmlGenerator {
 		writer.writeCharacters(cv.getProfile().getDateOfBirth());
 		writer.writeEndElement();
 
-		writer.writeStartElement("PortraitUrl");
-		writer.writeCharacters(cv.getProfile().getPortrait().getLocalUrl());
-		writer.writeEndElement();
+		if (cv.getProfile().getPortrait() != null
+				&& cv.getProfile().getPortrait().getUrl() != null) {
+			writer.writeStartElement("PortraitUrl");
+			writer.writeCharacters(cv.getProfile().getPortrait().getUrl());
+			writer.writeEndElement();
+		}
 
 		if (cv.getProfile().getPhoneNumber() != null) {
 			writer.writeStartElement("PhoneNumber");

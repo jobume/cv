@@ -86,5 +86,9 @@ public interface CurriculumVitae {
 	
 	public void setPersonalQualities(List<String> personalQualities);
 	
+	public String getOffice();
+	
+	public void setOffice(String office);
+	
 
 }

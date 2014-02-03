@@ -16,7 +16,11 @@ var uploader = angular.module('uploadrtf', [ 'ngRoute', 'resources.cvresource','
 	
 	// Set callback function on next button
 	Navigation.onNext(function(success) {
-		CvResource.create($scope.files, success);		
+		CvResource.create($scope.files, function () {
+			success();
+			$scope.model.cv.name = $scope.model.cv.profile.name;
+			$scope.model.cv.office = "Umeå";
+		});		
 	});
 	
 	/**

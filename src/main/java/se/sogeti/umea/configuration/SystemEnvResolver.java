@@ -1,13 +1,8 @@
 package se.sogeti.umea.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SystemEnvResolver {
-
-	private static final Logger LOG = LoggerFactory
-			.getLogger(ConfigurationInjectionManager.class);
-
+	
 	interface Sys {
 		String getenv(String name);
 	}

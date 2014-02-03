@@ -1,8 +1,11 @@
 'use strict';
 
+var defaultLayout = -1;
+
 var uploader = angular.module(
 		'selectimages', [ 'ngRoute','services.navigation', 
-		                  'resources.cvresource', 'resources.portraitresource', 'resources.coverimageresource' ])
+		                  'resources.cvresource', 'resources.portraitresource', 
+		                  'resources.coverimageresource', 'resources.pdfresource' ])
 
 .config(['$routeProvider', function ($routeProvider) {
 	  $routeProvider.when('/bilder', {
@@ -13,29 +16,45 @@ var uploader = angular.module(
 	}])
 	
 .controller('SelectImagesController', 
-		['$scope', 'CvResource', 'Navigation', 'PortraitResource', 'CoverImageResource',  
-		 function($scope, CvResource, Navigation, PortraitResource, CoverImageResource) {
-	 
-	$scope.$on('LOAD',function(){$scope.loading=true});
-	$scope.$on('UNLOAD',function(){$scope.loading=false});
-	$scope.$emit('LOAD');
+		['$scope', '$window', 'CvResource', 'Navigation', 'PortraitResource', 'CoverImageResource',  'PdfResource',
+		 function($scope, $window, CvResource, Navigation, PortraitResource, CoverImageResource, PdfResource) {
 	
+	// Indicates cover images are loading
+	$scope.loading=true;	
+	
+	// Indicates portrait is being loaded
 	$scope.loadingportrait = false;
+	
+	// Indicates PDF is being generated
+	$scope.generating = false;
+	
+	// Indicates CV is being saved to database
+	$scope.saving = false;
 	
 	$scope.model = CvResource.get();	
 	
+	checkState();
+	
 	$scope.imageSelected = function() {
-		Navigation.getState().disabled = false;
+		checkState();		
 	};
 	
-	if ($scope.model.cv.coverImage) {
-		Navigation.getState().disabled = false;
-	}	
+	// CoverImage and Portrait must be set, and must have a url
+	function checkState() {
+		if ($scope.model.cv.coverImage && 
+			$scope.model.cv.coverImage.url && 
+			$scope.model.cv.profile.portrait && 
+			$scope.model.cv.profile.portrait.url) {
+			Navigation.getState().disabled = false			
+		} else {
+			Navigation.getState().disabled = true;
+		}
+	}
 	
-	// Load portrait images into scope
+	// Load portrait images into scope	
 	CoverImageResource.get(function(data) {
 		$scope.coverimages = data;
-		$scope.$emit('UNLOAD');
+		$scope.loading = false;
 	});
 	
 	/**
@@ -46,13 +65,36 @@ var uploader = angular.module(
 	$scope.uploadFile = function(files) {
 		Navigation.getState().disabled = true;
 		$scope.loadingportrait = true;
-		PortraitResource.create(files, function (data) {
+		PortraitResource.create(files, $scope.model.cv.profile.name, function (data) {
 			$scope.model.cv.profile.portrait = data;
-			Navigation.getState().disabled = false;
+			checkState();
 			$scope.loadingportrait = false;
 		});
 		$scope.$apply();
 	}
+	
+	Navigation.onNext(function(success) {	
+				
+		if($scope.model.cv.id > 0) {
+			$scope.saving = true;
+			CvResource.update(function () {
+				$scope.saving = false;
+			});
+		} else {
+			$scope.saving = true;			
+			CvResource.save(function () {				
+				$scope.saving = false;
+			});
+		}
+		
+		$scope.generating = true;
+		
+		PdfResource.create($scope.model.cv, defaultLayout, function(getUrl) {
+			$scope.generating = false;
+			$window.open(getUrl) ;
+			Navigation.getState().disabled = false;
+		});			
+	});
 
 
 } ]);

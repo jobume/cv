@@ -23,7 +23,6 @@ class StringParser {
 	private static final String LN = System.getProperty("line.separator");
 	private static final String TAB = "\t"; // RegExp for tab
 	private ContentLanguage cvLanguage; // TODO this dependency could be removed
-										// if
 
 	// there is logic to scan for swedish and
 	// english chapter names
@@ -42,8 +41,9 @@ class StringParser {
 		Profile profile = parseProfile(cvText);
 		cv.setProfile(profile);
 		Image portrait = new Image();
-		portrait.setUrl(portraitUrl);
-		portrait.setLocalUrl(portraitUrl);
+		if(portraitUrl != null) {
+			portrait.setUrl(portraitUrl);			
+		}
 		cv.getProfile().setPortrait(portrait);
 
 		// Parse description
@@ -89,7 +89,9 @@ class StringParser {
 		List<Acquisition> educations = parseAcquisitions(cvText,
 				Chapter.EDUCATION);
 		cv.setEducations(educations);
-
+		
+		cv.setCoverImage(new Image());
+		
 		return cv;
 	}
 

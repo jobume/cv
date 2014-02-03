@@ -13,13 +13,14 @@ import se.sogeti.umea.cvconverter.application.Profile;
 import se.sogeti.umea.cvconverter.application.Skill;
 import se.sogeti.umea.cvconverter.application.Language;
 import se.sogeti.umea.cvconverter.application.Tag;
+import se.sogeti.umea.cvconverter.application.TagCloud;
 
 public class CurriculumVitaeImpl implements
 		se.sogeti.umea.cvconverter.application.CurriculumVitae {
 
 	private int id;
 	private String name;
-	
+
 	private ContentLanguage contentLanguage;
 	private String printDate;
 	private Profile profile;
@@ -37,6 +38,7 @@ public class CurriculumVitaeImpl implements
 	private Image coverImage;
 	private List<Tag> tags = new ArrayList<>();
 	private List<String> personalQualities = new ArrayList<>();
+	private String office;
 
 	@Override
 	public ContentLanguage getContentLanguage() {
@@ -89,13 +91,13 @@ public class CurriculumVitaeImpl implements
 	public void setEngagements(List<Job> engagements) {
 		this.engagements = engagements;
 	}
-	
+
 	@Override
 	@JsonDeserialize(contentAs = SkillImpl.class)
 	public List<Skill> getProfessionalKnowledge() {
 		return professionalKnowledge;
 	}
-	
+
 	@Override
 	public void setProfessionalKnowledge(List<Skill> professionalKnowledge) {
 		this.professionalKnowledge = professionalKnowledge;
@@ -188,12 +190,12 @@ public class CurriculumVitaeImpl implements
 		this.educations = educations;
 	}
 
-	@Override		
+	@Override
 	public Image getCoverImage() {
 		return this.coverImage;
 	}
 
-	@Override	
+	@Override
 	public void setCoverImage(Image coverImage) {
 		this.coverImage = coverImage;
 	}
@@ -236,6 +238,24 @@ public class CurriculumVitaeImpl implements
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String getOffice() {
+		return office;
+	}
+
+	@Override
+	public void setOffice(String office) {
+		this.office = office;
+	}
+
+	public void decorateTags() {
+		int i = 0;
+		for (Tag tag : tags) {
+			TagCloud.decorateTag(tag, i);
+			i++;
+		}
 	}
 
 }

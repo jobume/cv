@@ -20,5 +20,7 @@ public interface LayoutRepository {
 
 	public void deleteLayout(long id) throws IllegalArgumentException,
 			NoSuchElementException, IOException;
+	
+	public Layout getDefaultLayout() throws IOException;
 
 }

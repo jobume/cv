@@ -9,8 +9,20 @@ public class Tag {
 		SMALL, MEDIUM, LARGE;
 	}
 	
-	
+	public static enum Font {
+		MYRIAD("myriad"), TREBUCHET("trebuchet"), MINION("minion");
 
+		private String name;
+
+		Font(String name) {
+			this.name = name;
+		}
+
+		String getName() {
+			return name;
+		}
+	}
+	
 	private boolean bold;
 
 	private boolean upperCase;
