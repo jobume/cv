@@ -13,6 +13,9 @@ import java.util.NoSuchElementException;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.sogeti.umea.cvconverter.application.CvOverview;
 import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Repository;
@@ -20,6 +23,8 @@ import se.sogeti.umea.cvconverter.application.Repository;
 @Repository
 public class JdbcJsonCvRepository implements JsonCvRepository {
 
+	private final static Logger LOG = LoggerFactory.getLogger(JsonCvRepository.class);
+	
 	private final static String TBL_CV = "cv";
 	private final static String COL_ID = "id";
 	private final static String COL_NAME = "name";
@@ -117,6 +122,7 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 		String stmt;
 		if (office != null) {
 			stmt = JdbcUtils.createSelectWhere(TBL_CV, COL_OFFICE);
+			LOG.debug("List stmt: " + stmt);
 		} else {
 			stmt = JdbcUtils.createSelectWhere(TBL_CV);
 		}

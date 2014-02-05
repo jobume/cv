@@ -18,8 +18,7 @@ var uploader = angular.module('uploadrtf', [ 'ngRoute', 'resources.cvresource','
 	Navigation.onNext(function(success) {
 		CvResource.create($scope.files, function () {
 			success();
-			$scope.model.cv.name = $scope.model.cv.profile.name;
-			$scope.model.cv.office = "Umeå";
+			$scope.model.cv.name = $scope.model.cv.profile.name;			
 		});		
 	});
 	

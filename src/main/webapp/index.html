@@ -31,7 +31,7 @@
 			<div ng-hide="navigation.admin">
 						 
 				<div class="left">
-					<span></span><a href="#/person" style="text-decoration: underline;">Start</a> : </span>
+					<span></span><a href="" ng-click="start()">Start</a> : </span>
 					<span ng-repeat="step in navigation.steps"> <span
 						ng-class="{selected: $index == navigation.selectedIndex}">{{step.label}}</span>
 					</span>

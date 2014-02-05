@@ -33,7 +33,7 @@ angular.module('adjustments', [ 'ngRoute', 'resources.cvresource', 'services.nav
 	    require: 'ngModel',
 	    link: function(scope, elm, attrs, ctrl) {
 	      var validator = function(viewValue) {
-	    	if (viewValue.length > MAX_DESC_LENGTH) {
+	    	if (viewValue && viewValue.length > MAX_DESC_LENGTH) {
 	    	  ctrl.$setValidity('laxlength', false);
 			  return viewValue;
 		    } else {

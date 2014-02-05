@@ -8,7 +8,10 @@
 
 	<ul>
 		<li class="cvList" ng-repeat="cv in cvlist">
-			<div class="cvName">{{cv.ts | date:'yyyy-MM-dd' }} &nbsp; {{cv.name}}</div>
+			<div class="cvName">{{cv.ts | date:'yyyy-MM-dd HH:mm' }} &nbsp; 
+				<input ng-model="cv.name" value="cv.name" ng-blur="changeName(cv)" />
+				<!-- <input type="button" ng-click="changeName(cv)" value="Byt namn"/>  -->				
+			</div>
 			<div class="cvTools">
 				<button type="button" title="Skapa PDF" ng-click="createPdf(cv.id)"><img src="src/assets/new-pdf-16x16.png" /></button>
 				<button type="button" title="Redigera CV" ng-click="editCv(cv.id)"><img src="src/assets/pencil-16x16.png" /></button>

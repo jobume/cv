@@ -27,14 +27,14 @@
 	    <!-- No Auth Contraint! -->
 	</security-constraint>
 	
-	<!-- TODO remove this -->
+	<!-- TODO remove this 
 	<security-constraint>
 	    <web-resource-collection>
 	        <web-resource-name>Open API for testing</web-resource-name>	        
 	        <url-pattern>/api/*</url-pattern>	        
-	    </web-resource-collection>
-	    <!-- No API constraint! -->
+	    </web-resource-collection>	   
 	</security-constraint>
+	-->
 
   	<security-role>
         <role-name>cvuser</role-name>

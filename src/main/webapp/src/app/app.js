@@ -12,6 +12,11 @@ var app = angular.module('cv', ['ngRoute','ui',
 	
 	$scope.model = CvResource.get();
 	
+	$scope.start = function() {
+		CvResource.purge();
+		$location.path("/start");
+	}
+	
 	$scope.next = function() {
 		Navigation.next();
 	}

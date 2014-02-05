@@ -18,6 +18,12 @@ angular.module('savedcvs', [ 'ngRoute', 'resources.cvresource'])
 	
 	$scope.model = CvResource.get();	
 	
+	$scope.changeName = function (cv) {
+		CvResource.changeName(cv.id, cv.name, function(){
+			$location.path("/savedcvs");			
+		});
+	}
+	
 	CvResource.list(function(data) {		
 		$scope.cvlist = data;
 		$scope.loading = false;

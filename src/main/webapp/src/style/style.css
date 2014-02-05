@@ -213,6 +213,7 @@ span.orange {
 	color: rgb(242, 101, 50);
 }
 
+
 .cvList div {
 	display: inline;
 }
@@ -221,7 +222,7 @@ span.orange {
 	background-color: lightgray;
 }
 
-.cvList:hover input {
+.cvList input {
 	display: inline;
 }
 
