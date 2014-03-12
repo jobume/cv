@@ -179,7 +179,7 @@ public class CvConverterService implements ConverterService {
 	}
 
 	@Override
-	public void deleteCv(int id) throws IOException {
+	public void deleteCv(int id) throws IOException {			
 		cvRepo.deleteCv(id);
 	}
 

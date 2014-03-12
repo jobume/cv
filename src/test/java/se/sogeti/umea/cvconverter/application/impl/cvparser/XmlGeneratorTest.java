@@ -253,6 +253,7 @@ public class XmlGeneratorTest {
 		
 		// Assert
 		XmlAssertions.assertXmlSimilar(expectedXml, actualXml);
+		System.out.println(actualXml);
 
 	}
 }

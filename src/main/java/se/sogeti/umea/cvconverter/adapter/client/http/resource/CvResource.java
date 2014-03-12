@@ -184,7 +184,7 @@ public class CvResource extends Resource {
 
 	@DELETE
 	@Path("/{id}")
-	public Response deleteDv(@PathParam(value = "id") int id) {
+	public Response deleteCv(@PathParam(value = "id") int id) {
 		try {
 			service.deleteCv(id);
 		} catch (IllegalArgumentException | NoSuchElementException e) {

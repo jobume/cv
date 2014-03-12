@@ -98,7 +98,9 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		list : function(success) {						
 			$http.get(resourceUrl).success(function (data) {				
 				success(data);
-			});			
+			});
+			//var data =  [ { name : "Jonas", ts : "0", office : "Ume", id : 1}, { name : "Tobias", ts : "1", office : "Ume", id : 1} ];
+			//success(data);
 		}, 
 		
 		/**
