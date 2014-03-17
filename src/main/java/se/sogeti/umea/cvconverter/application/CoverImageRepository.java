@@ -12,6 +12,9 @@ public interface CoverImageRepository {
 
 	public List<Image> getCoverImages() throws IllegalArgumentException,
 			NoSuchElementException, IOException;
+	
+	public Image getCoverImage(int id) throws IllegalArgumentException,
+	NoSuchElementException, IOException;
 
 	public void deleteCoverImage(String name) throws IllegalArgumentException,
 			NoSuchElementException, IOException;	

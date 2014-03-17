@@ -12,9 +12,8 @@ abstract class Resource {
 	
 	@Inject
 	ConverterService service;
-
 	
 	@Context
-	UriInfo uriInfo;
+	UriInfo uriInfo;	
 	
 }

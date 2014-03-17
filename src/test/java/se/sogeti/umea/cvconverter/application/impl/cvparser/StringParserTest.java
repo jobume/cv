@@ -19,24 +19,14 @@ import se.sogeti.umea.cvconverter.application.Profile;
 import se.sogeti.umea.cvconverter.application.Skill;
 import testutil.FileReader;
 
-// TODO verify that methods are in correct order
-
-// TODO make more tests (see old testfile)
-// cvAllChapterEng
-// cvAllChapterSv
-// cvMissingChaptersEng
-// cvMissingChaptersSv
-// ...?
-
 public class StringParserTest {
 	private static CurriculumVitae cvAllChaptersEng;
 
-	private final static String FILE_NAME = "src\\test\\java\\cv-text-eng.txt";
+	private final static String FILE_NAME = "StringParserTest_Input.txt";
 
 	@BeforeClass
-	public static void setUp() throws Exception {
-		String fileText = FileReader.readFile(FILE_NAME); // non maven path:
-															// "test\\cv-text-eng.txt"
+	public static void setUp() throws Exception {		
+		String fileText = FileReader.readFile(FILE_NAME, StringParserTest.class);
 		StringBuilder cvEngText = new StringBuilder(fileText);
 
 		StringParser p = new StringParser();

@@ -10,7 +10,7 @@ public interface FileBinaryRepository {
 	 * @param fileInputStream
 	 *            the file data to save.
 	 * @param name
-	 *            the name of the file.
+	 *            the name of the file (eg. myFile.png).
 	 * @param type
 	 *            the type name of the file.
 	 * 
@@ -23,11 +23,11 @@ public interface FileBinaryRepository {
 	 * Deletes the specified file.
 	 * 
 	 * @param name
-	 *            the file name to delete.
+	 *            the file url to delete.
 	 * @param type
 	 *            the type name of the file to delete.
 	 */
-	public void deleteFile(String name, String type);
+	public void deleteFile(String url, String type);
 
 
 }

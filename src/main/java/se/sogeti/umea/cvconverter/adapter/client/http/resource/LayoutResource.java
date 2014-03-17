@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,12 +32,16 @@ import se.sogeti.umea.cvconverter.adapter.client.http.json.LayoutOverviewJson;
 import se.sogeti.umea.cvconverter.adapter.client.http.streamutil.StreamUtil;
 import se.sogeti.umea.cvconverter.application.Layout;
 import se.sogeti.umea.cvconverter.application.LayoutOverview;
+import se.sogeti.umea.cvconverter.application.LayoutRepository;
 
 @Path("/layouts")
 public class LayoutResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory
 			.getLogger(LayoutResource.class);
+	
+	@Inject
+	private LayoutRepository layoutRepository;
 
 	@GET
 	@Path("/{id}")
@@ -45,7 +50,7 @@ public class LayoutResource extends Resource {
 
 		Layout layout;
 		try {
-			layout = service.getLayout(id);
+			layout = layoutRepository.getLayout(id);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
 			LOG.error("Error getting layout with id=" + id + ".", e);
 			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
@@ -66,7 +71,7 @@ public class LayoutResource extends Resource {
 	public Response updateLayout(@PathParam("id") long id, LayoutJson layout) {
 		layout.setId(id);
 		try {
-			service.updateLayout(layout);
+			layoutRepository.updateLayout(layout);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
 			LOG.error("Error updating layout (id=" + id + ") with layout (id="
 					+ (layout != null ? layout.getId() : "null") + ").", e);
@@ -87,7 +92,7 @@ public class LayoutResource extends Resource {
 	@Path("/{id}")
 	public Response deleteCvConverter(@PathParam("id") long id) {
 		try {
-			service.deleteLayout(id);
+			layoutRepository.deleteLayout(id);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
 			LOG.error("Error deleting layout (id=" + id + ").", e);
 			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
@@ -108,7 +113,7 @@ public class LayoutResource extends Resource {
 
 		List<LayoutOverview> layouts = null;
 		try {
-			layouts = service.getLayouts();
+			layouts = layoutRepository.getLayouts();
 		} catch (IOException e) {
 			LOG.error("Error listing layouts", e);
 			throw new WebApplicationException(Response
@@ -142,7 +147,7 @@ public class LayoutResource extends Resource {
 
 		long createdId = 0;
 		try {
-			createdId = service.createLayout(name, xslStylesheet);
+			createdId = layoutRepository.createLayout(name, xslStylesheet);
 		} catch (IOException e) {
 			LOG.error("Error creating layout (name="
 					+ name

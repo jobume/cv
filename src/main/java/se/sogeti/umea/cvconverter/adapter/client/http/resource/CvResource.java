@@ -25,7 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import se.sogeti.umea.cvconverter.adapter.client.http.json.CurriculumVitaeImpl;
+import se.sogeti.umea.cvconverter.application.ConverterService;
 import se.sogeti.umea.cvconverter.application.CvOverview;
+import se.sogeti.umea.cvconverter.application.JsonCvRepository;
+import se.sogeti.umea.cvconverter.application.Repository;
 import se.sogeti.umea.cvconverter.application.TagCloud;
 import se.sogeti.umea.cvconverter.application.UserService;
 
@@ -33,23 +36,35 @@ import se.sogeti.umea.cvconverter.application.UserService;
 public class CvResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory.getLogger(CvResource.class);
-	
+
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private PortraitResource portraitResource;
+
+	@Inject
+	private CoverImageResource coverImageResource;
+
+	@Inject
+	@Repository
+	private JsonCvRepository cvRepository;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createCv(String jsonCv) {
-		LOG.debug("Creating (saving) jsonCv ... ");
+	public Response createCv(String jsonCv) {		
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = null;
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-			int id = service.createCv(cv.getName(), cv.getOffice(), jsonCv);
-			cv.setId(id);
-			LOG.debug("Saved CV " + cv.getName() + " with id " + cv.getId());
+
+			cv = setCoverImageIfExists(cv);
+
+			int id = cvRepository.createCv(cv.getName(), cv.getOffice(),
+					hasPortraitId(cv), mapper.writer().writeValueAsString(cv));
+			cv.setId(id);			
 			jsonCv = mapper.writer().writeValueAsString(cv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
@@ -60,20 +75,39 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
+	public void deleteUnusedPortraitFiles(int portraitId) {
+		if (portraitIsUnused(portraitId)) {
+			portraitResource.deleteImage(portraitId);
+		}
+	}
+
+	private boolean portraitIsUnused(int portraitId) {
+		return portraitId > 0 && cvRepository.countPortraitIds(portraitId) == 0;
+	}
+
+	private CurriculumVitaeImpl setCoverImageIfExists(CurriculumVitaeImpl cv)
+			throws IOException {
+		if (cv != null && cv.getCoverImage() != null
+				&& cv.getCoverImage().getId() > 0) {
+			cv.setCoverImage(coverImageResource.getCoverImage(cv
+					.getCoverImage().getId()));
+		}
+		return cv;
+	}
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<CvOverview> getCvs(@Context HttpServletRequest req) {
 		String userName = req.getRemoteUser();
-		if(userName==null) {
+		if (userName == null) {
 			LOG.info("No user with getRemoteUser()");
 			throw new WebApplicationException(Response
-					.status(Status.UNAUTHORIZED)
-					.entity("No user in request!").build());
+					.status(Status.UNAUTHORIZED).entity("No user in request!")
+					.build());
 		}
 		String office = userService.getOfficeForUser(userName);
-		try {
-			LOG.debug("Listing CV:s for office: " + office);
-			return service.listCvs(office);
+		try {			
+			return cvRepository.listCvs(office);
 		} catch (IOException io) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -88,7 +122,7 @@ public class CvResource extends Resource {
 
 		String jsonCv;
 		try {
-			jsonCv = service.getCv(id);
+			jsonCv = cvRepository.getCv(id);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -100,15 +134,15 @@ public class CvResource extends Resource {
 
 	@PUT
 	@Path("/partial/{id}")
-	public Response updateName(@PathParam(value= "id") int id, String name) {
+	public Response updateName(@PathParam(value = "id") int id, String name) {
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
 		try {
-			String jsonCv = service.getCv(id);
+			String jsonCv = cvRepository.getCv(id);
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 			cv.setName(name);
 			jsonCv = mapper.writer().writeValueAsString(cv);
-			service.updateCv(id, cv.getName(), jsonCv);
+			cvRepository.updateCv(id, cv.getName(), hasPortraitId(cv), jsonCv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -117,22 +151,31 @@ public class CvResource extends Resource {
 
 		return Response.ok().build();
 	}
-	
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public Response updateCv(@PathParam(value = "id") int id, String jsonCv) {
 
 		ObjectMapper mapper = new ObjectMapper();
-		CurriculumVitaeImpl cv;
+		CurriculumVitaeImpl oldCv;
+		CurriculumVitaeImpl newCv;
 		try {
-			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
+			oldCv = mapper.readValue(cvRepository.getCv(id),
+					CurriculumVitaeImpl.class);
+			newCv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
+			newCv = setCoverImageIfExists(newCv);
+			
+			int oldPortraitId = hasPortraitId(oldCv);
+			int newPortraitId = hasPortraitId(newCv);
 
-			LOG.debug("Updating jsonCv ... ");
+			jsonCv = mapper.writer().writeValueAsString(newCv);
 
-			jsonCv = mapper.writer().writeValueAsString(cv);
+			cvRepository.updateCv(id, newCv.getName(), newPortraitId, jsonCv);
+			if (oldPortraitId != newPortraitId) {
+				deleteUnusedPortraitFiles(oldPortraitId);
+			}
 
-			service.updateCv(id, cv.getName(), jsonCv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -142,17 +185,24 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
+	private int hasPortraitId(CurriculumVitaeImpl cv) {
+		if (cv.getProfile() != null && cv.getProfile().getPortrait() != null
+				&& cv.getProfile().getPortrait().getId() > 0) {
+			return cv.getProfile().getPortrait().getId();
+		}
+		return -1;
+	}
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response generateTagCloud(String jsonCv) {
-
-		LOG.debug("Generating tag cloud ... ");
+	public Response generateTagCloud(String jsonCv) {		
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
 
 		try {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
+			cv = setCoverImageIfExists(cv);
 			createTagCloud(cv);
 			jsonCv = mapper.writer().writeValueAsString(cv);
 		} catch (IOException e) {
@@ -164,9 +214,7 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
-	private CurriculumVitaeImpl createTagCloud(CurriculumVitaeImpl cv) {
-		LOG.debug("Generating tag cloud ... ");
-
+	private CurriculumVitaeImpl createTagCloud(CurriculumVitaeImpl cv) {		
 		try {
 			TagCloud cloud = new TagCloud(cv);
 			cloud.generateTags();
@@ -177,8 +225,7 @@ public class CvResource extends Resource {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(t.getMessage()).build());
-		}
-		LOG.debug("Returning cv with word cloud");
+		}		
 		return cv;
 	}
 
@@ -186,7 +233,22 @@ public class CvResource extends Resource {
 	@Path("/{id}")
 	public Response deleteCv(@PathParam(value = "id") int id) {
 		try {
-			service.deleteCv(id);
+			String jsonCv = cvRepository.getCv(id);
+
+			if (jsonCv == null) {
+				throw new WebApplicationException(Response
+						.status(Status.NOT_FOUND).entity("No CV for id: " + id)
+						.build());
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			CurriculumVitaeImpl deletedCv = mapper.readValue(jsonCv,
+					CurriculumVitaeImpl.class);
+			cvRepository.deleteCv(id);
+
+			int portraitId = hasPortraitId(deletedCv);
+			deleteUnusedPortraitFiles(portraitId);
+
 		} catch (IllegalArgumentException | NoSuchElementException e) {
 			LOG.error("Error deleting cv (id=" + id + ").", e);
 			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
@@ -200,4 +262,21 @@ public class CvResource extends Resource {
 
 		return Response.ok().build();
 	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public void setConverterService(ConverterService service) {
+		this.service = service;
+	}
+
+	public void setPortraitResource(PortraitResource portraitResource) {
+		this.portraitResource = portraitResource;
+	}
+
+	public void setCvRepository(JsonCvRepository cvRepository) {
+		this.cvRepository = cvRepository;
+	}
+
 }

@@ -17,8 +17,8 @@
 	
 	<div>
 		<span ng-repeat="coverimage in coverimages">
-			<input type="radio" name="coverimage" value="{{coverimage.url}}" ng-model="model.cv.coverImage.url" ng-change="imageSelected()" />
-			<img src="{{coverimage.url}}" alt="Cover Image" height="42" width="42" />
+			<input type="radio" name="coverimage" value="{{coverimage.id}}" ng-model="model.cv.coverImage.id" ng-change="imageSelected()" />
+			<img src="{{coverimage.url}}" alt="Cover Image" width="42" />
 		</span>		
 	</div>
 </fieldset>
@@ -36,6 +36,6 @@
 		<p>Ladda upp en ny bild</p>
 	</div>
 	
-	<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+	<input type="file" name="file" onchange="angular.element(this).scope().uploadPortrait(this.files)"/>
 </fieldset>
 </div>

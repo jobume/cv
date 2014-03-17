@@ -10,15 +10,16 @@ angular.module('resources.portraitresource', []).factory('PortraitResource', ['$
 		 * Uploads a portrait image and returns the public location for the file.
 		 * 
 		 * @param files		: form files
+		 * @param cvId		: id of the cv to create portrait for
 		 * @param success	: callback function to be executed on success. 
 		 * 					  function(data) {  }
 		 * 					  where data is the url to the uploaded image.
 		 */
-		create : function (files, name, success) {
+		create : function (files, cvId, success) {
 			var fd = new FormData();
 		    //Take the first selected file
-		    fd.append("file", files[0]);
-		    fd.append("fileName", name);
+		    fd.append("file", files[0]);		    
+		    fd.append("cvId", cvId);
 		    $http.post(resourceUrl, fd, {
 		        withCredentials: true,
 		        headers: {'Content-Type': undefined },

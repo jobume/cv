@@ -5,14 +5,11 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -21,10 +18,8 @@ import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import se.sogeti.umea.cvconverter.adapter.client.http.json.CurriculumVitaeImpl;
 import se.sogeti.umea.cvconverter.adapter.client.http.streamutil.StreamUtil;
 import se.sogeti.umea.cvconverter.application.CurriculumVitae;
-import se.sogeti.umea.cvconverter.application.TagCloud;
 import se.sogeti.umea.cvconverter.application.UserService;
 
 import com.sun.jersey.multipart.FormDataMultiPart;
@@ -51,13 +46,9 @@ public class RtfParserResource extends Resource {
 			throw new WebApplicationException(Response
 					.status(Status.UNAUTHORIZED)
 					.entity("No user in request!").build());
-		}
-		LOG.debug("Creating CV for user: " + userName + "");
+		}		
 		InputStream uploadedInputStream = multiPartRequest
-				.getField("rtfCvFile").getValueAs(InputStream.class);
-		LOG.debug("System file.encoding is: "
-				+ System.getProperty("file.encoding"));
-		LOG.debug("Reading file with: " + "ISO-8859-1");
+				.getField("rtfCvFile").getValueAs(InputStream.class);		
 		String rtfCv = StreamUtil.readStreamToString(uploadedInputStream,
 				"ISO-8859-1");
 
@@ -81,51 +72,6 @@ public class RtfParserResource extends Resource {
 		mapper.configure(Feature.INDENT_OUTPUT, true);
 
 		String cvJson = mapper.writer().writeValueAsString(cv);
-
-		return Response.ok(cvJson).build();
-	}
-
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response generateTagCloud(String jsonCv) {
-		LOG.debug("Generating tag cloud ... ");
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		CurriculumVitaeImpl cv;
-		String cvJson;
-		try {
-			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
-
-			boolean noTagCloud = false;
-			if (cv.getTags() == null) {
-				noTagCloud = true;
-			} else if (cv.getTags().size() == 0) {
-				noTagCloud = true;
-			}
-			if (noTagCloud) {
-				LOG.debug("CV did not have a word cloud. Generating cloud.");
-				TagCloud cloud = new TagCloud(cv);
-				cloud.generateTags();
-				cv.setTags(cloud.getTags());
-			} else {
-				LOG.debug("CV had a word cloud. Not updating.");
-			}
-
-			cvJson = mapper.writer().writeValueAsString(cv);
-
-		} catch (IOException e) {
-			LOG.error("Error updating cv with tag cloud", e);
-			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build());
-		} catch (Throwable t) {
-			LOG.error("Unknown error updating cv with tag cloud", t);
-			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR)
-					.entity(t.getMessage()).build());
-		}
-		LOG.debug("Returning cv with word cloud");
 
 		return Response.ok(cvJson).build();
 	}

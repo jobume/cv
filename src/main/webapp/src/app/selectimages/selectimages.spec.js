@@ -41,7 +41,7 @@ describe('Test suite for the select images controller', function(){
   }));
   
   it('should have the expected methods', inject(function() {
-	  expect(scope.uploadFile).toBeDefined();	  
+	  expect(scope.uploadPortrait).toBeDefined();	  
   }));
   
   it('should enable next when url is set', inject(function() {

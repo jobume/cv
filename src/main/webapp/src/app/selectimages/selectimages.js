@@ -42,7 +42,7 @@ var uploader = angular.module(
 	// CoverImage and Portrait must be set, and must have a url
 	function checkState() {
 		if ($scope.model.cv.coverImage && 
-			$scope.model.cv.coverImage.url && 
+			$scope.model.cv.coverImage.id && 
 			$scope.model.cv.profile.portrait && 
 			$scope.model.cv.profile.portrait.url) {
 			Navigation.getState().disabled = false			
@@ -62,39 +62,55 @@ var uploader = angular.module(
 	 * 
 	 * @param files file list
 	 */
-	$scope.uploadFile = function(files) {
+	$scope.uploadPortrait = function(files) {
 		Navigation.getState().disabled = true;
 		$scope.loadingportrait = true;
-		PortraitResource.create(files, $scope.model.cv.profile.name, function (data) {
+		if($scope.model.cv.id > 0) {
+			createPortrait(files);
+		} else {
+			CvResource.save( function () {
+				createPortrait(files);
+			});
+		}
+		
+		$scope.$apply();
+		
+	}
+	
+	var createPortrait = function (files) {
+		console.log("Saving portrait with scope id: " + $scope.model.cv.id);
+		PortraitResource.create(files, $scope.model.cv.id, function (data) {
 			$scope.model.cv.profile.portrait = data;
 			checkState();
 			$scope.loadingportrait = false;
 		});
-		$scope.$apply();
-	}
+	} ;
+	
+	var createPdf = function () {
+		$scope.saving = false;
+		PdfResource.create($scope.model.cv, defaultLayout, function(getUrl) {
+			$scope.generating = false;
+			$window.open(getUrl) ;
+			Navigation.getState().disabled = false;
+		});
+	} ;
 	
 	Navigation.onNext(function(success) {	
 				
 		if($scope.model.cv.id > 0) {
 			$scope.saving = true;
-			CvResource.update(function () {
-				$scope.saving = false;
-			});
+			CvResource.update(createPdf);
 		} else {
 			$scope.saving = true;			
-			CvResource.save(function () {				
-				$scope.saving = false;
-			});
+			CvResource.save(createPdf);
 		}
 		
 		$scope.generating = true;
 		
-		PdfResource.create($scope.model.cv, defaultLayout, function(getUrl) {
-			$scope.generating = false;
-			$window.open(getUrl) ;
-			Navigation.getState().disabled = false;
-		});			
+					
 	});
+	
+	
 
 
 } ]);

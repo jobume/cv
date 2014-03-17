@@ -4,8 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -35,7 +35,8 @@ public class ImageServlet extends HttpServlet {
 
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 
-	@Inject @Repository
+	@Inject
+	@Repository
 	private LocalImageFileBinaryRepository fileRepository;
 
 	protected void doGet(HttpServletRequest request,
@@ -49,17 +50,17 @@ public class ImageServlet extends HttpServlet {
 			return;
 		}
 
-		LOG.debug("ImagePath is: " + fileRepository.getFileLocationOnDisk());
-		File image = new File(fileRepository.getFileLocationOnDisk(),
-				URLDecoder.decode(requestedImage, "UTF-8"));
-
-		if (!image.exists()) {
+		File image;
+		try {
+			image = fileRepository.getFile(requestedImage);
+		} catch (FileNotFoundException fnf) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			LOG.debug("Did not find image : " + image);
+			LOG.debug("Did not find image : " + requestedImage);
 			return;
 		}
 
-		String contentType = getServletContext().getMimeType(image.getName().toLowerCase());
+		String contentType = getServletContext().getMimeType(
+				image.getName().toLowerCase());
 
 		if (contentType == null || !contentType.startsWith("image")) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);

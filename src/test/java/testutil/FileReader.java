@@ -3,8 +3,10 @@ package testutil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 public class FileReader {
@@ -12,6 +14,14 @@ public class FileReader {
 	public final static String UTF8 = "UTF-8";
 	public final static String ISO88591 = "ISO-8859-1";
 
+	public static String readFile(String name, Class<?> clazz) throws IOException {		
+		URL res = clazz.getResource(name);
+		if(res == null) {
+			throw new FileNotFoundException("No resource: " + name);
+		}
+		return readFile(clazz.getResource(name).getFile(), UTF8);		
+	}
+	
 	public static String readFile(String fileName) throws IOException {
 		File file = new File(fileName);
 
@@ -33,6 +43,9 @@ public class FileReader {
 	public static String readFile(String fileName, String encoding)
 			throws IOException {
 		File file = new File(fileName);
+		if(!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
 		StringBuilder stringBuilder = new StringBuilder();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(file), Charset.forName(encoding)));) {

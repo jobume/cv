@@ -5,23 +5,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Image {
 
+	private int id;
+	
 	private String name;
 
 	private String url;
 
-	public Image(String url) {
-		this.url = url;
-		String[] urlSplitBySlash = url.split("/");
-		if (urlSplitBySlash.length > 0)
-			name = urlSplitBySlash[urlSplitBySlash.length - 1];
-
+	public Image(int id) {
+		this.id = id;
 	}
 
 	public Image() {
 		super();
 	}
 
-	public Image(String name, String url) {
+	public Image(int id, String name, String url) {
+		this.id = id;
 		this.name = name;
 		this.url = url;		
 	}
@@ -41,4 +40,20 @@ public class Image {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Image [id=" + id + ", name=" + name + ", url=" + url + "]";
+	}
+	
+	
+	
 }

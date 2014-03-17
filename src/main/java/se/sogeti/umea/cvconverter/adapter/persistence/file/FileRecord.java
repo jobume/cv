@@ -2,14 +2,15 @@ package se.sogeti.umea.cvconverter.adapter.persistence.file;
 
 public class FileRecord {
 	
-	private int id;
+	private int id;	
 	private final String name;
 	private final String type;
 	private final String url;
 
-	public FileRecord(String name, String type, String url) {
+	public FileRecord(int id, String name, String type, String url) {
 		super();
-		this.name = name;
+		this.id = id;
+		this.name = name;		
 		this.type = type;
 		this.url = url;
 	}
@@ -32,6 +33,12 @@ public class FileRecord {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "FileRecord [id=" + id + ", name=" + name + ", type=" + type
+				+ ", url=" + url + "]";
 	}
 	
 	

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class FopErrorListener implements EventListener {
 
+	@SuppressWarnings("unused")
 	private final static Logger LOG = LoggerFactory
 			.getLogger(FopErrorListener.class);
 
@@ -22,28 +23,7 @@ public class FopErrorListener implements EventListener {
 		EventSeverity severity = event.getSeverity();
 		if (severity == EventSeverity.FATAL) {
 			events.add(event);
-		}
-
-		if("fontLoadingErrorAtAutoDetection".equals(event.getEventKey())) {
-			LOG.debug("Event toString(): " + event.toString());
-			LOG.debug("Event source: " + ( event.getSource() != null ? event.getSource().toString() : null ) );
-		}
-		
-		if (severity == EventSeverity.WARN || severity == EventSeverity.ERROR
-				|| severity == EventSeverity.FATAL) {
-
-			if (!("org.apache.fop.fonts.FontEventProducer".equals(event
-					.getEventGroupID()))) {
-				LOG.debug("Fop EventKey: " + event.getEventKey()
-						+ "\n Fop EventGroupId: " + event.getEventGroupID()
-						+ " \n Fop EventId: " + event.getEventID());
-			}
-			if("imageNotFound".equals(event.getEventKey())) {
-				LOG.debug("Event toString: "  + event.toString());				
-			}
-
-		}
-		
+		}		
 	}
 
 	public List<Event> getEvents() {

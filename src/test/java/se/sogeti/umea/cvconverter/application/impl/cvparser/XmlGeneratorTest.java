@@ -36,13 +36,14 @@ import testutil.XmlAssertions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XmlGeneratorTest {
-	private static final String TEST_XML_FILE = "src\\test\\java\\test.xml"; // non
-																				// maven
-																				// path:
-																				// "test\\test.xml"
+	
+	private static final String EXPECTED_XML_OUTPUT = "XmlGeneratorTest_Expected.xml";
+	
 	private static final String ENCODING = "UTF-8";
+	
 	@Mock
 	private CurriculumVitae mockCv;
+	
 	@Mock
 	private Profile mockProfile;
 
@@ -246,14 +247,13 @@ public class XmlGeneratorTest {
 		when(mockCv.getPersonalQualities()).thenReturn(personalQualities);
 
 		// Get expected XML
-		String expectedXml = FileReader.readFile(TEST_XML_FILE);
+		String expectedXml = FileReader.readFile(EXPECTED_XML_OUTPUT, this.getClass());
 
 		// Generate actual XML
 		String actualXml = xmlGenerator.generateXml(mockCv, ENCODING);
 		
 		// Assert
-		XmlAssertions.assertXmlSimilar(expectedXml, actualXml);
-		System.out.println(actualXml);
+		XmlAssertions.assertXmlSimilar(expectedXml, actualXml);		
 
 	}
 }

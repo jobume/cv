@@ -5,24 +5,32 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.sogeti.umea.cvconverter.application.Repository;
 
 /**
  * Repository for storing uploaded files.
  * 
- * The file repository stores the file binary data (locally or remote) and a record of the stored file.
+ * The file repository stores the file binary data (locally or remote) and a
+ * record of the stored file.
  * 
  * @author joparo
  * 
  */
 public class FileRepository {
 
-	@Inject @Repository
+	private final static Logger LOG = LoggerFactory
+			.getLogger(FileRepository.class);
+
+	@Inject
+	@Repository
 	private FileRecordRepository recordRepository;
-	
-	@Inject @Repository
+
+	@Inject
+	@Repository
 	private FileBinaryRepository binaryRepository;
-	
 
 	/**
 	 * Creates a file from file upload.
@@ -31,6 +39,8 @@ public class FileRepository {
 	 *            the file upload input stream.
 	 * @param name
 	 *            the name of the file.
+	 * @param foreignKey
+	 *            a foreignKey to this file record.
 	 * @param type
 	 *            the type name of the file.
 	 * 
@@ -39,9 +49,8 @@ public class FileRepository {
 	public FileRecord createFile(InputStream fileInputStream, String name,
 			String type) {
 		String url = binaryRepository.createFile(fileInputStream, name, type);
-		return recordRepository.createFileRecord(name, type, url);		
+		return recordRepository.createFileRecord(name, type, url);
 	}
-
 
 	/**
 	 * Lists all file names for a specified type.
@@ -63,9 +72,39 @@ public class FileRepository {
 	 * @param type
 	 *            the type name of the file to be deleted.
 	 */
-	public void deleteFile(String name, String type) {
-		binaryRepository.deleteFile(name, type);
-		recordRepository.deleteFileRecord(name, type);
+	public void deleteFile(int id) {
+		FileRecord fr = recordRepository.getFileRecord(id);
+		if (fr != null) {
+			recordRepository.deleteFileRecord(id);
+			LOG.debug("Deleted file record " + fr + ". Checking if the binary file is unused ...");
+			deleteBinaryFileIfUnused(fr);
+		} else {
+			LOG.warn("Trying to delete non-existent file record with id: " + id);
+		}
+	}
+
+	private void deleteBinaryFileIfUnused(FileRecord fr) {
+		List<FileRecord> fileRecords = recordRepository.listFileRecords(null);
+
+		for (FileRecord record : fileRecords) {
+			if (record.getUrl().equals(fr.getUrl())) {
+				LOG.debug("Found a file record with matching url: " + record + " The binary will not be deleted.");
+				return;
+			}
+		}
+		binaryRepository.deleteFile(fr.getUrl(), fr.getType());
+
+	}
+
+	/**
+	 * Gets a file record with the specified id.
+	 * 
+	 * @param id
+	 *            the id of the file record.
+	 * @return the complete file record.
+	 */
+	public FileRecord getFile(int id) {
+		return recordRepository.getFileRecord(id);
 	}
 
 }

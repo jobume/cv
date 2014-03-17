@@ -23,8 +23,10 @@ public class FileCoverImageRepository implements CoverImageRepository {
 	@Override
 	public Image createCoverImage(InputStream fileInputStream, String name)
 			throws IOException {
-		FileRecord fileRecord = fileRepository.createFile(fileInputStream, name, TYPE_NAME);
-		return new Image(fileRecord.getName(), fileRecord.getUrl());
+		FileRecord fileRecord = fileRepository.createFile(fileInputStream,
+				name, TYPE_NAME);
+		return new Image(fileRecord.getId(), fileRecord.getName(),
+				fileRecord.getUrl());
 	}
 
 	@Override
@@ -33,7 +35,8 @@ public class FileCoverImageRepository implements CoverImageRepository {
 		List<Image> images = new ArrayList<>();
 		List<FileRecord> records = fileRepository.listFiles(TYPE_NAME);
 		for (FileRecord record : records) {
-			images.add(new Image(record.getName(), record.getUrl()));
+			images.add(new Image(record.getId(), record.getName(), record
+					.getUrl()));
 		}
 		return images;
 	}
@@ -41,7 +44,19 @@ public class FileCoverImageRepository implements CoverImageRepository {
 	@Override
 	public void deleteCoverImage(String name) throws IllegalArgumentException,
 			NoSuchElementException, IOException {
-		fileRepository.deleteFile(name, TYPE_NAME);
+		List<FileRecord> files = fileRepository.listFiles(TYPE_NAME);
+		for (FileRecord file : files) {
+			if (file.getName().equals(name)) {
+				fileRepository.deleteFile(file.getId());
+				break;
+			}
+		}
 	}
 
+	@Override
+	public Image getCoverImage(int id) throws IllegalArgumentException,
+			NoSuchElementException, IOException {
+		FileRecord fr = fileRepository.getFile(id);
+		return new Image(fr.getId(), fr.getName(), fr.getUrl());
+	}
 }

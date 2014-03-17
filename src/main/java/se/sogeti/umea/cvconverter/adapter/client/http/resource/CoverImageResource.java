@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.sogeti.umea.cvconverter.application.CoverImageRepository;
 import se.sogeti.umea.cvconverter.application.Image;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -30,6 +32,9 @@ public class CoverImageResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory
 			.getLogger(CoverImageResource.class);
+	
+	@Inject
+	private CoverImageRepository service;
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -53,6 +58,18 @@ public class CoverImageResource extends Resource {
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getMessage()).build());
 		}
+	}
+
+	/**
+	 * Gets a cover image by id. Note that this method is not a web-accessible
+	 * method.
+	 * 
+	 * @param id
+	 *            the id of the cover Image
+	 * @return a cover image with url and name.
+	 */
+	public Image getCoverImage(int id) throws IOException {
+		return service.getCoverImage(id);
 	}
 
 	@GET
