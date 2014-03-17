@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface JsonCvRepository {
 	
-	public int createCv(String name, String office, int portraitId, String jsonCv) throws IOException;
+	public int createCv(CurriculumVitae cv) throws IOException;
 	
-	public String getCv(int id) throws IOException;
+	public CurriculumVitae getCv(int id) throws IOException;
 	
-	public void updateCv(int id, String name, int portraitId, String jsonCv) throws IOException;
+	public void updateCv(CurriculumVitae cv) throws IOException;
 	
 	public void deleteCv(int id) throws IOException;
 	

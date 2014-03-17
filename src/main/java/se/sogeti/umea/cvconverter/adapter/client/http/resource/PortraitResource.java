@@ -42,7 +42,7 @@ public class PortraitResource extends Resource {
 	private final static Logger LOG = LoggerFactory
 			.getLogger(CoverImageResource.class);
 
-	private final static String TYPE_NAME = "portrait";	
+	private final static String TYPE_NAME = "portrait";
 
 	@Inject
 	FileRepository fileRepo;
@@ -52,10 +52,10 @@ public class PortraitResource extends Resource {
 
 	@Inject
 	CvResource cvResource;
-	
+
 	@Inject
 	@Repository
-	JsonCvRepository cvRepository;	
+	JsonCvRepository cvRepository;
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -67,7 +67,7 @@ public class PortraitResource extends Resource {
 			JsonMappingException, IOException {
 
 		CurriculumVitae cv = getCv(cvId);
-		
+
 		FileRecord record = fileRepo.createFile(uploadedInputStream,
 				fileDetail.getFileName(), TYPE_NAME);
 		Image portrait = new Image(record.getId(), record.getName(),
@@ -80,17 +80,18 @@ public class PortraitResource extends Resource {
 
 		String url = record.getUrl();
 
-		LOG.debug("File " + fileDetail.getFileName() + " saved with url: " + url);
+		LOG.debug("File " + fileDetail.getFileName() + " saved with url: "
+				+ url);
 
 		return portrait;
 	}
 
 	private CurriculumVitae getCv(int id) throws WebApplicationException {
 		try {
-			String jsonCv = cvRepository.getCv(id);
-			if (jsonCv != null) {
-				ObjectMapper mapper = new ObjectMapper();
-				return mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
+			CurriculumVitaeImpl cv = (CurriculumVitaeImpl) cvRepository
+					.getCv(id);
+			if (cv != null) {
+				return cv;
 			} else {
 				throw new WebApplicationException(Response
 						.status(Status.NOT_FOUND)

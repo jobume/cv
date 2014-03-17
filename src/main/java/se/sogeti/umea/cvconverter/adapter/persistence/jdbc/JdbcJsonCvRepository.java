@@ -13,9 +13,12 @@ import java.util.NoSuchElementException;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.sogeti.umea.cvconverter.adapter.client.http.json.CurriculumVitaeImpl;
+import se.sogeti.umea.cvconverter.application.CurriculumVitae;
 import se.sogeti.umea.cvconverter.application.CvOverview;
 import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Repository;
@@ -38,18 +41,22 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 	DataSource ds;
 
 	@Override
-	public int createCv(String name, String office, int portraitId,
-			String jsonCv) throws IOException {
+	public int createCv(CurriculumVitae cv) throws IOException {
 
 		String stmt = JdbcUtils.createInsert(TBL_CV, COL_NAME, COL_OFFICE,
 				COL_JSON, COL_PORTRAIT_ID);
 		try (Connection con = ds.getConnection();
 				PreparedStatement ps = con.prepareStatement(stmt,
 						Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, name);
-			ps.setString(2, office);
-			ps.setString(3, jsonCv);
-			ps.setInt(4, portraitId);
+			ps.setString(1, cv.getName());
+			ps.setString(2, cv.getOffice());
+			ps.setString(3, new ObjectMapper().writer().writeValueAsString(cv));
+			if (cv.getProfile() != null
+					&& cv.getProfile().getPortrait() != null) {
+				ps.setInt(4, cv.getProfile().getPortrait().getId());
+			} else {
+				ps.setInt(4, -1);
+			}
 			ps.executeUpdate();
 			ResultSet generatedKeys = ps.getGeneratedKeys();
 			if (generatedKeys.next()) {
@@ -63,7 +70,7 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 	}
 
 	@Override
-	public String getCv(int id) throws IOException {
+	public CurriculumVitae getCv(int id) throws IOException {
 
 		String stmt = JdbcUtils.createSelectWhere(TBL_CV, COL_ID);
 
@@ -73,7 +80,8 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					return rs.getString(COL_JSON);
+					return new ObjectMapper().readValue(rs.getString(COL_JSON),
+							CurriculumVitaeImpl.class);
 				}
 			}
 
@@ -85,18 +93,22 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 	}
 
 	@Override
-	public void updateCv(int id, String name, int portraitId, String jsonCv)
-			throws IOException {
+	public void updateCv(CurriculumVitae cv) throws IOException {
 
 		String stmt = "UPDATE " + TBL_CV + " SET " + COL_NAME + "= ?, "
 				+ COL_PORTRAIT_ID + "=?, " + COL_JSON + "= ? WHERE " + COL_ID
 				+ "= ?";
 		try (Connection con = ds.getConnection();
 				PreparedStatement ps = con.prepareStatement(stmt)) {
-			ps.setString(1, name);
-			ps.setInt(2, portraitId);
-			ps.setString(3, jsonCv);
-			ps.setInt(4, id);
+			ps.setString(1, cv.getName());
+			if (cv.getProfile() != null
+					&& cv.getProfile().getPortrait() != null) {
+				ps.setInt(2, cv.getProfile().getPortrait().getId());
+			} else {
+				ps.setInt(2, -1);
+			}
+			ps.setString(3, new ObjectMapper().writer().writeValueAsString(cv));
+			ps.setInt(4, cv.getId());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

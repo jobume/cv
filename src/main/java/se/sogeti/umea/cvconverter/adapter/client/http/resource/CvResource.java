@@ -53,7 +53,7 @@ public class CvResource extends Resource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createCv(String jsonCv) {		
+	public Response createCv(String jsonCv) {
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = null;
@@ -62,9 +62,9 @@ public class CvResource extends Resource {
 
 			cv = setCoverImageIfExists(cv);
 
-			int id = cvRepository.createCv(cv.getName(), cv.getOffice(),
-					hasPortraitId(cv), mapper.writer().writeValueAsString(cv));
-			cv.setId(id);			
+			int id = cvRepository.createCv(cv);
+			cv.setId(id);
+
 			jsonCv = mapper.writer().writeValueAsString(cv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
@@ -106,7 +106,7 @@ public class CvResource extends Resource {
 					.build());
 		}
 		String office = userService.getOfficeForUser(userName);
-		try {			
+		try {
 			return cvRepository.listCvs(office);
 		} catch (IOException io) {
 			throw new WebApplicationException(Response
@@ -122,7 +122,8 @@ public class CvResource extends Resource {
 
 		String jsonCv;
 		try {
-			jsonCv = cvRepository.getCv(id);
+			CurriculumVitaeImpl cv = getCvOrThrowNotFound(id);
+			jsonCv = new ObjectMapper().writer().writeValueAsString(cv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -132,17 +133,24 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
+	private CurriculumVitaeImpl getCvOrThrowNotFound(int id) throws IOException {
+		CurriculumVitaeImpl cv = (CurriculumVitaeImpl) cvRepository.getCv(id);
+		if (cv == null) {
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
+					.entity("No cv with id: " + id).build());
+		} else {
+			return cv;
+		}
+	}
+
 	@PUT
 	@Path("/partial/{id}")
 	public Response updateName(@PathParam(value = "id") int id, String name) {
-		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
 		try {
-			String jsonCv = cvRepository.getCv(id);
-			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
+			cv = (CurriculumVitaeImpl) cvRepository.getCv(id);
 			cv.setName(name);
-			jsonCv = mapper.writer().writeValueAsString(cv);
-			cvRepository.updateCv(id, cv.getName(), hasPortraitId(cv), jsonCv);
+			cvRepository.updateCv(cv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
@@ -161,17 +169,14 @@ public class CvResource extends Resource {
 		CurriculumVitaeImpl oldCv;
 		CurriculumVitaeImpl newCv;
 		try {
-			oldCv = mapper.readValue(cvRepository.getCv(id),
-					CurriculumVitaeImpl.class);
+			oldCv = (CurriculumVitaeImpl) cvRepository.getCv(id);
 			newCv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 			newCv = setCoverImageIfExists(newCv);
-			
+
 			int oldPortraitId = hasPortraitId(oldCv);
 			int newPortraitId = hasPortraitId(newCv);
 
-			jsonCv = mapper.writer().writeValueAsString(newCv);
-
-			cvRepository.updateCv(id, newCv.getName(), newPortraitId, jsonCv);
+			cvRepository.updateCv(newCv);
 			if (oldPortraitId != newPortraitId) {
 				deleteUnusedPortraitFiles(oldPortraitId);
 			}
@@ -195,7 +200,7 @@ public class CvResource extends Resource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response generateTagCloud(String jsonCv) {		
+	public Response generateTagCloud(String jsonCv) {
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
@@ -214,7 +219,7 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
-	private CurriculumVitaeImpl createTagCloud(CurriculumVitaeImpl cv) {		
+	private CurriculumVitaeImpl createTagCloud(CurriculumVitaeImpl cv) {
 		try {
 			TagCloud cloud = new TagCloud(cv);
 			cloud.generateTags();
@@ -225,7 +230,7 @@ public class CvResource extends Resource {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(t.getMessage()).build());
-		}		
+		}
 		return cv;
 	}
 
@@ -233,20 +238,11 @@ public class CvResource extends Resource {
 	@Path("/{id}")
 	public Response deleteCv(@PathParam(value = "id") int id) {
 		try {
-			String jsonCv = cvRepository.getCv(id);
+			CurriculumVitaeImpl cvToDelete = getCvOrThrowNotFound(id);
 
-			if (jsonCv == null) {
-				throw new WebApplicationException(Response
-						.status(Status.NOT_FOUND).entity("No CV for id: " + id)
-						.build());
-			}
-
-			ObjectMapper mapper = new ObjectMapper();
-			CurriculumVitaeImpl deletedCv = mapper.readValue(jsonCv,
-					CurriculumVitaeImpl.class);
 			cvRepository.deleteCv(id);
 
-			int portraitId = hasPortraitId(deletedCv);
+			int portraitId = hasPortraitId(cvToDelete);
 			deleteUnusedPortraitFiles(portraitId);
 
 		} catch (IllegalArgumentException | NoSuchElementException e) {

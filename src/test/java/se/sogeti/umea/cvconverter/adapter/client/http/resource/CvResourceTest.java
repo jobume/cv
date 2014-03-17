@@ -51,12 +51,10 @@ public class CvResourceTest {
 		int cvPortraitId = 36;
 		int cvId = 42;
 
-		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = createCvWithPortrait(cvPortraitId, cvId);
-		String jsonCv = mapper.writer().writeValueAsString(cv);
 
 		setPortraitIdToUnused(cvPortraitId);
-		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(jsonCv);
+		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(cv);
 
 		cvResource.deleteCv(cvId);
 
@@ -74,12 +72,10 @@ public class CvResourceTest {
 		int cvPortraitId = 36;
 		int cvId = 42;
 
-		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = createCvWithPortrait(cvPortraitId, cvId);
-		String jsonCv = mapper.writer().writeValueAsString(cv);
 
 		setPortraitIdToUsed(cvPortraitId);
-		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(jsonCv);
+		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(cv);
 
 		cvResource.deleteCv(cvId);
 
@@ -98,25 +94,20 @@ public class CvResourceTest {
 		int cvId = 42;
 
 		ObjectMapper mapper = new ObjectMapper();
-		CurriculumVitaeImpl cv = createCvWithPortrait(cvPortraitId, cvId);
-		String jsonCv = mapper.writer().writeValueAsString(cv);
+		CurriculumVitaeImpl oldCv = createCvWithPortrait(cvPortraitId, cvId);
 
 		setPortraitIdToUnused(cvPortraitId);
 
-		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(jsonCv);
+		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(oldCv);
 
-		setNewPortraitOnCv(cv);
-		cvResource.updateCv(cvId, mapper.writer().writeValueAsString(cv));
+		CurriculumVitaeImpl newCv = createCvWithPortrait(235, cvId);
+
+		cvResource.updateCv(cvId, mapper.writer().writeValueAsString(newCv));
 
 		Mockito.verify(jsonRepoMock, Mockito.times(1)).countPortraitIds(
 				cvPortraitId);
 		Mockito.verify(portraitResourceMock, Mockito.times(1)).deleteImage(
 				cvPortraitId);
-	}
-
-	private void setNewPortraitOnCv(CurriculumVitaeImpl cv) {
-		int newPortraitId = 235;
-		cv.getProfile().setPortrait(new Image(newPortraitId, "new name", "new url"));
 	}
 
 	@Test
@@ -126,15 +117,12 @@ public class CvResourceTest {
 		int cvId = 42;
 
 		ObjectMapper mapper = new ObjectMapper();
-		CurriculumVitaeImpl cv = createCvWithPortrait(cvPortraitId, cvId);
-		String jsonCv = mapper.writer().writeValueAsString(cv);
-
+		CurriculumVitaeImpl oldCv = createCvWithPortrait(cvPortraitId, cvId);
 		setPortraitIdToUsed(cvPortraitId);
+		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(oldCv);
+		CurriculumVitaeImpl newCv = createCvWithPortrait(235, cvId);
 
-		Mockito.when(jsonRepoMock.getCv(cvId)).thenReturn(jsonCv);
-		
-		setNewPortraitOnCv(cv);
-		cvResource.updateCv(cvId, mapper.writer().writeValueAsString(cv));
+		cvResource.updateCv(cvId, mapper.writer().writeValueAsString(newCv));
 
 		Mockito.verify(jsonRepoMock, Mockito.times(1)).countPortraitIds(
 				cvPortraitId);

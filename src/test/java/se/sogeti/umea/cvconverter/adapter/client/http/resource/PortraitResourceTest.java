@@ -62,12 +62,11 @@ public class PortraitResourceTest {
 		res.cvRepository = mockCvRepository;
 
 		int cvId = 42;
-		ObjectMapper mapper = new ObjectMapper();
+		
 		CurriculumVitaeImpl cv = new CurriculumVitaeImpl();
-		cv.setId(cvId);
-		String jsonCv = mapper.writer().writeValueAsString(cv);
+		cv.setId(cvId);		
 
-		when(mockCvRepository.getCv(cvId)).thenReturn(jsonCv);
+		when(mockCvRepository.getCv(cvId)).thenReturn(cv);
 
 		String fileName = setMockFileDetailToReturnFilename();
 
@@ -95,11 +94,9 @@ public class PortraitResourceTest {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		CurriculumVitaeImpl cv = cvWithExistingPortraitImage(cvId);
+		CurriculumVitaeImpl cv = cvWithExistingPortraitImage(cvId);		
 
-		String jsonCv = mapper.writer().writeValueAsString(cv);
-
-		when(mockCvRepository.getCv(cvId)).thenReturn(jsonCv);
+		when(mockCvRepository.getCv(cvId)).thenReturn(cv);
 
 		res.createImage(uploadedInputStream, fileDetail, cvId);
 
@@ -128,9 +125,7 @@ public class PortraitResourceTest {
 
 		CurriculumVitaeImpl cv = cvWithoutExistingPortraitImage(cvId);
 
-		String jsonCv = mapper.writer().writeValueAsString(cv);
-
-		when(mockCvRepository.getCv(cvId)).thenReturn(jsonCv);
+		when(mockCvRepository.getCv(cvId)).thenReturn(cv);
 
 		res.createImage(uploadedInputStream, fileDetail, cvId);
 
