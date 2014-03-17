@@ -1,0 +1,44 @@
+<div style="margin-bottom: 10px;">	
+	<a href="#/admin" style="color: gray; text-decoration: underline;"">Layouter</a> |
+	<a href="#/admin/coverimage" style="color: gray; text-decoration: underline;">Omslagsbilder</a> |
+	<b>Portr&auml;tt</b>
+	
+	<a href="#/admin/base64" style="float:right; color: gray; text-decoration: underline;">base64</a>
+</div>
+
+<fieldset>
+	<legend>Portr&auml;tt</legend>
+	<div>
+		<ul>
+        	<li ng:repeat="portrait in portraits" class="tag" style="height: 45px;">
+        		
+	        	 	<img src="{{portrait.url}}" alt="Portrait" height="42" width="42" />
+	        	 	{{portrait.name}}
+	        	 	 
+	        		<a ng-click="deletePortrait(portrait.id)" style="float:right;">
+	        			<img src="src/assets/delete-16x16.png" alt="Ta bort"/>
+	        		</a>
+        		
+        	</li>
+    	</ul>
+	</div>
+</fieldset>
+
+<fieldset>
+	<legend>Ladda upp ny bild</legend>
+	
+	Ladda upp ett nytt portr&auml;tt. 
+	
+	<form enctype="multipart/form-data">
+		Namn: <input ng-model="portraitname" />
+		<input type="file" name="file" 
+		onchange="angular.element(this).scope().prepare(this.files); angular.element(this).scope().$digest();"/>		
+	</form>
+	
+</fieldset>
+
+<div class="buttonPanel">
+	<div class="right">
+		<input type="button" value="Skapa" ng-click="upload()"/>
+	</div>	
+</div>	
