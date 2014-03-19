@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +26,6 @@ import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.multipart.FormDataMultiPart;
-
 import se.sogeti.umea.cvconverter.adapter.client.http.json.CurriculumVitaeImpl;
 import se.sogeti.umea.cvconverter.adapter.client.http.streamutil.StreamUtil;
 import se.sogeti.umea.cvconverter.application.ConverterService;
@@ -38,6 +35,8 @@ import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Repository;
 import se.sogeti.umea.cvconverter.application.TagCloud;
 import se.sogeti.umea.cvconverter.application.UserService;
+
+import com.sun.jersey.multipart.FormDataMultiPart;
 
 @Path("jsoncv")
 public class CvResource extends Resource {
@@ -55,19 +54,13 @@ public class CvResource extends Resource {
 
 	@Inject
 	@Repository
-	private JsonCvRepository cvRepository;
-
-	private static boolean delay = false;
-
-	private static boolean throwRandom = false;
+	private JsonCvRepository cvRepository;	
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response parseRtfToJson(FormDataMultiPart multiPartRequest,
 			@Context HttpServletRequest req) throws IllegalArgumentException,
 			IOException {
-
-		checkConf();
 
 		String userName = req.getRemoteUser();
 		String office;
@@ -113,9 +106,7 @@ public class CvResource extends Resource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/json")
-	public Response createCv(String jsonCv) {
-
-		checkConf();
+	public Response createCv(String jsonCv) {		
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = null;
@@ -225,9 +216,7 @@ public class CvResource extends Resource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response updateCv(@PathParam(value = "id") int id, String jsonCv) {
-
-		checkConf();
+	public Response updateCv(@PathParam(value = "id") int id, String jsonCv) {		
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl oldCv;
@@ -254,28 +243,6 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
-	private void checkConf() {
-		if (delay) {
-			LOG.debug("Sleeping . . .");
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException ignore) {
-			}
-		} else if (throwRandom) {
-			Random r = new Random();
-			LOG.debug("Exception flag set . . .");
-			if (r.nextInt(2) > 0) {
-				LOG.debug("Throwing random exception . . .");
-				throw new WebApplicationException(Response
-						.status(Status.INTERNAL_SERVER_ERROR)
-						.entity("There was a random exception.").build());
-			}
-		} else {
-			LOG.debug("No flags set . . .");
-		}
-
-	}
-
 	private int hasPortraitId(CurriculumVitaeImpl cv) {
 		if (cv.getProfile() != null && cv.getProfile().getPortrait() != null
 				&& cv.getProfile().getPortrait().getId() > 0) {
@@ -287,8 +254,6 @@ public class CvResource extends Resource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response generateTagCloud(String jsonCv) {
-
-		checkConf();
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
@@ -346,28 +311,6 @@ public class CvResource extends Resource {
 		}
 
 		return Response.ok().build();
-	}
-
-	@GET
-	@Path("/conf/{type}")
-	public Response setConf(@PathParam(value = "type") String type) {
-		String message = "";
-		if ("delay".equals(type)) {
-			message = "Setting delay to 5000 ms.";
-			delay = true;
-		} else if ("unset_delay".equals(type)) {
-			message = "Unsetting delay.";
-			delay = false;
-		} else if ("throwrandom".equals(type)) {
-			message = "Setting throw random.";
-			throwRandom = true;
-		} else if ("unset_throwrandom".equals(type)) {
-			message = "Unsetting throw random.";
-			throwRandom = false;
-		} else {
-			message = "Unknown type: " + type;
-		}
-		return Response.ok(message).build();
 	}
 
 	public void setUserService(UserService userService) {
