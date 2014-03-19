@@ -15,13 +15,14 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		/**
 		 * Creates a new CV model from a rtf document.
 		 * 
-		 * @param files		: form files
-		 * @param success	: callback function to be executed on success
+		 * @param files		: form files.
+		 * @param success	: callback function to be executed on success.
+		 * @param error		: callback function to be executed on error.
 		 */
-		create : function(files, success) {					
+		create : function(files, success, error) {					
 			var fd = new FormData();
 			fd.append("rtfCvFile", files[0]);
-			$http.post(parserUrl, fd, {
+			$http.post(resourceUrl, fd, {
 				withCredentials : true,
 				headers : {'Content-Type' : undefined},
 				transformRequest : angular.identity
@@ -29,6 +30,7 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 				model.cv = data;
 				success();
 			}).error(function(err) {
+				if(error) { error(); }
 				alert("Det uppstod ett fel vid konverteringen! Felmeddelande från server: " + err);
 			});
 		},
@@ -43,23 +45,29 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		
 		/**
 		 * Generates a tag cloud for the model backed by this resource.
+		 * 
+		 * @param success	: callback function on success.
+		 * @param error		: callback function on error.
 		 */
-		generateCloud : function(success) {
+		generateCloud : function(success, error) {
 			$http.put(resourceUrl, model.cv).
 			  success(function(data, status, headers, config) {
 				  model.cv = data;
 				  success();
 			  }).
 			  error(function(data, status, headers, config) {
+				if(error) { error(); }
 			    alert("Ett fel uppstod när egenskaperna lades till. " + data);
 			});
 		},
 		
 		/**
 		 * Persists a cv in the database
+		 * 
+		 * @param success	: callback function on success.
 		 */
 		save : function(success) {
-			$http.post(resourceUrl, model.cv).success(function(data) {				
+			$http.post(resourceUrl + "/json", model.cv).success(function(data) {				
 				model.cv = data;
 				success();
 			}).error(function(err) {
@@ -69,15 +77,19 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		
 		/**
 		 * Updates the persistent model backed by this resource.
+		 * 
+		 * @param success	: callback function on success.
+		 * @param error		: callback function on error.
 		 */
-		update : function(success) {
+		update : function(success, error) {
 			$http.put(resourceUrl + "/" + model.cv.id, model.cv).
 			  success(function(data, status, headers, config) {
 				  model.cv = data;
 				  success();
 			  }).
 			  error(function(data, status, headers, config) {
-			    alert("Ett fel uppstod när egenskaperna lades till. " + data);
+				if(error) { error(); }
+			    alert("Ett fel uppstod när CV:et skulle uppdateras. " + data);
 			});
 		},
 		
@@ -116,12 +128,13 @@ angular.module('resources.cvresource', []).factory('CvResource', ['$http', funct
 		/**
 		 * Change name of cv with id : id
 		 */
-		changeName : function(id, name, success) {
+		changeName : function(id, name, success, error) {
 			$http.put(resourceUrl + "/partial/" + id, name).
 			  success(function(data, status, headers, config) {
 				  success();
 			  }).
 			  error(function(data, status, headers, config) {
+				if(error) { error(); }
 			    alert("Ett fel uppstod när namnet ändrades. " + data);
 			});
 		},

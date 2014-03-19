@@ -17,12 +17,18 @@ angular.module('qualities', [ 'ngRoute', 'resources.cvresource', 'services.navig
 	
 	$scope.model = CvResource.get();
 	
-	Navigation.onNext(function(success) {
+	Navigation.onNext(function(success, state) {
 		if($scope.model.cv.tags && $scope.model.cv.tags.length > 0) {
 			console.log("Skipping tag cloud generation");
-			success();
-		} else {
-			CvResource.generateCloud(success);
+			CvResource.update(success, function () {
+				state.waitingfornext = false;
+				state.disabled = false;
+			})
+		} else {			
+			CvResource.generateCloud(success, function () {
+				state.waitingfornext = false;
+				state.disabled = false;
+			});
 		} 		
 	});
 	

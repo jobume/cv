@@ -23,9 +23,15 @@ angular.module('skills', [ 'ngRoute', 'resources.cvresource', 'services.navigati
 	
 	Navigation.onNext(function (success, state) {
 		if($scope.adjustmentForm.$valid) {
-			success();
+			CvResource.update(function () {
+				success();
+			}, function () {
+				state.disabled = false;
+				state.waitingfornext = false;
+			});			
 		} else {
 			state.disabled = false;
+			state.waitingfornext = false;
 			alert("Det finns fel i formuläret!")
 		}
 	});

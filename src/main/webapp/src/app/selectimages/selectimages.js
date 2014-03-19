@@ -40,7 +40,7 @@ var uploader = angular.module(
 	};
 	
 	// CoverImage and Portrait must be set, and must have a url
-	function checkState() {
+	function checkState() {		
 		if ($scope.model.cv.coverImage && 
 			$scope.model.cv.coverImage.id && 
 			$scope.model.cv.profile.portrait && 
@@ -68,10 +68,12 @@ var uploader = angular.module(
 		if($scope.model.cv.id > 0) {
 			createPortrait(files);
 		} else {
+			alert("Error. No CV id was set!");
+		}/*else {
 			CvResource.save( function () {
 				createPortrait(files);
 			});
-		}
+		}*/
 		
 		$scope.$apply();
 		
@@ -92,18 +94,31 @@ var uploader = angular.module(
 			$scope.generating = false;
 			$window.open(getUrl) ;
 			Navigation.getState().disabled = false;
+			Navigation.getState().waitingfornext = false;
+		}, function () {
+			$scope.generating = false;
+			Navigation.getState().disabled = false;
+			Navigation.getState().waitingfornext = false;
 		});
 	} ;
 	
-	Navigation.onNext(function(success) {	
+	Navigation.onNext(function(success, state) {	
 				
 		if($scope.model.cv.id > 0) {
 			$scope.saving = true;
-			CvResource.update(createPdf);
+			CvResource.update(createPdf, function () {
+				state.disabled = false;
+				state.waitingfornext = false;
+				$scope.generating = false;
+				$scope.saving = false;
+			});
 		} else {
+			state.waitingfornext = false;
+			alert("Error! No CV id set.");
+		} /*else {
 			$scope.saving = true;			
 			CvResource.save(createPdf);
-		}
+		}*/
 		
 		$scope.generating = true;
 		

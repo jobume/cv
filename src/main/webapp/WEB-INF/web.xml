@@ -27,6 +27,14 @@
 	    <!-- No Auth Contraint! -->
 	</security-constraint>
 	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>The healthcheck folder is open</web-resource-name>	        
+	        <url-pattern>/api/healthcheck/*</url-pattern>	        
+	    </web-resource-collection>
+	    <!-- No Auth Contraint! -->
+	</security-constraint>
+	
 	<!-- TODO remove this 
 	<security-constraint>
 	    <web-resource-collection>

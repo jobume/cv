@@ -25,10 +25,16 @@ angular.module('engagements', [ 'ngRoute', 'resources.cvresource', 'services.nav
 	
 	Navigation.onNext(function (success, state) {
 		if($scope.adjustmentForm.$valid) {
-			success();
+			CvResource.update(function () {
+				success();
+			}, function () {
+				state.disabled = false;
+				state.waitingfornext = false;
+			});			
 		} else {
 			state.disabled = false;
-			alert("Det finns fel i formuläret!")
+			state.waitingfornext = false;
+			alert("Det finns fel i formuläret. Uppdragsbeskrivningen för utvalda uppdrag får ej överstiga " + MAX_JOB_DESC_LENGTH + " tecken.");
 		}
 	});
 	

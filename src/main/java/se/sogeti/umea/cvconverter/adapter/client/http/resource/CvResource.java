@@ -1,8 +1,10 @@
 package se.sogeti.umea.cvconverter.adapter.client.http.resource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -21,11 +23,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.jersey.multipart.FormDataMultiPart;
+
 import se.sogeti.umea.cvconverter.adapter.client.http.json.CurriculumVitaeImpl;
+import se.sogeti.umea.cvconverter.adapter.client.http.streamutil.StreamUtil;
 import se.sogeti.umea.cvconverter.application.ConverterService;
+import se.sogeti.umea.cvconverter.application.CurriculumVitae;
 import se.sogeti.umea.cvconverter.application.CvOverview;
 import se.sogeti.umea.cvconverter.application.JsonCvRepository;
 import se.sogeti.umea.cvconverter.application.Repository;
@@ -50,10 +57,65 @@ public class CvResource extends Resource {
 	@Repository
 	private JsonCvRepository cvRepository;
 
+	private static boolean delay = false;
+
+	private static boolean throwRandom = false;
+
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response parseRtfToJson(FormDataMultiPart multiPartRequest,
+			@Context HttpServletRequest req) throws IllegalArgumentException,
+			IOException {
+
+		checkConf();
+
+		String userName = req.getRemoteUser();
+		String office;
+		if (userName != null) {
+			office = userService.getOfficeForUser(userName);
+		} else {
+			throw new WebApplicationException(Response
+					.status(Status.UNAUTHORIZED).entity("No user in request!")
+					.build());
+		}
+		InputStream uploadedInputStream = multiPartRequest
+				.getField("rtfCvFile").getValueAs(InputStream.class);
+		String rtfCv = StreamUtil.readStreamToString(uploadedInputStream,
+				"ISO-8859-1");
+
+		CurriculumVitae cv = null;
+		try {
+			cv = service.parseRtf(rtfCv);
+			cv.setOffice(office);
+			int id = cvRepository.createCv(cv);
+			cv.setId(id);
+		} catch (IllegalArgumentException | IOException e) {
+			LOG.error("Error parsing RTF to JSON.", e);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getMessage()).build());
+		} catch (Throwable t) {
+			LOG.error("Unknown error parsing RTF to JSON.", t);
+			throw new WebApplicationException(Response
+					.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(t.getMessage()).build());
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(Feature.INDENT_OUTPUT, true);
+
+		String cvJson = mapper.writer().writeValueAsString(cv);
+
+		return Response.ok(cvJson).build();
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/json")
 	public Response createCv(String jsonCv) {
+
+		checkConf();
 
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv = null;
@@ -137,7 +199,7 @@ public class CvResource extends Resource {
 		CurriculumVitaeImpl cv = (CurriculumVitaeImpl) cvRepository.getCv(id);
 		if (cv == null) {
 			throw new WebApplicationException(Response.status(Status.NOT_FOUND)
-					.entity("No cv with id: " + id).build());
+					.entity("The CV with id " + id + " does not exist.").build());			
 		} else {
 			return cv;
 		}
@@ -165,11 +227,13 @@ public class CvResource extends Resource {
 	@Path("/{id}")
 	public Response updateCv(@PathParam(value = "id") int id, String jsonCv) {
 
+		checkConf();
+
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl oldCv;
 		CurriculumVitaeImpl newCv;
 		try {
-			oldCv = (CurriculumVitaeImpl) cvRepository.getCv(id);
+			oldCv = getCvOrThrowNotFound(id);
 			newCv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 			newCv = setCoverImageIfExists(newCv);
 
@@ -190,6 +254,28 @@ public class CvResource extends Resource {
 		return Response.ok(jsonCv).build();
 	}
 
+	private void checkConf() {
+		if (delay) {
+			LOG.debug("Sleeping . . .");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException ignore) {
+			}
+		} else if (throwRandom) {
+			Random r = new Random();
+			LOG.debug("Exception flag set . . .");
+			if (r.nextInt(2) > 0) {
+				LOG.debug("Throwing random exception . . .");
+				throw new WebApplicationException(Response
+						.status(Status.INTERNAL_SERVER_ERROR)
+						.entity("There was a random exception.").build());
+			}
+		} else {
+			LOG.debug("No flags set . . .");
+		}
+
+	}
+
 	private int hasPortraitId(CurriculumVitaeImpl cv) {
 		if (cv.getProfile() != null && cv.getProfile().getPortrait() != null
 				&& cv.getProfile().getPortrait().getId() > 0) {
@@ -202,6 +288,8 @@ public class CvResource extends Resource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response generateTagCloud(String jsonCv) {
 
+		checkConf();
+
 		ObjectMapper mapper = new ObjectMapper();
 		CurriculumVitaeImpl cv;
 
@@ -209,6 +297,7 @@ public class CvResource extends Resource {
 			cv = mapper.readValue(jsonCv, CurriculumVitaeImpl.class);
 			cv = setCoverImageIfExists(cv);
 			createTagCloud(cv);
+			cvRepository.updateCv(cv);
 			jsonCv = mapper.writer().writeValueAsString(cv);
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
@@ -257,6 +346,28 @@ public class CvResource extends Resource {
 		}
 
 		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/conf/{type}")
+	public Response setConf(@PathParam(value = "type") String type) {
+		String message = "";
+		if ("delay".equals(type)) {
+			message = "Setting delay to 5000 ms.";
+			delay = true;
+		} else if ("unset_delay".equals(type)) {
+			message = "Unsetting delay.";
+			delay = false;
+		} else if ("throwrandom".equals(type)) {
+			message = "Setting throw random.";
+			throwRandom = true;
+		} else if ("unset_throwrandom".equals(type)) {
+			message = "Unsetting throw random.";
+			throwRandom = false;
+		} else {
+			message = "Unknown type: " + type;
+		}
+		return Response.ok(message).build();
 	}
 
 	public void setUserService(UserService userService) {

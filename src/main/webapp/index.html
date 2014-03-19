@@ -4,85 +4,106 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <link rel="stylesheet" type="text/css" href="src/style/style.css" />
 <style type="text/css">
-		span.selected {font-weight:bold;}
-		input.ng-invalid {
-			background-color: rgb(242, 101, 50);
-		}
-		textarea.ng-invalid {
-			background-color: rgb(242, 101, 50);
-		}		
+span.selected {
+	font-weight: bold;
+}
+
+input.ng-invalid {
+	background-color: rgb(242, 101, 50);
+}
+
+textarea.ng-invalid {
+	background-color: rgb(242, 101, 50);
+}
 </style>
 </head>
 <body>
 
 	<div ng-controller="AppController">
-		<p id="adminLink" title="Administration av layouter" style="float: right;"> 
-			<a href="#/admin/savedcvs">Sparade CV:s</a> &nbsp;
-			<a ng-hide="navigation.admin" href="#/admin">Admin</a> &nbsp;			
-			<a ng-hide="!navigation.admin" href="" ng-click="back()" >Tillbaka till CV</a>
+		<p id="adminLink" title="Administration av layouter"
+			style="float: right;">
+			<a href="#/admin/savedcvs">Sparade CV:s</a> &nbsp; <a
+				ng-hide="navigation.admin" href="#/admin">Admin</a> &nbsp; <a
+				ng-hide="!navigation.admin" href="" ng-click="back()">Tillbaka
+				till CV</a>
 		</p>
 	</div>
 
 	<div id="wrapper">
-		<a href="#/person" style="float: left; margin-right: 10px;"><img src="src/assets/orange-logo.PNG" alt="CVGenerator LOGO" width="132px;" border="0" /></a>		
-		<h1 style="color: rgb(242, 101, 50);"><a style="color: rgb(242, 101, 50);" href="#/person">CVGenerator</a></h1>
-		
-		<div ng-controller="AppController">			
+		<a href="#/person" style="float: left; margin-right: 10px;"><img
+			src="src/assets/orange-logo.PNG" alt="CVGenerator LOGO"
+			width="132px;" border="0" /></a>
+		<h1 style="color: rgb(242, 101, 50);">
+			<a style="color: rgb(242, 101, 50);" href="#/person">CVGenerator</a>
+		</h1>
+
+		<div ng-controller="AppController">
 			<div ng-hide="navigation.admin">
-						 
+
 				<div class="left">
-					<span></span><a href="" ng-click="start()">Start</a> : </span>
-					<span ng-repeat="step in navigation.steps"> <span
+					<span></span><a href="" ng-click="start()">Start</a> : </span> <span
+						ng-repeat="step in navigation.steps"> <span
 						ng-class="{selected: $index == navigation.selectedIndex}">{{step.label}}</span>
 					</span>
 				</div>
-				
+
 				<div class="right">
-						<p> {{model.cv.name}} ({{model.cv.id}}) </p>
-				</div>			
+					<p>{{model.cv.name}} </p>
+				</div>
 			</div>
 		</div>
-				
+
 		<div style="clear: both;" class="buttonPanel" ng-controller="AppController">
-			<div ng-hide="navigation.admin">
+			<div ng-hide="navigation.admin || navigation.waitingfornext">
 				<div class="left">
 					<input type="button" value="Tillbaka"
-						ng-hide="navigation.selectedIndex==0" ng-click="previous()" />
+						ng-hide="navigation.selectedIndex < 2" ng-click="previous()" />
 				</div>
 				<div class="right">
-					
-					<input type="button" value="{{navigation.steps[navigation.selectedIndex].buttonLabel}}"
+
+					<input type="button"
+						value="{{navigation.steps[navigation.selectedIndex].buttonLabel}}"
 						ng-disabled="navigation.disabled" ng-click="next()" />
 				</div>
 			</div>
-		</div>		 
-	
-		<div style="clear: both; float;" ng-view id="main"></div>
+		</div>
+
+		<div style="width: 160px; clear: both;" ng-controller="AppController" ng-hide="!navigation.waitingfornext">
+			<img src="src/assets/spinner.gif"> Laddar ...
+		</div>
+
+		<div ng-controller="AppController" ng-hide="navigation.waitingfornext">
+			<div style="clear: both;" ng-view id="main"></div>	
+		</div>
 
 		<div class="buttonPanel" ng-controller="AppController">
-			<div ng-hide="navigation.admin">
+			<div ng-hide="navigation.admin || navigation.waitingfornext">
 				<div class="left">
 					<input type="button" value="Tillbaka"
-						ng-hide="navigation.selectedIndex==0" ng-click="previous()" />
+						ng-hide="navigation.selectedIndex < 2" ng-click="previous()" />
 				</div>
 				<div class="right">
-					
-					<input type="button" value="{{navigation.steps[navigation.selectedIndex].buttonLabel}}"
+
+					<input type="button"
+						value="{{navigation.steps[navigation.selectedIndex].buttonLabel}}"
 						ng-disabled="navigation.disabled" ng-click="next()" />
 				</div>
 			</div>
-		</div>		
+		</div>
 	</div>
 
 	<!-- TODO concat and minify -->
 	<!-- script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script -->
 	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
-	
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
-	
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+
+	<script
+		src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+
 	<script src="http://code.angularjs.org/1.2.0-rc.2/angular-route.min.js"></script>
 
 	<script src="src/app/app.js"></script>
@@ -96,14 +117,14 @@
 	<script src="src/app/layout/layout.js"></script>
 	<script src="src/app/admin/admin.js"></script>
 	<script src="src/app/savedcvs/savedcvs.js"></script>
-	
+
 	<script src="src/common/resources/cvresource.js"></script>
 	<script src="src/common/resources/portraitresource.js"></script>
 	<script src="src/common/resources/coverimageresource.js"></script>
 	<script src="src/common/resources/layoutsresource.js"></script>
 	<script src="src/common/resources/pdfresource.js"></script>
 	<script src="src/common/resources/base64resource.js"></script>
-	
+
 	<script src="src/common/services/navigation.js"></script>
 
 </body>

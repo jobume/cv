@@ -19,7 +19,7 @@ describe('Test suite for the navigation service', function(){
   it('should be initialized correctly', inject(function() {
 	  var selectedIndex = service.getState().selectedIndex;
 	  expect(selectedIndex).toBe(0);	  
-	  expect(service.getState().steps[selectedIndex].label).toBe('Person >');
+	  expect(service.getState().steps[selectedIndex].label).toBe('Ladda upp >');
 	  expect(service.getState().steps[selectedIndex].path).toBe('/laddaupp');
 	  expect(service.getState().steps[selectedIndex].buttonLabel).toBe('Nästa');
 	  expect(service.getState().steps[selectedIndex].disabled).toBe(true);	  
@@ -77,11 +77,13 @@ describe('Test suite for the navigation service', function(){
 	  
 	  service.next();
 	  
-	  expect(service.getState().selectedIndex).toBe(1);
+	  service.next();
+	  
+	  expect(service.getState().selectedIndex).toBe(2);
 	  
 	  service.previous();
 	  
-	  expect(service.getState().selectedIndex).toBe(0);
+	  expect(service.getState().selectedIndex).toBe(1);
   }));
   
   it('should not go back beyond first', inject(function() {

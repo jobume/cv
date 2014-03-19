@@ -17,7 +17,7 @@ describe('Test suite for the adjustments module', function(){
 		  var controller, scope, cvResourceMock, navMock, state;
 		  beforeEach(inject(function($rootScope, $controller) {
 		      scope = $rootScope.$new();
-		      cvResourceMock = { get : function () { }, create : function () {} };
+		      cvResourceMock = { get : function () { }, create : function () {}, update : function (success) { success(); } };
 		      
 		      state = { disabled : true, callback : null };
 		      

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import se.sogeti.umea.cvconverter.application.CoverImageRepository;
 import se.sogeti.umea.cvconverter.application.Image;
+import se.sogeti.umea.cvconverter.application.Repository;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -34,6 +35,7 @@ public class CoverImageResource extends Resource {
 			.getLogger(CoverImageResource.class);
 	
 	@Inject
+	@Repository
 	private CoverImageRepository service;
 
 	@POST

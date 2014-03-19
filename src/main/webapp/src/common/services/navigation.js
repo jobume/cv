@@ -13,7 +13,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 	 *  disabled	: True if the next button should be disabled
 	 */
 	var steps = [
- 		{label:"Person >", path:"/laddaupp", buttonLabel: "Nästa", disabled: true},
+ 		{label:"Ladda upp >", path:"/laddaupp", buttonLabel: "Nästa", disabled: true},
  		{label:"Anpassning >", path:"/anpassa", buttonLabel: "Nästa", disabled: false},
  		{label:"Uppdrag >", path:"/uppdrag", buttonLabel: "Nästa", disabled: false},
  		{label:"Teknik >", path:"/teknik", buttonLabel: "Nästa", disabled: false},
@@ -30,6 +30,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 	 * selectedIndex	: current selected step.
 	 * disabled			: if the next button is disabled
 	 * admin			: if current page is admin page
+	 * waitingfornext	: if next button is pressed and we are waiting to go to next page.
 	 * callback			: callback function to be executed on next()
 	 */
 	var state = { 
@@ -37,6 +38,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 			selectedIndex : 0,
 			disabled : true,
 			admin : false,
+			waitingfornext : false,
 			callback : null
 	};
 	
@@ -61,6 +63,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 		next : function() {
 			// Immediately disable next-button.
 			state.disabled = true;
+			state.waitingfornext = true;			
 			if(state.callback != null) {
 				state.callback(this.success, state);
 			} else {
@@ -73,11 +76,12 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 				var navTo = steps[state.selectedIndex].path;
 				state.callback = null;
 				state.disabled = steps[state.selectedIndex].disabled;
+				state.waitingfornext = false;
 				$location.path(navTo);
 			}
 		},
 		previous : function() {
-			if(state.selectedIndex > 0) {
+			if(state.selectedIndex > 1) {
 				state.selectedIndex--;
 				var navTo = steps[state.selectedIndex].path;
 				state.callback = null;
@@ -106,8 +110,7 @@ factory('Navigation', ['$rootScope','$location', function($rootScope, $location)
 		/**
 		 * Returns true if current step is the last step.
 		 */
-		isLast : function() {
-			alert("Hej");
+		isLast : function() {			
 			return (state.selectedIndex == steps.length-1);
 		}
 	};

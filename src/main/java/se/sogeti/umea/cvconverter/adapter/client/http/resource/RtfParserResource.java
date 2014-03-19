@@ -56,6 +56,7 @@ public class RtfParserResource extends Resource {
 		try {
 			cv = service.parseRtf(rtfCv);
 			cv.setOffice(office);
+			
 		} catch (IllegalArgumentException | IOException e) {
 			LOG.error("Error parsing RTF to JSON.", e);
 			throw new WebApplicationException(Response

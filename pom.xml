@@ -26,8 +26,7 @@
 				<jdbc.url>jdbc:mysql://mysql-sogeti.jelastic.elastx.net/cvconverter</jdbc.url>
 				<jdbc.user>cvconverter</jdbc.user>
 				<jdbc.password>cvconverter</jdbc.password>
-				<host.name>http://sogeti.jelastic.elastx.net</host.name>
-				<host.name.internal>http://localhost:8080</host.name.internal>
+				<host.name>http://sogeti.jelastic.elastx.net</host.name>				
 				<file.path>images</file.path>
 				<file.location>/opt/jetty/home/images</file.location>
 			</properties>
@@ -40,8 +39,7 @@
 				<jdbc.url>jdbc:mysql://localhost:3306/test</jdbc.url>
 				<jdbc.user>joparo</jdbc.user>
 				<jdbc.password>joparo</jdbc.password>
-				<host.name>http://localhost:8080</host.name>
-				<host.name.internal>http://localhost:8080</host.name.internal>
+				<host.name>http://localhost:8080</host.name>				
 				<file.path>images</file.path>
 				<file.location>C:\Users\joparo\Servers\jetty\jetty-6.1.26\home\images</file.location>
 				<fop.config.file>C:\Users\joparo\Projects\cv-converter\cvconverter\src\test\resources\userconfig.xml</fop.config.file>				

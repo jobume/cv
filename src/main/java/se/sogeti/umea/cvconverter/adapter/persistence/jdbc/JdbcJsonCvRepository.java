@@ -80,8 +80,10 @@ public class JdbcJsonCvRepository implements JsonCvRepository {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					return new ObjectMapper().readValue(rs.getString(COL_JSON),
-							CurriculumVitaeImpl.class);
+					CurriculumVitaeImpl cv = new ObjectMapper().readValue(
+							rs.getString(COL_JSON), CurriculumVitaeImpl.class);
+					cv.setId(rs.getInt(COL_ID));
+					return cv;
 				}
 			}
 

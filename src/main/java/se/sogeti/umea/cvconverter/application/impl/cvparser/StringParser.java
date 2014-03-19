@@ -171,7 +171,7 @@ class StringParser {
 		JobImpl workingJob = null;
 		StringBuilder description = null;
 		for (int i = 0; i < linesWithTabSeparatedText.size(); i++) {
-			List<String> line = linesWithTabSeparatedText.get(i);
+			List<String> line = linesWithTabSeparatedText.get(i);			
 
 			// We found a new line
 			if(line.size() == 2) {

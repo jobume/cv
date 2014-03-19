@@ -12,8 +12,8 @@ angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navig
 	  );
 	}])
 	
-.controller('WordCloudController', ['$scope', 'CvResource', 
-                                      function($scope, CvResource) {
+.controller('WordCloudController', ['$scope', 'CvResource', 'Navigation', 
+                                      function($scope, CvResource, Navigation) {
 	
 	$scope.model = CvResource.get();
 	
@@ -22,6 +22,15 @@ angular.module('wordcloud', [ 'ngRoute', 'resources.cvresource', 'services.navig
 			console.log("New cloud generated...");
 		});
 	}
+	
+	Navigation.onNext(function (success, state) {
+		CvResource.update(function () {
+			success();
+		}, function () {
+			state.waitingfornext = false;
+			state.disabled = false;
+		});					
+	});
 	
 	$scope.addTag = function() {
 		var tagName = $scope.tagName;

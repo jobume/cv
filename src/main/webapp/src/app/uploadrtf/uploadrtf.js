@@ -15,10 +15,13 @@ var uploader = angular.module('uploadrtf', [ 'ngRoute', 'resources.cvresource','
 	$scope.model = CvResource.get();	
 	
 	// Set callback function on next button
-	Navigation.onNext(function(success) {
+	Navigation.onNext(function(success, state) {
 		CvResource.create($scope.files, function () {
 			success();
 			$scope.model.cv.name = $scope.model.cv.profile.name;			
+		}, function () {
+			state.waitingfornext = false;
+			state.disabled = false;
 		});		
 	});
 	

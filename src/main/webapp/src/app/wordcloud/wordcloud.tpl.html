@@ -6,8 +6,8 @@
         <li ng:repeat="tag in model.cv.tags" class="tag">{{tag.tagName}} <a ng-click="deleteTag($index)" style="float:right;"><img src="src/assets/delete-16x16.png" alt="Ta bort"/></a> </li>
     </ul>
     
-    <input type="button" ng-click="generateCloud()" value="Nytt moln"  style="float: right;"/>
+    <input type="button" ng-click="generateCloud()" value="Nytt moln" />
     
-    <input ng-model="tagName" style="float:left;"/> <input type="button" ng-click="addTag()" value="L&auml;gg till"/>
+    <input ng-model="tagName" style="float:left;"/> <input type="button" ng-disabled="model.cv.tags.length > 7" ng-click="addTag()" value="L&auml;gg till"/>
 	
 </fieldset>

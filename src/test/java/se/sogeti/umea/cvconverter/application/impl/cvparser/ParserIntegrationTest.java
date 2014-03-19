@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.fop.apps.FOPException;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -31,7 +32,7 @@ import testutil.FileReader;
 
 public class ParserIntegrationTest {
 	
-	private final static String FILE_NAME_INPUT = "ParserIntegrationTest_Input.rtf";
+	private final static String FILE_NAME_INPUT = "ParserIntegrationTest_Input.rtf";	
 	
 	private final static String FILE_NAME_OUTPUT = "ParserIntegrationTest_Output.pdf";
 
@@ -49,11 +50,12 @@ public class ParserIntegrationTest {
 	}
 	
 	@Test
+	@Ignore
 	public void canBeCreated() throws Exception {
 		Parser p = new Parser(null, null, null, null);
 		assertNotNull(p);
 	}
-
+		
 	@Test
 	public void writePdfFromRtf() throws FOPException, ConfigurationException,
 			TransformerException, SAXException, IOException {

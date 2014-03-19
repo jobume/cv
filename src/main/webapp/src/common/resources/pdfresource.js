@@ -14,13 +14,15 @@ angular.module('resources.pdfresource', []).factory('PdfResource', ['$http', fun
 		 * @param success	: callback function to be executed on success. 
 		 * 					  function(data) {  }
 		 * 					  where data is the url to the created pdf.
+		 * @param error		: callback function for error.
 		 */
-		create : function (cv, layoutId, success) {
+		create : function (cv, layoutId, success, error) {
 			var postUrl = resourceUrl + "/" + layoutId;
 			$http.post(postUrl, cv).success(function(data) { 	    			    	
 		    	var getUrl = resourceUrl + "/" + data;
 		    	success(getUrl); 
-		    }).error(function(data, status, headers, config) { 
+		    }).error(function(data, status, headers, config) {
+		    	if(error) { error (); }
 		    	alert("Ett fel uppstod vid konvertering. Felmeddelande från server: " + data); 
 		    });
 		}

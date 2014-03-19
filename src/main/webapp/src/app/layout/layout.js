@@ -60,7 +60,7 @@ angular.module('layout', [ 'ngRoute', 'services.navigation',
 				$window.open(getUrl) ;
 				Navigation.getState().disabled = false;
 			});
-		} else {
+		} else {			
 			alert('Välj en layout!');
 		}	
 	});

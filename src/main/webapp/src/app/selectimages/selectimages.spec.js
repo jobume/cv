@@ -10,7 +10,7 @@ describe('Test suite for the select images controller', function(){
       cvResourceMock = { get : function () {  
     	  return { 
     		  cv : { 
-    			  coverImage : { url: 'http://istrue.com' },
+    			  coverImage : { url: 'http://istrue.com', id: 55 },
     			  profile : { portrait : { url: 'http.istrue.com' } }
     		  } 
     	  } 
