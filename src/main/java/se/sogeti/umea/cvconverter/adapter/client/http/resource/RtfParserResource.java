@@ -6,7 +6,6 @@ import java.io.InputStream;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -24,7 +23,8 @@ import se.sogeti.umea.cvconverter.application.UserService;
 
 import com.sun.jersey.multipart.FormDataMultiPart;
 
-@Path("rtfparser")
+// @Path("rtfparser")
+@Deprecated
 public class RtfParserResource extends Resource {
 
 	private final static Logger LOG = LoggerFactory

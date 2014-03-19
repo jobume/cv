@@ -234,13 +234,15 @@ public class CvResource extends Resource {
 				deleteUnusedPortraitFiles(oldPortraitId);
 			}
 
+			return Response.ok(mapper.writeValueAsString(newCv)).build();
+			
 		} catch (IOException e) {
 			throw new WebApplicationException(Response
 					.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getMessage()).build());
 		}
 
-		return Response.ok(jsonCv).build();
+		
 	}
 
 	private int hasPortraitId(CurriculumVitaeImpl cv) {
