@@ -157,6 +157,7 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 		});
 	}
 	
+	/*
 	$scope.prepare = function(files) {
 		$scope.files = files;		
 		$scope.$apply();
@@ -173,6 +174,7 @@ angular.module('admin', [ 'ngRoute', 'services.navigation', 'resources.layoutsre
 			alert("Ange ett namn för porträttet!")
 		}
 	};
+	*/
 	
 		
 }]);
